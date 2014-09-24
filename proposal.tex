@@ -1,6 +1,6 @@
-\def \name {PLT Lang}
-
+\def \name {PLT Lang }
 \documentclass[10pt]{article}
+\usepackage{listings}
 \title{\name}
 \author{PLT Group}
 
@@ -8,27 +8,57 @@
 \maketitle
 
 \section{Language Overview}
-    \name is a language that is aimed at distributed CSV processing. Provided the IP addresses, ports, and some form of identifier, \name can send code real time for the slave computers to compile and run. The intent behind this is to allow rapid data transformations on CSV's resembling matrices, thus fundamental operations such as finding the minimum or maxiumum or averaging data will be provided, as well as mapping arithmetic functions. To conclude in key points:
+    \name is a language that is aimed at distributed CSV processing. Provided the IP addresses, ports, and some form of identifier, \name can send code real time to the slave computers corresponding to the given IPs to compile and run. The intent behind this is to allow rapid data transformations on CSV's resembling matrices, thus fundamental operations such as finding the minimum or maxiumum or averaging data will be provided, as well as mapping arithmetic functions. To conclude in key points:
     \begin{description}
     \item[Distributed] \name works at a local level but comes with built in distributed functionality.
     \item[Code Oriented] \name is NOT a system for sending data; it only sends the raw code that gets compiled at the slave site; this means that the master must be able to compile before sending, effectively providing \name with interpreter-like error-catching.
-    \item[Matrix] Oriented] \name will have a lot of built in matrix operations for data processing at the slave environment. This will be reflected in its data types and syntax.
+    \item[Matrix Oriented] \name will have a lot of built in matrix operations for data processing at the slave environment. This will be reflected in its data types and syntax.
     \end{description}
     
 \section{Use Cases}
-	The inspiration behind \name came from Hadoop and personal experiences with large data sets. One of the common issues that data scientists run into is waiting for processing of large data sets, especially ones that aren't on their local drive. Consequently, \name is aimed at remediting this by providing built-in distributed support for transforming and analyzing large CSV's from far away. This is the "Map" portion in "MapReduce". \name will \emph{not} provide a "Reduce" portion, as the presumption here is that the data sets are independent, and perhaps, the actual code is as well.
+	The inspiration behind \name came from Hadoop and personal experiences with large data sets. One of the common issues that data scientists run into is waiting for processing of large data sets, especially ones that aren't on their local drive. Consequently, \name is aimed at remedying this by providing built-in distributed support for transforming and analyzing large CSV's from far away. This is the "Map" portion in "MapReduce". \name will \emph{not} provide a "Reduce" portion, as the presumption here is that the data sets are independent, and perhaps, the actual code is as well.
     In the long run, \name could be used as a central compilation point for code to be issued out to many cloud-based platforms without hogging local resources, thus enabling the user to continue to develop and write for new processes while processes in the cloud continue to run without interruption.
     
 \section{Main Features}
 	\subsection{Syntax}
-    The style of the language will draw its inspiration from C/C++/Java. Curly braces will be plentiful. This means that \name files can be minified into one long string, which enables easier sending across to slaves.
+    The style of the language will draw inspiration from C/C++/Java. Curly braces will be plentiful. This means that \name files can be expressed as one long string, which enables easier sending across to slaves.
     \subsection{Data Types}
     \begin{description}
-    \item{Primitives} Ints, Floats, Bools, Chars, String, Doubles will all be provided as per most standard languages.
-    \item{Data Structures} Lists will be used as the main implementation of a data structure, and it will be mutable, extensible, and provide constant access time to its elements (thus some sort of indexing will be in place). Lists will also be recursive and nestable, due to matrices being nested lists.
-    \item{Slave Buffer} Because we will be sending raw code in plaintext ASCII-format across a network (often times minified into one line), there is specific syntax for writing code that is meant to be sent, as opposed to compiled and/or run.
+    \item[Primitives] Ints, Floats, Bools, Chars, String, Doubles will all be provided as per most standard languages.
+    \item[Data Structures] Lists will be used as the main implementation of a data structure, and it will be mutable, extensible, and provide constant access time to its elements (thus some sort of indexing will be in place). Lists will also be recursive and nestable, due to matrices being nested lists.
+    \item[Slave Buffer] Because we will be sending raw code in plaintext ASCII-format across a network (often expressed as one line), there is specific syntax for writing code that is meant to be sent, as opposed to compiled and/or run.
     \end{description}
     
 \section{Source Code Examples}
-	
+	\begin{lstlisting}
+    Slave slave1 = Slave(127.0.0.1,5000);
+    
+    print("Hello world!");
+    List test_data = read("Mydata.txt");
+    
+Code x = "int average(List column){
+    	return sum(column)/column.length;
+    };"
+    
+    //Returns the ascii string of how average  
+    //is defined that is acceptable by compiler
+    print(x) 
+    
+    print(average([2,4,6]) // Prints 4
+    //Siimilar to REST POST
+    send(x, slave1);
+    
+    //REST POST
+    //and GET return values
+    String r_value = request(slave1, "average data"); 
+    
+    //prints Slave1's dataset average
+    print(r_value); 
+    
+    
+    
+    
+    
+    
+    \end{lstlisting}
 \end{document}
