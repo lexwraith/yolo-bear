@@ -1,0 +1,27 @@
+\def \name {PLT Lang}
+
+\documentclass[10pt]{article}
+\title{\name}
+\author{PLT Group}
+
+\begin{document}
+\maketitle
+
+\section{Language Overview}
+    \name is a language that is aimed at distributed CSV processing. Provided the IP addresses, ports, and some form of identifier, \name can send code real time for the slave computers to compile and run. The intent behind this is to allow rapid data transformations on CSV's resembling matrices, thus fundamental operations such as finding the minimum or maxiumum or averaging data will be provided, as well as mapping arithmetic functions. To conclude in key points:
+    \begin{description}
+    \item[Distributed] \name works at a local level but comes with built in distributed functionality.
+    \item[Code Oriented] \name is NOT a system for sending data; it only sends the raw code that gets compiled at the slave site; this means that the master must be able to compile before sending, effectively providing \name with interpreter-like error-catching.
+    \item[Matrix] Oriented] \name will have a lot of built in matrix operations for data processing at the slave environment. This will be reflected in its data types and syntax.
+    \end{description}
+    
+\section{Use Cases}
+	The inspiration behind \name came from Hadoop and personal experiences with large data sets. One of the common issues that data scientists run into is waiting for processing of large data sets, especially ones that aren't on their local drive. Consequently, \name is aimed at remediting this by providing built-in distributed support for transforming and analyzing large CSV's from far away. This is the "Map" portion in "MapReduce". \name will \emph{not} provide a "Reduce" portion, as the presumption here is that the data sets are independent, and perhaps, the actual code is as well.
+    In the long run, \name could be used as a central compilation point for code to be issued out to many cloud-based platforms without hogging local resources, thus enabling the user to continue to develop and write for new processes while processes in the cloud continue to run without interruption.
+    
+\section{Main Features}
+	\subsection{Syntax and Semantics}
+    
+\section{Source Code Examples}
+
+\end{document}
