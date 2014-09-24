@@ -20,8 +20,15 @@
     In the long run, \name could be used as a central compilation point for code to be issued out to many cloud-based platforms without hogging local resources, thus enabling the user to continue to develop and write for new processes while processes in the cloud continue to run without interruption.
     
 \section{Main Features}
-	\subsection{Syntax and Semantics}
+	\subsection{Syntax}
+    The style of the language will draw its inspiration from C/C++/Java. Curly braces will be plentiful. This means that \name files can be minified into one long string, which enables easier sending across to slaves.
+    \subsection{Data Types}
+    \begin{description}
+    \item{Primitives} Ints, Floats, Bools, Chars, String, Doubles will all be provided as per most standard languages.
+    \item{Data Structures} Lists will be used as the main implementation of a data structure, and it will be mutable, extensible, and provide constant access time to its elements (thus some sort of indexing will be in place). Lists will also be recursive and nestable, due to matrices being nested lists.
+    \item{Slave Buffer} Because we will be sending raw code in plaintext ASCII-format across a network (often times minified into one line), there is specific syntax for writing code that is meant to be sent, as opposed to compiled and/or run.
+    \end{description}
     
 \section{Source Code Examples}
-
+	
 \end{document}
