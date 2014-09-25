@@ -13,6 +13,8 @@
     \item[Distributed] \name works at a local level but comes with built in distributed functionality.
     \item[Code Oriented] \name is NOT a system for sending data; it only sends the raw code that gets compiled at the slave site; this means that the master must be able to compile before sending, effectively providing \name with interpreter-like error-catching.
     \item[Matrix Oriented] \name will have a lot of built in matrix operations for data processing at the slave environment. This will be reflected in its data types and syntax.
+    \item[Extensibility] \name is meant to provide semi-permanent extensibility to its slaves by actively rewriting source code for interpretation/compilation at the remote sites. 
+        Different data sets can thus be manipulated in different ways, all from the comfort of your own home.
     \end{description}
     
 \section{Use Cases}
@@ -32,33 +34,52 @@
 \section{Source Code Examples}
 	\begin{lstlisting}
     Slave slave1 = Slave(127.0.0.1,5000);
-    
+    Slave slave2 = Slave(127.0.0.1,5001);    
     print("Hello world!");
     List test_data = read("Mydata.txt");
     
-Code x = "int average(List column){
+    Code x = "int average(List column){
     	return sum(column)/column.length;
     };"
-    
+   
+    String y = "int average(List column){return
+        sum(column)/column.length;};"
+
     /*Returns the ascii string of how average  
     is defined that is acceptable by compiler*/
     print(x) 
     
-    print(average([2,4,6]) // Prints 4
+    /*Prints out 4*/
+    print(average([2,4,6])
+
     /*Siimilar to REST POST*/
-    send(x, slave1);
+    /*Note that Code objects causes changes to
+    both the local compiler, AND is available for
+    sending to a distributed interpreter/compiler.
     
+    That being said, the distributed compilers can
+    also take raw strings to process as code.*/
+
+    send(x, slave1);
+    send(y, slave1);
+
     /*REST POST
     and GET return values*/
     String r_value = request(slave1, "average data"); 
     
     /*prints Slave1's dataset average*/
     print(r_value); 
-    
-    
-    
-    
-    
-    
+   
+    /*prints this machine's dataset average*/
+    print(average(test_data));
+
     \end{lstlisting}
+
+\section{Team Roster}
+    \begin{description}
+        \item[Manager] Mikhail Kilmentov
+        \item[Language Gurus] Mikhail Kilmentov, Prateek Sinha
+        \item[Tester] Michael Nguyen
+        \item[Environment] Yuchen Zeng, Eli Bogom-Shanon
+    \end{description}
 \end{document}
