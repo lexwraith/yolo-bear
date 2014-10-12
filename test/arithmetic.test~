@@ -1,6 +1,4 @@
 /*Assignment and arithmetic tests*/
-print("Testing addition");
-
 number y = 2 + 2; /*4*/
 number g = 2**2 - 3 + 4; /*5*/
 number x = 2/2 + 1; /*2*/
