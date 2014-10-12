@@ -1,0 +1,8 @@
+/*Assignment and arithmetic tests*/
+number y = 2 + 2; /*4*/
+number g = 2**2 - 3 + 4; /*5*/
+number x = 2/2 + 1; /*2*/
+number a = 2.00001 /*2.0001*/
+
+
+/**/
