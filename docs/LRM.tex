@@ -6,6 +6,8 @@
 \usepackage{color}
 \usepackage{courier}
 \usepackage{multicol}
+\usepackage{float}
+\restylefloat{table}
 
 \definecolor{mygray}{rgb}{0.94,0.94,0.94}
 
@@ -65,8 +67,10 @@ else \newline
 float \newline
 for \newline
 if \newline
+master \newline
 print \newline
 return \newline
+slave \newline
 string \newline
 while \newline
 void \newline }}
@@ -83,13 +87,22 @@ Lorem Ipsum
 
 \subsection{Punctuation}
 
-Lorem Ipsum
+Civ supports standard C punctuation with the exception of the usage of * as a pointer indicator.
+
+\begin{description}
+	\item{$[]$} - Brackets are used as indices for lists and list declarations.
+	\item{$()$} - Parantheses are used in function calls to surround the function arguments.
+    \item{$\{\}$} - Curly braces are used to indicate the beginning end of a body or block statement.
+    \item{$,$} - Commas are used in lists generation and as a separator between inline statements.
+    \item{$:$} - Colons indicate the beginning of a declaration, and is usually followed by an opening curly brace.
+    \item{$;$} - Semicolons tell the compiler that the statement, expression, or body/block is complete.
+\end{description}
 
 \subsection{Operators}
 
-\begin{table}
+\begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|c|l|l|}
 \hline
 Operator & Use & Associativity\\
 \hline
@@ -116,20 +129,36 @@ Operator & Use & Associativity\\
 \textless= & Less than or equal to & Non-associative\\
 \hline 
 \textgreater= & Less than or equal to & Non-associative\\
+\hline 
+! & Not & Right\\
 \hline
 \&\& & And & Non-associative\\
 \hline
-|| & Or & Non-associative\\
+$||$ & Or & Non-associative\\
 \hline
 \end{tabular}
 \caption{Operators}
 \end{table}
+
+The precedence of operations is shown as below, from greatest to least precedence: 
+\begin{center}
+
+\fontfamily{pcr}\selectfont
+* / \% \\
++ - \\ 
+! \&\& $||$ \\
+\textless \quad  \textgreater \quad \textless= \quad \textgreater= \\
+== \quad !=\\
+=\\ 
+\end{center}
+
 
 \section{Types}
 
 \subsection{Boolean}
 In Civ, a boolean is defined by the values {\fontfamily{pcr}\selectfont true} and {\fontfamily{pcr}\selectfont false}. 
 
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting} 
     
     if(true){print("Test")}
@@ -139,7 +168,7 @@ In Civ, a boolean is defined by the values {\fontfamily{pcr}\selectfont true} an
     /*No response*/
 
 \end{lstlisting}
-
+}
 
 \subsection{Float}
 All numbers in Civ are floats by default. In the event that the float has no significant digits past the decimal point, it is displayed as an integer, e.g.,
