@@ -2,9 +2,17 @@
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{courier}
+\usepackage{multicol}
+
+\definecolor{mygray}{rgb}{0.94,0.94,0.94}
+
+\lstset{ %
+	backgroundcolor=\color{mygray},
+    basicstyle=\footnotesize}
+
 
 \def \authors{Mikhail Klimentov, Michael Nguyen, Prateek Sinha, Yuchen Zeng, and Eli Bogom-Shanon }
 
@@ -20,47 +28,175 @@ For the most part, this document follows an organizational precedent set by Bria
 
 \section{Lexical Conventions}
 
-
-
-\subsection{Tokens}
-
-Lorem Ipsum Dolorum.
-
 \subsection{Comments}
 
-Comments are styled after the C multiline comments. Open with /* and close with */. 
+Comments are styled after the C multiline comments. Open with /* and close with */.
+
+
+{\fontfamily{pcr}\selectfont
+\begin{lstlisting} 
+
+   /* This is a comment in Civ */
+  
+   /*
+      This is a multiline comment in Civ
+   */
+    
+   // ILLEGAL: This is NOT a comment in Civ
+\end{lstlisting}
+}
 
 \subsection{Identifiers}
 
 In Civ, an identifier is an alphanumeric string used for any variables, functions, data definitions, etc. Identifiers cannot begin with symbols (ex: \_toast would not be a valid identifier). Upper case and lower case letters are distinct in Civ. It is advised that identifiers be written in mixedCase notation.
 
+\subsection{Keywords}
+
+The following identifiers are reserved for the use as keywords, and may not be used otherwise:
+
+
+\begin{multicols}{2}
+\noindent 
+\center{
+{\fontfamily{pcr}\selectfont
+boolean \newline
+do \newline
+else \newline
+float \newline
+for \newline
+if \newline
+print \newline
+return \newline
+string \newline
+while \newline
+void \newline }}
+\end{multicols}
+
+
 \subsection{Constants}
 
-Civ doesn't have constants—everything is mutable.
+There are no constants in Civ—everything is mutable. 
 
-\subsection{How to Make Sections and Subsections}
+\subsection{Literals}
+
+Lorem Ipsum
+
+\subsection{Punctuation}
+
+Lorem Ipsum
+
+\subsection{Operators}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Operator & Use & Associativity\\
+\hline
++ & Addition & Left\\
+\hline
+- & Subtraction & Left \\
+\hline
+* & Multiplication & Left\\
+\hline
+/ & Division & Left \\
+\hline
+\% & Modulus & Left \\
+\hline
+= & Assignment & Right \\
+\hline 
+== & Equal to & Non-associative\\
+\hline
+!= & Not equal to & Non-associative\\
+\hline 
+\textless & Less than & Non-associative\\
+\hline 
+\textgreater & Less than & Non-associative\\
+\hline 
+\textless= & Less than or equal to & Non-associative\\
+\hline 
+\textgreater= & Less than or equal to & Non-associative\\
+\hline
+\&\& & And & Non-associative\\
+\hline
+|| & Or & Non-associative\\
+\hline
+\end{tabular}
+\caption{Operators}
+\end{table}
+
+\section{Types}
+
+\subsection{Boolean}
+In Civ, a boolean is defined by the values {\fontfamily{pcr}\selectfont true} and {\fontfamily{pcr}\selectfont false}. 
+
+\begin{lstlisting} 
+    
+    if(true){print("Test")}
+    Test
+        
+    if(false){fork();};
+    /*No response*/
+
+\end{lstlisting}
 
 
-\subsection{How to Make Lists}
+\subsection{Float}
+All numbers in Civ are floats by default. In the event that the float has no significant digits past the decimal point, it is displayed as an integer, e.g.,
 
-You can make lists with automatic numbering \dots
+{\fontfamily{pcr}\selectfont
+\begin{lstlisting} 
 
-\begin{enumerate}
-\item Like this,
-\item and like this.
-\end{enumerate}
-\dots or bullet points \dots
-\begin{itemize}
-\item Like this,
-\item and like this.
-\end{itemize}
-\dots or with words and descriptions \dots
-\begin{description}
-\item[Word] Definition
-\item[Concept] Explanation
-\item[Idea] Text
-\end{description}
+    print(5 + 5);
+    10
+    
+    print(5.0 + 5.1);
+    10.1
+    
+    print(5 + 5.1);
+    10.1
+    
+    print(4.5 + 4.5);
+    9
 
-We hope you find write\LaTeX\ useful, and please let us know if you have any feedback using the help menu above.
+\end{lstlisting}
+}
+
+\subsection{String}
+Strings are a primitive data $and$ a data structure in Civ, as opposed to a data structure composed of primitive chars. Consequently, String types come with a slew of implicit functions.
+
+{\fontfamily{pcr}\selectfont
+\begin{lstlisting}
+
+    String a = "";
+    String b = "f";
+    String c = "abcdef";
+    String d = "1a2b3c";
+    
+    print(a);
+    
+    print(b);
+    f
+    
+    print(c);
+    abcdef
+    
+    print(d[2]);
+    2
+    
+    print(a.length);
+    0
+    
+    print(b.length);
+    1
+    
+    /*Note that because everything is mutable,
+    d is rebound when its function is called.*/
+    print(d.append("test"));
+    a12b3ctest
+	
+\end{lstlisting}
+}
+
 
 \end{document}
