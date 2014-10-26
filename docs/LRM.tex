@@ -122,6 +122,7 @@ goto \newline
 if \newline
 print \newline
 return \newline
+static \newline
 string \newline
 struct \newline
 while \newline
@@ -142,9 +143,9 @@ A literal in Civ is a literal like anywhere else: any raw data that is presented
 Civ is meant to look as close to C as possible, with the exception of explicit pointer notation.
 
 \begin{description}
-	\item{$[]$} - Brackets are used as indices for lists and list declarations.
-	\item{$()$} - Parantheses are used in function calls to surround the function arguments.
-    \item{$\{\}$} - Curly braces are used to indicate the beginning end of a body or block statement.
+	\item{$[\hspace{2mm}]$} - Brackets are used as indices for lists and list declarations.
+	\item{$(\hspace{2mm})$} - Parantheses are used in function calls to surround the function arguments.
+    \item{$\{\hspace{2mm}\}$} - Curly braces are used to indicate the beginning end of a body or block statement.
     \item{$,$} - Commas are used in lists generation and as a separator between inline statements.
     \item{$:$} - Colons indicate the beginning of a declaration, and is usually followed by an opening curly brace.
     \item{$;$} - Semicolons tell the compiler that the statement, expression, or body/block is complete.
@@ -244,39 +245,21 @@ All numbers in Civ are floats by default. In the event that the float has no sig
 \end{lstlisting}
 }
 
-\paragraph{String}
-Strings are a primitive data $and$ a data structure in Civ, as opposed to a data structure composed of primitive chars. Consequently, String types come with a slew of implicit functions.
+\paragraph{Char}
+In Civ, chars are a primitive data type. Chars are used in arrays to make strings. 
 
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting}
 
-	String a = "";
-	String b = "f";
-	String c = "abcdef";
-	String d = "1a2b3c";
+	char string[50];
+	/* Creates an array of length 50 */
     
-	print(a);
+	char greeting[] = "Hi";
+	/* 
+	greeting is an array with values: H, i, and \0
+	*/
     
-	print(b);
-	f
     
-	print(c);
-	abcdef
-    
-	print(d[2]);
-	2
-    
-	print(a.length);
-	0
-    
-	print(b.length);
-	1
-    
-	/*Note that because everything is mutable,
-	d is rebound when its function is called.*/
-	print(d.append("test"));
-	a12b3ctest
-	
 \end{lstlisting}
 }
 
