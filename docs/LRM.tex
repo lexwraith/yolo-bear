@@ -36,31 +36,45 @@ However, there is a distinct difference between Civ and C, and that is that Civ 
 
 Consider the following code for swapping two numbers written in C:
 
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-void swap(int *a,int *b);
 
-int main(){
-  int num1=5,num2=10;
-  swap(&num1,&num2);        //Passing in two addresses as arguments  
-  return 0;
-}
-void swap(int *a,int *b){   //Has two pointers at two addresses 
-  int temp;
-  temp=*a;                  //temp holds num1
-  *a=*b;                    //&num1 holds num2
-  *b=temp;                  //&num2 holds num1
-}
+	void swap(int *a,int *b);
+
+	int main(){
+		int num1=5,num2=10;
+		swap(&num1,&num2);
+        
+        //Passing in two addresses as arguments
+		return 0;
+	}
+	void swap(int *a,int *b){  //Two pointers at two addresses
+  		int temp;
+        
+        //temp holds num1
+  		temp=*a;
+        
+        //&num1 holds num2
+ 	 	*a=*b;
+        
+        //&num2 holds num1
+  		*b=temp;
+	}
 \end{lstlisting}
+}
 
 Now consider the following code written in Civ:
 
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-int main(){
-  float num1=5,num2=10;
-  num1,num2= num2,num1;
-  return 0;
-}
+    
+	int main(){
+		float num1=5,num2=10;
+		num1,num2= num2,num1;
+		return 0;
+	}
 \end{lstlisting}
+} 
 
 While it is true we have NOT swapped addresses (as that is not possible in Civ), we have effectively achieved what we wanted: a swap of values in variables. But rather than actually swapping addresses, we are actually going to manipulate the symbol table such that the values of num1 and num2 change while staying in the same memory allocation.
 
@@ -71,17 +85,17 @@ While it is true we have NOT swapped addresses (as that is not possible in Civ),
 Comments are styled after the C multiline comments. Open with /* and close with */. Civ does NOT have single line comments, nor nested comments.
 
 {\fontfamily{pcr}\selectfont
-
 \begin{lstlisting}
-   /* This is a comment in Civ */
-  
-   /*
-      This is a multiline comment in Civ
-   */
-    
-   // ILLEGAL: This is NOT a comment in Civ
    
-   /*/*This is also ILLEGAL*/*/
+	/* This is a comment in Civ */
+  
+	/*
+	This is a multiline comment in Civ
+	*/
+    
+	// ILLEGAL: This is NOT a comment in Civ
+   
+	/*/*This is also ILLEGAL*/*/
 \end{lstlisting}
 }
 
@@ -99,16 +113,19 @@ The following identifiers are reserved for the use as keywords, and may not be u
 \center{
 {\fontfamily{pcr}\selectfont
 bool \newline
+break \newline
 do \newline
 else \newline
 float \newline
 for \newline
+goto \newline
 if \newline
 print \newline
 return \newline
-str \newline
+string \newline
+struct \newline
 while \newline
-void \newline }}
+void \hspace{14 mm}}}
 \end{multicols}
 
 
@@ -197,11 +214,11 @@ In Civ, a boolean is defined by the values {\fontfamily{pcr}\selectfont true} an
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting} 
     
-    if(true){print("Test")}
-    Test
+	if(true){print("Test")}
+	Test
         
-    if(false){fork();};
-    /*No response*/
+	if(false){fork();};
+	/*No response*/
 
 \end{lstlisting}
 }
@@ -212,17 +229,17 @@ All numbers in Civ are floats by default. In the event that the float has no sig
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting} 
 
-    print(5 + 5);
-    10
+	print(5 + 5);
+	10
     
-    print(5.0 + 5.1);
-    10.1
+	print(5.0 + 5.1);
+	10.1
     
-    print(5 + 5.1);
-    10.1
+	print(5 + 5.1);
+	10.1
     
-    print(4.5 + 4.5);
-    9
+	print(4.5 + 4.5);
+	9
 
 \end{lstlisting}
 }
@@ -233,32 +250,32 @@ Strings are a primitive data $and$ a data structure in Civ, as opposed to a data
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting}
 
-    String a = "";
-    String b = "f";
-    String c = "abcdef";
-    String d = "1a2b3c";
+	String a = "";
+	String b = "f";
+	String c = "abcdef";
+	String d = "1a2b3c";
     
-    print(a);
+	print(a);
     
-    print(b);
-    f
+	print(b);
+	f
     
-    print(c);
-    abcdef
+	print(c);
+	abcdef
     
-    print(d[2]);
-    2
+	print(d[2]);
+	2
     
-    print(a.length);
-    0
+	print(a.length);
+	0
     
-    print(b.length);
-    1
+	print(b.length);
+	1
     
-    /*Note that because everything is mutable,
-    d is rebound when its function is called.*/
-    print(d.append("test"));
-    a12b3ctest
+	/*Note that because everything is mutable,
+	d is rebound when its function is called.*/
+	print(d.append("test"));
+	a12b3ctest
 	
 \end{lstlisting}
 }
@@ -268,10 +285,14 @@ Note that the following conversions happen based off of the grammar. The only ti
 
 \paragraph{String to Boolean}
 Any string that is NOT an empty string is treated as a positive boolean, i.e. True. A string that is empty is automatically regarded as false.
+
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-if("test"){print("This works.");};
-if(""){print("Unreachable code.");};
+
+	if("test"){print("This works.");};
+	if(""){print("Unreachable code.");};
 \end{lstlisting}
+}
 
 \paragraph{Float to String}
 Printing a float automatically converts the float to a string. If the float has no numbers past the decimal, it is presented as an integer in the print statement. This does NOT hold for string concatenation, or any other string operation.
@@ -289,26 +310,36 @@ In the event the compiler catches such a situation, an error will be thrown.
 \subsection{Data Structures}
 There is only one fundamental data structure that Civ provides, and that is a mutable array. It follows standard C declaration procedures, e.g.,
 
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-String test[10];
-String hw[2] = \{"Hello", "world!"\};
-print(hw[0]) /*Returns "Hello"*/
+
+	String test[10];
+	String hw[2] = \{"Hello", "world!"\};
+	print(hw[0]) /*Returns "Hello"*/
 \end{lstlisting} 
+} 
 
 There are some fundamental differences in Civ due to lack of pointers. For example, consider the following C code:
+
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-char *word;
-char **sentence;
-char ***chapter;
-char ****book;
-char *****library;
+
+	char *word;
+	char **sentence;
+	char ***chapter;
+	char ****book;
+	char *****library;
 \end{lstlisting}
+} 
 
 This is obviously strange C code, but it shows how powerful pointers can be. In Civ, a multidimensional-array would be used, and accessing a the fifth book's fourth chapter's third sentence's second word would look like this:
 
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-library[5][4][3][2] = "new word";
+
+	library[5][4][3][2] = "new word";
 \end{lstlisting}
+} 
 
 Because of these differences, every array access is ALWAYS a reference to the original array, and consequently, just like variables, arrays are always pass by reference. The fact that they are mutable in structure and size also aids array manipulation.
 
@@ -323,26 +354,29 @@ Because of these differences, every array access is ALWAYS a reference to the or
 
 \subsection{Explicit Typecasting} - Civ's type declarations are also functions that return a type casted variable or literal where valid. For example,
 
+{\fontfamily{pcr}\selectfont
 \begin{lstlisting}
-str s = "Hello";
-float x = 2;
-float y = 3.3;
-bool t = true;
 
-print(str(x));  //2
-print(str(y));  //3.3
-print(str(t));  //true
+	str s = "Hello";
+	float x = 2;
+	float y = 3.3;
+	bool t = true;
 
-float s = float(s); //Throws error
-float x = float(x); //No change in memory
-float y = float(y); //No change in memory
-float t = float(t); //t = 1
+	print(str(x));  /*2*/
+	print(str(y));  /*3.3*/
+	print(str(t));  /*true*/
 
-bool(s); //Returns true
-bool(x); //Returns true
-bool(y); //Returns true
-bool(t); //Returns true
+	float s = float(s); /*Throws error*/
+	float x = float(x); /*No change in memory*/
+	float y = float(y); /*No change in memory*/
+	float t = float(t); /*t = 1*/
+	
+	bool(s); /*Returns true*/
+	bool(x); /*Returns true*/
+	bool(y); /*Returns true*/
+	bool(t); /*Returns true*/
 \end{lstlisting}
+}
 
 \section{Code Samples}
 \subsection{FizzBuzz}
