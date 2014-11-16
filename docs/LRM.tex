@@ -68,15 +68,15 @@ Now consider the following code written in Civ:
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting}
     
-	int main(){
-		float num1=5,num2=10;
-		num1,num2= num2,num1;
+	num main(){
+		num var1 = 5,var2 = 10;
+		var1, var2 = var2, var1;
 		return 0;
 	}
 \end{lstlisting}
 } 
 
-While it is true we have NOT swapped addresses (as that is not possible in Civ), we have effectively achieved what we wanted: a swap of values in variables. But rather than actually swapping addresses, we are actually going to manipulate the symbol table such that the values of num1 and num2 change while staying in the same memory allocation.
+While it is true we have NOT swapped addresses (as that is not possible in Civ), we have effectively achieved what we wanted: a swap of values in variables. But rather than actually swapping addresses, we are actually going to manipulate the symbol table such that the values of var1 and var2 change while staying in the same memory allocation.
 
 \section{Lexical Conventions}
 
@@ -116,14 +116,13 @@ bool \newline
 break \newline
 do \newline
 else \newline
-float \newline
 for \newline
 goto \newline
 if \newline
+num \newline
 print \newline
 return \newline
 static \newline
-string \newline
 struct \newline
 while \newline
 void \hspace{14 mm}}}
@@ -136,7 +135,7 @@ There are no constants in Civ — everything is mutable.
 
 \subsection{Literals}
 
-A literal in Civ is a literal like anywhere else: any raw data that is presented symbolically is a literal. For example, 2 represents the float 2.0. Literally are useful as they provide an alternative to references, and can be used in pass by argument parameters for functions.
+A literal in Civ is a literal like anywhere else: any raw data that is presented symbolically is a literal. For example, 2 represents the num 2.0. Literally are useful as they provide an alternative to references, and can be used in pass by argument parameters for functions.
 
 \subsection{Punctuation}
 
@@ -175,6 +174,10 @@ Operator & Use & Associativity\\
 \hline
 != & Not equal to & Non-associative\\
 \hline 
+++ & Increment & Right\\
+\hline
+-- & Decrement & Right\\
+\hline
 \textless & Less than & Non-associative\\
 \hline 
 \textgreater & Less than & Non-associative\\
@@ -185,9 +188,9 @@ Operator & Use & Associativity\\
 \hline 
 ! & Not & Right\\
 \hline
-\&\& & And & Non-associative\\
+\&\& & And & Left\\
 \hline
-$||$ & Or & Non-associative\\
+$||$ & Or & Left\\
 \hline
 \end{tabular}
 \caption{Operators}
@@ -215,22 +218,25 @@ In Civ, a boolean is defined by the values {\fontfamily{pcr}\selectfont true} an
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting} 
     
-	if(true){print("Test")}
+	if(true) { print("Test"); }
 	Test
         
-	if(false){fork();};
+	if(false) { fork(); }
 	/*No response*/
 
 \end{lstlisting}
 }
 
-\paragraph{Float}
-All numbers in Civ are floats by default. In the event that the float has no significant digits past the decimal point, it is displayed as an integer, e.g.,
+\paragraph{Num}
+All numbers in Civ are a type called num, which encapsulates the functions of float and int. Nums are largely treated as floats, except in the case in which the num has no significant digits past the decimal point: then it is displayed as an integer, e.g.,
 
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting} 
 
-	print(5 + 5);
+	num x = 5; /* this is valid */
+    num y = 5.5; /* this is also valid */
+    
+    print(5 + 5);
 	10
     
 	print(5.0 + 5.1);
@@ -277,16 +283,15 @@ Any string that is NOT an empty string is treated as a positive boolean, i.e. Tr
 \end{lstlisting}
 }
 
-\paragraph{Float to String}
-Printing a float automatically converts the float to a string. If the float has no numbers past the decimal, it is presented as an integer in the print statement. This does NOT hold for string concatenation, or any other string operation.
+\paragraph{Num to String}
+Printing a num automatically converts it to a string. If the nym has no values past the decimal, it is presented as an integer in the print statement. This does NOT hold for string concatenation, or any other string operation.
 
 \paragraph{All Other Conversions}
 The following type pairs do not convert automatically:
 \begin{itemize}
-\item{String to Float}
+\item{String to Num}
 \item{Boolean to String}
-\item{Boolean to Float}
-\item{Float to String}.
+\item{Boolean to Num}
 \end{itemize}
 In the event the compiler catches such a situation, an error will be thrown.
 
@@ -329,30 +334,34 @@ Because of these differences, every array access is ALWAYS a reference to the or
 \section{Workflow}
 \subsection{Overview and Main Differences from C}
 
-\paragraph{Pass by Reference} - Civ ALWAYS passes by reference if a primitive isn't provided. This is fundamentally different in C, as pass by argument and pass by reference are both allowed, as passing a pointer serves as passing by reference. One might argue that because they are passing a pointer address, it is actually pass by reference value, but that is outside the scope of Civ.
+\paragraph{Pass by Reference}
+Civ ALWAYS passes by reference if a primitive isn't provided. This is fundamentally different in C, as pass by argument and pass by reference are both allowed, as passing a pointer serves as passing by reference. One might argue that because they are passing a pointer address, it is actually pass by reference value, but that is outside the scope of Civ.
 
-\paragraph{Declarations} - Civ does NOT require declarations of variables at the head of every body.
+\paragraph{Declarations}
+Civ does NOT require declarations of variables at the head of every body.
 
-\subsection{Variable Scope} - Civ variables strictly have lexical scope, thus making every body closure have its own symbol table.
+\subsection{Variable Scope}
+Civ variables strictly have lexical scope, thus making every body closure have its own symbol table.
 
-\subsection{Explicit Typecasting} - Civ's type declarations are also functions that return a type casted variable or literal where valid. For example,
+\subsection{Explicit Typecasting}
+Civ's type declarations are also functions that return a type casted variable or literal where valid. For example,
 
 {\fontfamily{pcr}\selectfont
 \begin{lstlisting}
 
 	str s = "Hello";
-	float x = 2;
-	float y = 3.3;
+	num x = 2;
+	num y = 3.3;
 	bool t = true;
 
 	print(str(x));  /*2*/
 	print(str(y));  /*3.3*/
 	print(str(t));  /*true*/
 
-	float s = float(s); /*Throws error*/
-	float x = float(x); /*No change in memory*/
-	float y = float(y); /*No change in memory*/
-	float t = float(t); /*t = 1*/
+	num s = num(s); /*Throws error*/
+	num x = num(x); /*No change in memory*/
+	num y = num(y); /*No change in memory*/
+	num t = num(t); /*t = 1*/
 	
 	bool(s); /*Returns true*/
 	bool(x); /*Returns true*/
