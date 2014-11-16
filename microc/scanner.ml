@@ -909,7 +909,7 @@ let
 # 910 "scanner.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
 # 40 "scanner.mll"
-                    ( LITERAL(int_of_string lxm) )
+                    ( INT(int_of_string lxm) )
 # 914 "scanner.ml"
 
   | 27 ->

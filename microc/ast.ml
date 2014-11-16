@@ -8,6 +8,8 @@ type expr =
   | Call of string * expr list
   | Noexpr
 
+(*TODO: Add in arithmetic sub-expressions
+to differentiate from superexpressions*)
 type stmt =
     Block of stmt list
   | Expr of expr

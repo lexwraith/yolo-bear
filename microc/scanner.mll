@@ -37,11 +37,11 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "char"   { CHAR }
-| ['0'-'9']+ as lxm { LITERAL(int_of_string lxm) }
-| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
+| ['0'-'9']+ as lxm { INT(int_of_string lxm) } (*Used for scanning integer literals*)
+| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Used for getting Var names*)
 (*Our shit*)
-| '"' (['a'-'z' 'A'-'Z' '0'-'9']|symbols)* '"' as s { STRING(s) }
-| ''' (['a'-'z' 'A'-'Z' '0'-'9']|symbols)? ''' as c { CHAR(c) }
+| '"' (['a'-'z' 'A'-'Z' '0'-'9']|symbols)* '"' as s { STRING(s) } (*Syntactic sugar for char arrays*)
+| ''' (['a'-'z' 'A'-'Z' '0'-'9']|symbols)? ''' as c { CHAR(c) } (*Single chars*)
 | '{' (ascii ',')* ascii '}' as c {ARR_CHAR(c)}
 (*| '{' bool ',' bool '}' as b {ARR_BOOL(b)}
 | '{' '}'

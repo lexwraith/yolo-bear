@@ -4,8 +4,10 @@
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
 %token RETURN IF ELSE FOR WHILE INT
-%token <int> LITERAL
-%token <string> ID
+%token <int> INTEGER
+%token <string> CHAR
+%token <string> STRING
+%token <string> ID /*This is for var names*/
 %token EOF
 
 %nonassoc NOELSE
@@ -52,7 +54,7 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
-stmt:
+stmt: /*Statements create side effects*/
     expr SEMI { Expr($1) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -62,14 +64,17 @@ stmt:
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
-expr_opt:
+expr_opt: /*Base case .. ? */
     /* nothing */ { Noexpr }
   | expr          { $1 }
 
-expr:
-    LITERAL          { Literal($1) }
+expr: /*Overarching expressions 
+	TODO: Break into subclasses, i.e. arithmetic expressions?*/
+    INTEGER          { Literal($1) }
+  | CHAR	     { Literal($1) }
+  | STRING	     { Literal($1) }
   | ID               { Id($1) }
-  | expr PLUS   expr { Binop($1, Add,   $3) }
+/*  | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
   | expr DIVIDE expr { Binop($1, Div,   $3) }
@@ -78,7 +83,7 @@ expr:
   | expr LT     expr { Binop($1, Less,  $3) }
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
-  | expr GEQ    expr { Binop($1, Geq,   $3) }
+  | expr GEQ    expr { Binop($1, Geq,   $3) }*/
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
