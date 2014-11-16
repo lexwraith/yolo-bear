@@ -1,6 +1,6 @@
 main()
 {
-  print(42);
+  print('i');
   print(71);
   print(1);
 }

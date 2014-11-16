@@ -1,12 +1,13 @@
 { open Parser }
 
-let symbols = ['!','@','#','$','%','^','&','*','(',')','_','+','=','-','[',']',
-              '{','}','|','\',':','"',';',''','<','>','?',',','.','/'];
+let symbols = ['!' '@' '#' '$' '%' '^' '&' '*' '(' ')' '_' '+' '=' '-' '[' ']'
+              '{' '}' '|' '\\' ':' '"' ';' ''' '<' '>' '?' ',' '.' '/']
 let ascii = (['a'-'z' 'A'-'Z' '0'-'9']|symbols)
 let numbers = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 let alphanumeric = (numbers|alpha)
-let bool = ['false' 'true' '0' '1']
+let bool = ('0' | '1' | "false" | "true")
+
 (*Add floats token here*)
 
 rule token = parse
