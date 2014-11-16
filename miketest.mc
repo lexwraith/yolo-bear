@@ -1,4 +1,4 @@
-int genfibo(int[] arr, n){
+int[] genfibo(int[] arr, int n){
     arr[0] = 0;
     arr[1] = 1;
     arr[2] = 1;
