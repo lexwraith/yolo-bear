@@ -1,7 +1,0 @@
-/*This is a comment.*/
-print("This is a print statement");
-if(true){print("This is true.");};
-if(false){print("This statement is false.");};
-else{print("This is an else.")};
-while(true){print("This is a while true.");};
-while(false){print("This is a while false.");};
