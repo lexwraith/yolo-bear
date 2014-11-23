@@ -3,9 +3,9 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE FOR WHILE INT
+%token RETURN IF ELSE FOR WHILE INT STR CHAR
 %token <int> INTEGER
-%token <string> CHAR
+%token <int> CHARACTER /* Use ASCII to store Char */
 %token <string> STRING
 %token <string> ID /*This is for var names*/
 %token EOF
@@ -23,7 +23,7 @@
 
 %%
 
-program:
+program: /* make a tuple { vdecl_list, fdecl_list } */
    /* nothing */ { [], [] }
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
@@ -49,6 +49,7 @@ vdecl_list:
 
 vdecl:
    INT ID SEMI { $2 }
+	| STR ID SEMI { $2 }
 
 stmt_list:
     /* nothing */  { [] }
@@ -70,11 +71,11 @@ expr_opt: /*Base case .. ? */
 
 expr: /*Overarching expressions 
 	TODO: Break into subclasses, i.e. arithmetic expressions?*/
-    INTEGER          { Literal($1) }
-  | CHAR	     { Literal($1) }
-  | STRING	     { Literal($1) }
+    INTEGER          { Literal(Int $1) }
+  | CHARACTER	     	 { Literal(Int $1) }
+  | STRING	    		 { Literal(String $1) }
   | ID               { Id($1) }
-/*  | expr PLUS   expr { Binop($1, Add,   $3) }
+  | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
   | expr DIVIDE expr { Binop($1, Div,   $3) }
@@ -83,7 +84,7 @@ expr: /*Overarching expressions
   | expr LT     expr { Binop($1, Less,  $3) }
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
-  | expr GEQ    expr { Binop($1, Geq,   $3) }*/
+  | expr GEQ    expr { Binop($1, Geq,   $3) }
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }

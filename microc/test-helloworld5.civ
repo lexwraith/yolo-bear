@@ -1,0 +1,10 @@
+print_2str(a,b)
+{
+	print(a);
+	print(b);
+}
+
+main()
+{
+ 	print_2str("Hello","World"); 
+}

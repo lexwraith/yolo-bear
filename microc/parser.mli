@@ -22,8 +22,10 @@ type token =
   | FOR
   | WHILE
   | INT
+  | STR
+  | CHAR
   | INTEGER of (int)
-  | CHAR of (string)
+  | CHARACTER of (int)
   | STRING of (string)
   | ID of (string)
   | EOF
