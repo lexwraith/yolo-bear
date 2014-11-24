@@ -1,0 +1,9 @@
+print_hw()
+{
+	print("Hello World");
+}
+
+main()
+{
+ 	print_hw(); 
+}

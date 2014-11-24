@@ -3,7 +3,11 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
+<<<<<<< HEAD
+%token RETURN IF ELSE FOR WHILE INT KCHAR
+=======
 %token RETURN IF ELSE FOR WHILE INT STR CHAR
+>>>>>>> Modification-Test
 %token <int> INTEGER
 %token <int> CHARACTER /* Use ASCII to store Char */
 %token <string> STRING
@@ -71,9 +75,15 @@ expr_opt: /*Base case .. ? */
 
 expr: /*Overarching expressions 
 	TODO: Break into subclasses, i.e. arithmetic expressions?*/
+<<<<<<< HEAD
+    INTEGER          { Literal($1) }
+  | CHAR	     { Char($1) }
+  | STRING	     { String($1) }
+=======
     INTEGER          { Literal(Int $1) }
   | CHARACTER	     	 { Literal(Int $1) }
   | STRING	    		 { Literal(String $1) }
+>>>>>>> Modification-Test
   | ID               { Id($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }

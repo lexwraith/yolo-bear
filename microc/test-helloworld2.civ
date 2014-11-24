@@ -1,0 +1,6 @@
+string s;
+main()
+{
+  s = "Hello World" ;
+  print(s);
+}
