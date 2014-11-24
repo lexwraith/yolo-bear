@@ -3,7 +3,7 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE FOR WHILE INT
+%token RETURN IF ELSE FOR WHILE INT KCHAR
 %token <int> INTEGER
 %token <string> CHAR
 %token <string> STRING
@@ -71,8 +71,8 @@ expr_opt: /*Base case .. ? */
 expr: /*Overarching expressions 
 	TODO: Break into subclasses, i.e. arithmetic expressions?*/
     INTEGER          { Literal($1) }
-  | CHAR	     { Literal($1) }
-  | STRING	     { Literal($1) }
+  | CHAR	     { Char($1) }
+  | STRING	     { String($1) }
   | ID               { Id($1) }
 /*  | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
