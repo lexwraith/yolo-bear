@@ -5,19 +5,26 @@ module StringMap = Map.Make(String)
 
 (* Symbol table: Information about all the names in scope *)
 type env = {
-    function_index : int StringMap.t; (* Index for each function *)
+    function_index : int StringMap.t; (* Index for each function, TODO: Do we need this? *)
     global_index   : int StringMap.t; (* "Address" for global variables *)
     local_index    : int StringMap.t; (* FP offset for args, locals *)
+    (* TODO:    block_index    : int StringMap.t; (* For nested blocks *) *)
   }
 
 (* val enum : int -> 'a list -> (int * 'a) list *)
-let rec enum stride n = function
+let rec enum stride n = function (*Stride is the interval, n is the start point*)
     [] -> []
   | hd::tl -> (n, hd) :: enum stride (n+stride) tl
 
 (* val string_map_pairs StringMap 'a -> (int * 'a) list -> StringMap 'a *)
+(* Adds a set of (index,value) pairs to a map *)
 let string_map_pairs map pairs =
-  List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
+  List.fold_left (fun mp (ind, n) -> StringMap.add n ind mp) map pairs
+
+(* TODO: Translate a program in AST form into a C program. Throw an
+	 error when something fucks up.*)
+
+
 
 (** Translate a program in AST form into a bytecode program.  Throw an
     exception if something is wrong, e.g., a reference to an unknown
@@ -44,6 +51,8 @@ let translate (globals, functions) =
 
     let rec expr : expr -> binst list = function
 	Literal i -> [Lit i]
+      | String(l) -> "String" ^ l
+      | Char(l) -> "Char" ^ l
       | Id s ->
 	  (try [Lfp (StringMap.find s env.local_index)]
           with Not_found -> try [Lod (StringMap.find s env.global_index)]
