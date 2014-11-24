@@ -48,7 +48,8 @@ let translate (globals, functions) =
     and formal_offsets = enum (-1) (-2) fdecl.formals in
     let env = { env with local_index = string_map_pairs
 		  StringMap.empty (local_offsets @ formal_offsets) } in
-
+		  
+(* binst = 'binary instruction', defined in bytecode.ml and opened at the top of this file *)
     let rec expr : expr -> binst list = function
 	Literal i -> [Lit i]
       | String(l) -> "String" ^ l
