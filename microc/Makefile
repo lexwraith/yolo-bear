@@ -1,22 +1,15 @@
 OBJS = ast.cmo parser.cmo scanner.cmo interpret.cmo bytecode.cmo \
 	 microc.cmo
 
-TESTS = arith1 arith2 arith3 arith4 \
-	fib \
-	for1 for2 \
-	func1 func2 func3 func4 func5 \
-	gcd \
-	global1 \
-	hello \
-	if1 if2	if3 if4 if5 \
-	ops1 \
-	var1 var2 var3 var4 \
-	stmts1 \
-	while1
+TESTS = add_matrix add_n_numbers \
+	bubblesort dynprogfibo \
+	even_or_odd fibonacci \
+	stirng_array \
+	helloworld1 helloworld2 helloworld3 helloworld4 helloworld5
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	ast.ml bytecode.ml interpret.ml  microc.ml \
-	$(TESTS:%=tests/test-%.mc) \
+	$(TESTS:%=tests/test-%.civ) \
 	$(TESTS:%=tests/test-%.out)
 
 microc : $(OBJS)
