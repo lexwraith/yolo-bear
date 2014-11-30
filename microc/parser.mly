@@ -3,11 +3,9 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE FOR WHILE INT STR CHAR
-%token <int> INTEGER
-%token <int> CHARACTER /* Use ASCII to store Char */
-%token <string> STRING
-%token <string> ID /*This is for var names*/
+%token RETURN IF ELSE FOR WHILE INT
+%token <int> LITERAL
+%token <string> ID
 %token EOF
 
 %nonassoc NOELSE
@@ -23,7 +21,7 @@
 
 %%
 
-program: /* make a tuple { vdecl_list, fdecl_list } */
+program:
    /* nothing */ { [], [] }
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
@@ -49,13 +47,12 @@ vdecl_list:
 
 vdecl:
    INT ID SEMI { $2 }
-	| STR ID SEMI { $2 }
 
 stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
-stmt: /*Statements create side effects*/
+stmt:
     expr SEMI { Expr($1) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -65,15 +62,12 @@ stmt: /*Statements create side effects*/
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
-expr_opt: /*Base case .. ? */
+expr_opt:
     /* nothing */ { Noexpr }
   | expr          { $1 }
 
-expr: /*Overarching expressions 
-	TODO: Break into subclasses, i.e. arithmetic expressions?*/
-    INTEGER          { Literal(Int $1) }
-  | CHARACTER	     	 { Literal(Int $1) }
-  | STRING	    		 { Literal(String $1) }
+expr:
+    LITERAL          { Literal($1) }
   | ID               { Id($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }

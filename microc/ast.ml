@@ -1,17 +1,13 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
-type lit = Int of int| String of string
-
 type expr =
-    Literal of lit
+    Literal of int
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
   | Call of string * expr list
   | Noexpr
 
-(*TODO: Add in arithmetic sub-expressions
-to differentiate from superexpressions*)
 type stmt =
     Block of stmt list
   | Expr of expr
@@ -33,7 +29,7 @@ type program = string list * func_decl list
    only for debugging (the -r flag) and can be removed. *)
 
 let rec expr_s = function
-   Literal(l) -> (match l with Int(l) -> "Literal " ^ string_of_int l | String(l) -> "Literal " ^ l)
+   Literal(l) -> "Literal " ^ string_of_int l
  | Id(s) -> "Id " ^ s
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
@@ -71,7 +67,7 @@ let program_s (vars, funcs) = "([" ^ String.concat ", " vars ^ "],\n" ^
    the AST and can be removed. *)
 
 let rec string_of_expr = function
-    Literal(l) -> (match l with Int(l) -> "Literal " ^ string_of_int l | String(l) -> "Literal " ^ l)
+    Literal(l) -> string_of_int l
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^

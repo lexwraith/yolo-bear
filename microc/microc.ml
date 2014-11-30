@@ -15,10 +15,8 @@ let _ =
   | Ast -> let listing = Ast.string_of_program program
            in print_string listing
   | Interpret -> Interpret.run program
-(*
   | Bytecode -> let listing =
       Bytecode.string_of_prog (Compile.translate program)
     in print_endline listing
   | Compile -> Execute.execute_prog (Compile.translate program)
-	| *)
  

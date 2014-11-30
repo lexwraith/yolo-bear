@@ -1,5 +1,1 @@
-*.c*
-*.out
-*.diff
-scanner.ml
-parser.mli
+mytests/

@@ -1,4 +1,4 @@
-type binst =      (* Binary Instructions *)
+type binst =
     Lit of int    (* Push a literal *)
   | Drp           (* Discard a value *)
   | Bin of Ast.op (* Perform arithmetic on top of stack *)

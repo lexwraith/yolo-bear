@@ -1,15 +1,22 @@
 OBJS = ast.cmo parser.cmo scanner.cmo interpret.cmo bytecode.cmo \
-	 microc.cmo
+	compile.cmo execute.cmo microc.cmo
 
-TESTS = add_matrix add_n_numbers \
-	bubblesort dynprogfibo \
-	even_or_odd fibonacci \
-	stirng_array \
-	helloworld1 helloworld2 helloworld3 helloworld4 helloworld5
+TESTS = arith1 arith2 arith3 arith4 \
+	fib \
+	for1 for2 \
+	func1 func2 func3 func4 func5 \
+	gcd \
+	global1 \
+	hello \
+	if1 if2	if3 if4 if5 \
+	ops1 \
+	var1 var2 var3 var4 \
+	stmts1 \
+	while1
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
-	ast.ml bytecode.ml interpret.ml  microc.ml \
-	$(TESTS:%=tests/test-%.civ) \
+	ast.ml bytecode.ml interpret.ml compile.ml execute.ml microc.ml \
+	$(TESTS:%=tests/test-%.mc) \
 	$(TESTS:%=tests/test-%.out)
 
 microc : $(OBJS)
@@ -44,15 +51,15 @@ ast.cmo:
 ast.cmx: 
 bytecode.cmo: ast.cmo 
 bytecode.cmx: ast.cmx 
-#compile.cmo: bytecode.cmo ast.cmo 
-#compile.cmx: bytecode.cmx ast.cmx 
-#execute.cmo: bytecode.cmo ast.cmo 
-#execute.cmx: bytecode.cmx ast.cmx 
+compile.cmo: bytecode.cmo ast.cmo 
+compile.cmx: bytecode.cmx ast.cmx 
+execute.cmo: bytecode.cmo ast.cmo 
+execute.cmx: bytecode.cmx ast.cmx 
 interpret.cmo: ast.cmo 
 interpret.cmx: ast.cmx 
-microc.cmo: scanner.cmo parser.cmi interpret.cmo \
+microc.cmo: scanner.cmo parser.cmi interpret.cmo execute.cmo compile.cmo \
     bytecode.cmo ast.cmo 
-microc.cmx: scanner.cmx parser.cmx interpret.cmx \
+microc.cmx: scanner.cmx parser.cmx interpret.cmx execute.cmx compile.cmx \
     bytecode.cmx ast.cmx 
 parser.cmo: ast.cmo parser.cmi 
 parser.cmx: ast.cmx parser.cmi 
