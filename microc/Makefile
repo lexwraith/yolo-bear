@@ -44,7 +44,10 @@ ast.cmo:
 ast.cmx: 
 bytecode.cmo: ast.cmo 
 bytecode.cmx: ast.cmx 
-
+#compile.cmo: bytecode.cmo ast.cmo 
+#compile.cmx: bytecode.cmx ast.cmx 
+#execute.cmo: bytecode.cmo ast.cmo 
+#execute.cmx: bytecode.cmx ast.cmx 
 interpret.cmo: ast.cmo 
 interpret.cmx: ast.cmx 
 microc.cmo: scanner.cmo parser.cmi interpret.cmo \
