@@ -1,5 +1,5 @@
 type binst =      (* Binary Instructions *)
-    Lit of Ast.lit    (* Push a literal *)
+    Lit of lit    (* Push a literal *)
   | Drp           (* Discard a value *)
   | Bin of Ast.op (* Perform arithmetic on top of stack *)
   | Lod of int    (* Fetch global variable *)

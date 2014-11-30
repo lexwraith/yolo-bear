@@ -1,5 +1,5 @@
 open Ast
-open Bytecode
+(*open Bytecode*)
 open Ccode
 
 module StringMap = Map.Make(String)
@@ -26,20 +26,29 @@ let string_map_pairs map pairs =
 (* (globals, functions) is from program in microc.ml which in turn
 is the result of the parsing/scanning of a programming file.
 It consists of a variable declarations list and a functions declaration list.*)
-let translate (globals, functions) = 
-   let global_indexes = string_map_pairs StringMap.empty (enum 1 0 globals) in (*Adding provided global variables to global indices*)
-      let built_in_functions = StringMap.add "print" (-1) StringMap.empty in (* Adding default 'print' as a hack *)
-         let function_indexes = string_map_pairs built_in_functions (* Part one : Adding our builtin funcs to our function map *)
-            (enum 1 1 (List.map (fun f -> f.name) functions)) in (* Part two of adding in builtin functions *)
-            let translate env fdecl = (* WHERE THE FUN BEGINS *)
-		(* A bunch of book keeping stuff should be added here *)
-            let rec expr : expr -> cinst list = function
-               Literal(l) -> 
-	       
+let translatec (globals, functions) = 
+  let global_indexes = string_map_pairs StringMap.empty (enum 1 0 globals) in (*Adding provided global variables to global indices*)
+    let built_in_functions = StringMap.add "print" (-1) StringMap.empty in (* Adding default 'print' as a hack *)
+      let function_indexes = string_map_pairs built_in_functions (* Part one : Adding our builtin funcs to our function map *)
+        (enum 1 1 (List.map (fun f -> f.name) functions)) in (* Part two of adding in builtin functions *)
+        let translatec env fdecl = (* WHERE THE FUN BEGINS *)
+          let num_formals = List.length fdecl.formals (* TODO: We don't need this? It's bytecode addresses? *)
+            and num_locals = List.length fdecl.formals
+            and local_offsets = enum 1 1 fdecl.locals
+            and formal_offsets = enum (-1) (-2) fdecl.formals in
+            let env = { env with local_index = string_map_pairs StringMap.empty (local_offsets @ formal_offsets) } in 
+              let rec expr : expr -> cinst list = function
+                Literal(l) -> [Lit l]
+ 	        | Call (fname, actuals) -> (try
+                  (List.concat (List.map expr (List.rev actuals))) @
+                  [Func_Call (StringMap.find fname env.function_index)]
+                  with Not_found -> raise (Failure ("Undefined function " ^ fname)))
+               | Noexpr -> [] in
+              let rec stmt : stmt -> cinst list = function
+                Block sl -> List.concat (List.map stmt sl)
+                | Expr e -> expr e @ [
 
-
-
-(** Translate a program in AST form into a bytecode program.  Throw an
+(* Translate a program in AST form into a bytecode program.  Throw an
     exception if something is wrong, e.g., a reference to an unknown
     variable or function *)
 let translate (globals, functions) =
@@ -55,7 +64,7 @@ let translate (globals, functions) =
   (* Translate a function in AST form into a list of bytecode statements *)
   let translate env fdecl =
     (* Bookkeeping: FP offsets for locals and arguments *)
-    let num_formals = List.length rdecl.formals
+    let num_formals = List.length fdecl.formals
     and num_locals = List.length fdecl.locals
     and local_offsets = enum 1 1 fdecl.locals
     and formal_offsets = enum (-1) (-2) fdecl.formals in
