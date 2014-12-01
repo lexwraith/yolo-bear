@@ -37,16 +37,42 @@ let translatec (globals, functions) =
             and local_offsets = enum 1 1 fdecl.locals
             and formal_offsets = enum (-1) (-2) fdecl.formals in
             let env = { env with local_index = string_map_pairs StringMap.empty (local_offsets @ formal_offsets) } in 
+              (*Expressions go here*)
               let rec expr : expr -> cinst list = function
-                Literal(l) -> [Lit l]
+                Literal(l) -> l
  	        | Call (fname, actuals) -> (try
                   (List.concat (List.map expr (List.rev actuals))) @
                   [Func_Call (StringMap.find fname env.function_index)]
                   with Not_found -> raise (Failure ("Undefined function " ^ fname)))
                | Noexpr -> [] in
-              let rec stmt : stmt -> cinst list = function
-                Block sl -> List.concat (List.map stmt sl)
-                | Expr e -> expr e @ [
+              (*Statements go here*)
+                let rec stmt : stmt -> cinst list = function
+                  Block sl -> List.concat (List.map stmt sl)
+                  in 
+                  [Ent num_locals] @ (* Entry: allocate space for locals *)
+                  stmt (Block fdecl.body) @  (* Body *)
+                 [Lit 0; Rts num_formals] in   (* Default = return 0 *)
+                  let env = { function_index = function_indexes;
+	            global_index = global_indexes;
+                    local_index = StringMap.empty } in
+              (* Code executed to start the program: Jsr main; halt *)
+                    let entry_function = try
+                       [Jsr (StringMap.find "main" function_indexes); Hlt]
+                       with Not_found -> raise (Failure ("no \"main\" function")) in
+             (* Compile the functions *)
+                      let func_bodies = entry_function :: List.map (translate env) functions in
+             (* Calculate function entry points by adding their lengths *)
+                        let (fun_offset_list, _) = List.fold_left
+                          (fun (l,i) f -> (i :: l, (i + List.length f))) ([],0) func_bodies in
+                          let func_offset = Array.of_list (List.rev fun_offset_list) in
+                            { num_globals = List.length globals;
+             (* Concatenate the compiled functions and replace the function
+             indexes in Jsr statements with PC values *)
+                            text = Array.of_list (List.map (function
+	                    Jsr i when i > 0 -> Jsr func_offset.(i)
+                            | _ as s -> s) (List.concat func_bodies))
+                            }
+
 
 (* Translate a program in AST form into a bytecode program.  Throw an
     exception if something is wrong, e.g., a reference to an unknown

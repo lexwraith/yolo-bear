@@ -45,8 +45,8 @@ let run ((vars, funcs) : program) : unit =
       | Binop(e1, op, e2) ->
 	  let v1, env = eval env e1 in
           let v2, env = eval env e2 in
-					let v1 = (match v1 with |Int(v)->v |String(v) -> 0) in
-					let v2 = (match v2 with |Int(v)->v |String(v) -> 0) in
+	    let v1 = (match v1 with |Int(v)-> v |String(v) -> 0) in
+	    let v2 = (match v2 with |Int(v)-> v |String(v) -> 0) in
 	  let boolean i = if i then 1 else 0 in
 	  Int(match op with
 	    Add -> v1 + v2
