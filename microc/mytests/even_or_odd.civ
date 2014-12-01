@@ -1,0 +1,14 @@
+number main()
+{
+   number n;
+ 
+   print("Enter an integer\n");
+   scanf("%d",&n);
+ 
+   if ( n%2 == 0 )
+      print("Even\n");
+   else
+      print("Odd\n");
+ 
+   return 0;
+}
