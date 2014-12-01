@@ -1,15 +1,15 @@
-number main()
+int main()
 {
-   number c, d, sum[2][3];
+   int c, d, sum[2][3];
  
-  number first[2][3] = {{0,1,2},{9,8,7}};
-  number second[2][3] = {{6,5,4},{3,4,5}};
+  int first[2][3] = {{0,1,2},{9,8,7}};
+  int second[2][3] = {{6,5,4},{3,4,5}};
  
    for ( c = 0 ; c < 2 ; c++ )
       for ( d = 0 ; d < 3 ; d++ )
          sum[c][d] = first[c][d] + second[c][d];
  
-   print("Sum of entered matrices:-\n");
+   print("Sum of matrices:-\n");
  
    for ( c = 0 ; c < 2 ; c++ )
    {

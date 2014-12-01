@@ -1,6 +1,6 @@
-number main()
+int main()
 {
-   number n, sum = 0, c, value;
+  int n, sum = 0, c, value;
  
    print("Enter the number of integers you want to add\n");
    scanf("%d", &n);
