@@ -1,0 +1,8 @@
+*#*
+*.cmo
+*.cmx
+*.out
+*.diff
+scanner.ml
+parser.mli
+

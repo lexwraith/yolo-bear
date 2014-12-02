@@ -3,7 +3,7 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE FOR WHILE INT
+%token RETURN IF ELSE FOR WHILE INT VOID
 %token <int> LITERAL
 %token <string> ID
 %token EOF
@@ -47,6 +47,7 @@ vdecl_list:
 
 vdecl:
    INT ID SEMI { $2 }
+   /*INT ID EQ LITERAL SEMI { $2 :: $1 }*/
 
 stmt_list:
     /* nothing */  { [] }
