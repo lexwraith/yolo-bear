@@ -26,18 +26,25 @@ program:
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
 
-fdecl:
+fdecl: /* TODO : Add in function type before ID */
    ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { fname = $1;
 	 formals = $3;
 	 locals = List.rev $6;
 	 body = List.rev $7 } }
+   | 
+     VOID ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+	{ { fname = $2;
+	    formals = $4;
+	    locals = List.rev $7;
+	    body = List.rev $8 } }
+   
 
-formals_opt:
+formals_opt: /* TODO : Add in formal arguments types*/
     /* nothing */ { [] }
   | formal_list   { List.rev $1 }
 
-formal_list:
+formal_list: /* TODO : Same */
     ID                   { [$1] }
   | formal_list COMMA ID { $3 :: $1 }
 
@@ -47,8 +54,8 @@ vdecl_list:
 
 vdecl:
    INT ID SEMI { $2 }
-   /*INT ID EQ LITERAL SEMI { $2 :: $1 }*/
-
+/* TODO:  | INT ID ASSIGN expr SEMI { Assign($2, $4) } */
+	
 stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }

@@ -1,7 +1,7 @@
 clear
 make clean
 make
-./testall.sh | grep -v "failed on"
-rm *.out
+./testall.sh | grep -v "microc failed on"
+./microc -r << tests/test-func1.mc
 make clean
 
