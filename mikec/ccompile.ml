@@ -102,3 +102,5 @@ let translate (globals, functions) =
 	Jsr i when i > 0 -> Jsr func_offset.(i)
       | _ as s -> s) (List.concat func_bodies))
   }
+
+let translate (globals,functions) =  print_string (Ast.program_s (globals,functions))

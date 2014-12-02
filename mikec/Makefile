@@ -1,5 +1,5 @@
 OBJS = ast.cmo parser.cmo scanner.cmo interpret.cmo bytecode.cmo \
-	compile.cmo execute.cmo microc.cmo
+	compile.cmo ccode.cmo ccompile.cmo execute.cmo microc.cmo
 
 TESTS = arith1 arith2 arith3 arith4 \
 	fib \
@@ -16,7 +16,8 @@ TESTS = arith1 arith2 arith3 arith4 \
 	base0 base1 base2 base3
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
-	ast.ml bytecode.ml interpret.ml compile.ml execute.ml microc.ml \
+	ast.ml ccode.ml ccompile.ml \
+	bytecode.ml interpret.ml compile.ml execute.ml microc.ml \
 	$(TESTS:%=tests/test-%.mc) \
 	$(TESTS:%=tests/test-%.out)
 

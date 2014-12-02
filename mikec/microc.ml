@@ -20,4 +20,4 @@ let _ =
       Bytecode.string_of_prog (Compile.translate program)
     in print_endline listing
   | Compile -> Execute.execute_prog (Compile.translate program)
-(*  | ReallyCompile -> Compile.translate program*)
+  | ReallyCompile -> Ccompile.translate program
