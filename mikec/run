@@ -1,7 +1,7 @@
 clear
 make clean
 make
-./testall.sh
+./testall.sh | grep -v "failed on"
 rm *.out
 make clean
 
