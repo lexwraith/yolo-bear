@@ -2,5 +2,3 @@ clear
 make clean
 make
 ./testall.sh | grep -v "microc failed on"
-make clean
-

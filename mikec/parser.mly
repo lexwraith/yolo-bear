@@ -28,19 +28,25 @@ program:
 
 fdecl: /* TODO : Remove no type functions (first one) and clean up */
    ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-     { { fname = $1;
+     { { 
+	 ftype = Dummy;
+	 fname = $1;
 	 formals = $3;
 	 locals = List.rev $6;
 	 body = List.rev $7 } }
    | 
      VOID ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-	{ { fname = $2;
+	{ { 
+	    ftype = Void;
+	    fname = $2;
 	    formals = $4;
 	    locals = List.rev $7;
 	    body = List.rev $8 } }
    | 
      INT ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-	{ { fname = $2;
+	{ { 
+	    ftype = Int;
+	    fname = $2;
 	    formals = $4;
 	    locals = List.rev $7;
 	    body = List.rev $8 } }
