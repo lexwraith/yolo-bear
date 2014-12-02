@@ -26,7 +26,7 @@ program:
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
 
-fdecl: /* TODO : Remove no type functions (first one) */
+fdecl: /* TODO : Remove no type functions (first one) and clean up */
    ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { fname = $1;
 	 formals = $3;
@@ -44,13 +44,12 @@ fdecl: /* TODO : Remove no type functions (first one) */
 	    formals = $4;
 	    locals = List.rev $7;
 	    body = List.rev $8 } }
-   
 
-formals_opt: /* TODO : Add in formal arguments types*/
+formals_opt: 
     /* nothing */ { [] }
   | formal_list   { List.rev $1 }
 
-formal_list: /* TODO : Same */
+formal_list: /* TODO : Add in formal arguments types*/
     ID                   { [$1] }
   | formal_list COMMA ID { $3 :: $1 }
 
@@ -60,7 +59,6 @@ vdecl_list:
 
 vdecl:
    INT ID SEMI { $2 }
-/* TODO:  | INT ID ASSIGN expr SEMI { Assign($2, $4) } */
 	
 stmt_list:
     /* nothing */  { [] }
@@ -94,6 +92,7 @@ expr:
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
   | ID ASSIGN expr   { Assign($1, $3) }
+  | INT ID ASSIGN expr { Assign($2, $4) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
 
