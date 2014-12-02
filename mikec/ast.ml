@@ -18,7 +18,7 @@ type stmt =
   | For of expr * expr * expr * stmt
   | While of expr * stmt
 
-type func_decl = {
+type func_decl = { 
     ftype : type_decl;
     fname : string;
     formals : string list;

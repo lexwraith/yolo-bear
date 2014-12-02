@@ -6,3 +6,4 @@
 scanner.ml
 parser.mli
 testall.log
+*.swp

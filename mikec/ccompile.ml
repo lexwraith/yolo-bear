@@ -19,9 +19,7 @@ let rec enum stride n = function
 let string_map_pairs map pairs =
   List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
 
-(** Translate a program in AST form into a bytecode program.  Throw an
-    exception if something is wrong, e.g., a reference to an unknown
-    variable or function *)
+(* NOTE THAT THIS IS BYTECODE TRANSLATE *)
 let translate (globals, functions) =
 
   (* Allocate "addresses" for each global variable *)
@@ -103,4 +101,91 @@ let translate (globals, functions) =
       | _ as s -> s) (List.concat func_bodies))
   }
 
-let translate (globals,functions) =  print_string (Ast.program_s (globals,functions))
+(* Low-level AST printing, to help debug the structure.  These functions are
+   only for debugging (the -r flag) and can be removed. *)
+
+let rec expr_s = function
+   Literal(l) -> "Literal " ^ string_of_int l
+ | Id(s) -> "Id " ^ s
+ | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
+       (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
+                     Div -> "Div" | Equal -> "Equal" | Neq -> "Neq" |
+                     Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
+                     Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
+ | Assign(v, e) -> "Assign " ^ v ^ " (" ^ expr_s e ^ ")"
+ | Call(f, es) -> "Call " ^ f ^ " [" ^
+        String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
+ | Noexpr -> "Noexpr"
+
+let rec stmt_s = function
+   Block(ss) -> "Block [" ^ String.concat ",\n"
+                             (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss) ^ "]"
+ | Expr(e) -> "Expr (" ^ expr_s e ^ ")"
+ | Return(e) -> "Return (" ^ expr_s e ^ ")"
+ | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
+                                                stmt_s s2 ^ ")"
+ | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ ") (" ^ expr_s e2 ^
+                            ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
+ | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
+
+let func_decl_s f =
+  f.fname ^ "\"\n   formals = [" ^
+  String.concat ", " f.formals ^ "]\n   locals = [" ^
+  String.concat ", " f.locals ^ "]\n   body = ["  ^
+  String.concat ",\n" (List.map stmt_s f.body) ^
+  "]}\n"
+
+
+let rec string_of_expr = function
+    Literal(l) -> string_of_int l
+  | Id(s) -> s
+  | Binop(e1, o, e2) ->
+      string_of_expr e1 ^ " " ^
+      (match o with
+	Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"
+      | Equal -> "==" | Neq -> "!="
+      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
+      string_of_expr e2
+  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
+  | Call(f, el) ->
+      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | Noexpr -> ""
+
+let rec string_of_stmt = function
+    Block(stmts) ->
+      "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
+  | Expr(expr) -> string_of_expr expr ^ ";\n";
+  | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
+  | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
+  | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
+      string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
+  | For(e1, e2, e3, s) ->
+      "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
+      string_of_expr e3  ^ ") " ^ string_of_stmt s
+  | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+
+let string_of_vdecl id = "int " ^ id ^ ";\n"
+
+let string_of_tdecl tdecl = function
+  Dummy -> "Deleteme"
+  | Void -> "void"
+  | Int -> "int"
+  | Char -> "char"
+
+let string_of_fdecl fdecl =
+  fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^
+  String.concat "" (List.map string_of_vdecl fdecl.locals) ^
+  String.concat "" (List.map string_of_stmt fdecl.body) ^
+  "}\n"
+
+let string_of_program (vars, funcs) =
+  String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
+  String.concat "\n" (List.map string_of_fdecl funcs)
+
+(* Temporary function from AST to break down AST tree *)
+let compile_print (globals, functions) = print_string (String.concat "," globals ^ String.concat "\n" (List.map Ast.func_decl_s functions) ^ "" )
+
+let program_s (vars, funcs) = "([" ^ String.concat ", " vars ^ "],\n" ^
+  String.concat "\n" (List.map func_decl_s funcs) ^ ")"
+
+let translate (globals,functions) = print_string( program_s (globals,functions))
