@@ -1,5 +1,13 @@
 { open Parser }
 
+let symbols = ['!' '@' '#' '$' '%' '^' '&' '*' '(' ')' '_' '+' '=' '-' '[' ']'
+              '{' '}' '|' '\\' ':' '"' ';' ''' '<' '>' '?' '.' '/' ' ']
+let ascii = (['a'-'z' 'A'-'Z' '0'-'9']|symbols)
+let numbers = ['0'-'9']
+let alpha = ['a'-'z' 'A'-'Z']
+let alphanumeric = (numbers|alpha)
+let bool = ('0' | '1' | "false" | "true")
+
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
 | "/*"     { comment lexbuf }           (* Comments *)
@@ -26,8 +34,8 @@ rule token = parse
 | "while"  { WHILE }
 | "return" { RETURN }
 | "int"    { INT }
-| ['0'-'9']+ as lxm { LITERAL(int_of_string lxm) }
-| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
+| ['0'-'9']+ as lxm { LITERAL(int_of_string lxm) } (*Scans literal integers*)
+| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Scans IDs*)
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
