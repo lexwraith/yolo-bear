@@ -1,4 +1,6 @@
 make clean
 make
+./testall.sh
+rm *.out
 make clean
 

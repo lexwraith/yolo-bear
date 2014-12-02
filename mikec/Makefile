@@ -12,8 +12,8 @@ TESTS = arith1 arith2 arith3 arith4 \
 	ops1 \
 	var1 var2 var3 var4 \
 	stmts1 \
-	while1
-        base0 base1 base2 base3
+	while1 \
+	base0 base1 base2 base3
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	ast.ml bytecode.ml interpret.ml compile.ml execute.ml microc.ml \
