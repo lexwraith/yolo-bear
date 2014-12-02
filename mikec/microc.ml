@@ -1,4 +1,4 @@
-type action = Raw | Ast | Interpret | Bytecode | Compile
+type action = Raw | Ast | Interpret | Bytecode | Compile | ReallyCompile
 
 let _ =
   let action = if Array.length Sys.argv > 1 then
@@ -6,7 +6,8 @@ let _ =
                               ("-a", Ast);
 			      ("-i", Interpret);
 			      ("-b", Bytecode);
-			      ("-c", Compile) ]
+			      ("-c", Compile);
+			      ("-C", ReallyCompile)]
   else Compile in
   let lexbuf = Lexing.from_channel stdin in
   let program = Parser.program Scanner.token lexbuf in
@@ -19,4 +20,4 @@ let _ =
       Bytecode.string_of_prog (Compile.translate program)
     in print_endline listing
   | Compile -> Execute.execute_prog (Compile.translate program)
- 
+(*  | ReallyCompile -> Compile.translate program*)
