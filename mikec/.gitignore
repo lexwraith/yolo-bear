@@ -5,4 +5,4 @@
 *.diff
 scanner.ml
 parser.mli
-
+testall.log

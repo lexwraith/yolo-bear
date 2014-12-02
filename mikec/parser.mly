@@ -26,7 +26,7 @@ program:
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
 
-fdecl: /* TODO : Add in function type before ID */
+fdecl: /* TODO : Remove no type functions (first one) */
    ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { fname = $1;
 	 formals = $3;
@@ -34,6 +34,12 @@ fdecl: /* TODO : Add in function type before ID */
 	 body = List.rev $7 } }
    | 
      VOID ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+	{ { fname = $2;
+	    formals = $4;
+	    locals = List.rev $7;
+	    body = List.rev $8 } }
+   | 
+     INT ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
 	{ { fname = $2;
 	    formals = $4;
 	    locals = List.rev $7;
