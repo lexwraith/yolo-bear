@@ -1,6 +1,6 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
-type type_decl = Void | Int | Char | Dummy
+type type_decl = Void | Int | Char
 
 type expr =
     Literal of int
@@ -19,7 +19,7 @@ type stmt =
   | While of expr * stmt
 
 type func_decl = { 
-    ftype : type_decl;
+    ftype : string;
     fname : string;
     formals : string list;
     locals : string list;

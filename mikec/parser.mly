@@ -3,7 +3,8 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE FOR WHILE INT VOID
+%token RETURN IF ELSE FOR WHILE
+%token <string> TYPE
 %token <int> LITERAL
 %token <string> ID
 %token EOF
@@ -26,30 +27,15 @@ program:
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
 
-fdecl: /* TODO : Remove no type functions (first one) and clean up */
-   ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-     { { 
-	 ftype = Dummy;
-	 fname = $1;
-	 formals = $3;
-	 locals = List.rev $6;
-	 body = List.rev $7 } }
-   | 
-     VOID ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+fdecl:
+     TYPE ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
 	{ { 
-	    ftype = Void;
+	    ftype = $1;
 	    fname = $2;
 	    formals = $4;
 	    locals = List.rev $7;
 	    body = List.rev $8 } }
-   | 
-     INT ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-	{ { 
-	    ftype = Int;
-	    fname = $2;
-	    formals = $4;
-	    locals = List.rev $7;
-	    body = List.rev $8 } }
+
 
 formals_opt: 
     /* nothing */ { [] }
@@ -64,7 +50,7 @@ vdecl_list:
   | vdecl_list vdecl { $2 :: $1 }
 
 vdecl:
-   INT ID SEMI { $2 }
+   TYPE ID SEMI { $2 }
 	
 stmt_list:
     /* nothing */  { [] }
@@ -98,7 +84,7 @@ expr:
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
   | ID ASSIGN expr   { Assign($1, $3) }
-  | INT ID ASSIGN expr { Assign($2, $4) }
+  | TYPE ID ASSIGN expr { Assign($2, $4) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
 
