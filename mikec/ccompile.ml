@@ -21,7 +21,8 @@ let string_map_pairs map pairs =
 
 let rec expr_s = function
    Literal(l) -> string_of_int l
- | Id(s) -> "Id " ^ s
+ | Id(v) -> "Id " ^ v
+ | NId(t,v) -> t ^ " " ^ v ^ ";"
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
                      Div -> "Div" | Equal -> "Equal" | Neq -> "Neq" |
@@ -51,49 +52,8 @@ let func_decl_s f =
   String.concat "\n" (List.map stmt_s f.body) ^
   "}\n"
 
-
-let rec string_of_expr = function
-    Literal(l) -> string_of_int l
-  | Id(s) -> s
-  | Binop(e1, o, e2) ->
-      string_of_expr e1 ^ " " ^
-      (match o with
-	Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"
-      | Equal -> "==" | Neq -> "!="
-      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
-      string_of_expr e2
-  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-  | Call(f, el) ->
-      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
-  | Noexpr -> ""
-
-let rec string_of_stmt = function
-    Block(stmts) ->
-      "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
-  | Expr(expr) -> string_of_expr expr ^ ";\n";
-  | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
-  | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
-  | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
-      string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
-  | For(e1, e2, e3, s) ->
-      "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
-      string_of_expr e3  ^ ") " ^ string_of_stmt s
-  | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
-
-let string_of_vdecl id = "int " ^ id ^ ";\n"
-
-let string_of_fdecl fdecl =
-  fdecl.ftype ^ " " ^ fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ "){\n" ^
-  String.concat "" (List.map string_of_vdecl fdecl.locals) ^
-  String.concat "" (List.map string_of_stmt fdecl.body) ^
-  "}\n"
-
-let string_of_program (vars, funcs) =
-  String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
-  String.concat "\n" (List.map string_of_fdecl funcs)
-
-
-let program_s (vars, funcs) = String.concat ", " vars ^ "\n" ^
-  String.concat "\n" (List.map func_decl_s funcs) ^ ")"
+let program_s (vars, funcs) = "#include <stdio.h>\n\n" ^ 
+				String.concat ", " vars ^ "\n" ^
+				String.concat "\n" (List.map func_decl_s funcs)
 
 let translate (globals,functions) = print_string( program_s (globals,functions))

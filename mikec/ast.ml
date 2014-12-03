@@ -4,9 +4,10 @@ type type_decl = Void | Int | Char
 type expr =
     Literal of int
   | Id of string
+  | NId of string * string (* Variable declaration*)
   | Binop of expr * op * expr
   | Assign of string * expr
-  | NAssign of string * string * expr
+  | NAssign of string * string * expr (* Variable declaration AND assignment *)
   | Call of string * expr list
   | Noexpr
 
@@ -26,7 +27,7 @@ type func_decl = {
     body : stmt list;
   }
 
-(*TODO*)
+(*TODO: is this needed? *)
 type var_decl = {
     vtype : string;
     vname : string;

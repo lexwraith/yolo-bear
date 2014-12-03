@@ -39,7 +39,6 @@ fdecl:
 	  } 
 	}
 
-
 formals_opt: 
     /* nothing */ { [] }
   | formal_list   { List.rev $1 }
@@ -52,7 +51,7 @@ vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
-vdecl:
+vdecl: /* TODO: What the fuck is this? */
    TYPE ID SEMI { $2 }
 	
 stmt_list:
@@ -60,7 +59,7 @@ stmt_list:
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
-    expr SEMI { Expr($1) }
+  | expr SEMI { Expr($1) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
@@ -75,7 +74,8 @@ expr_opt:
 
 expr:
     LITERAL          { Literal($1) }
-  | ID               { Id($1) }
+  | ID               { Id($1) } /* Apparently I can remove this with no ill effect.*/
+  | TYPE ID          { NId($1,$2) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
