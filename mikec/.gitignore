@@ -5,5 +5,7 @@
 *.diff
 scanner.ml
 parser.mli
+parser.ml
 testall.log
 *.swp
+microc
