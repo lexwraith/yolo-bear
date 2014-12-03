@@ -34,6 +34,7 @@ rule token = parse
 | "for"    { FOR }
 | "while"  { WHILE }
 | "return" { RETURN }
+| "print"  { PRINT }
 | types as lxm { TYPE(lxm) }
 | ['0'-'9']+ as lxm { LITERAL(int_of_string lxm) } (*Scans literal integers*)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Scans IDs*)
