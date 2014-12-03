@@ -1,5 +1,4 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
-
 type type_decl = Void | Int | Char
 
 type expr =
@@ -7,6 +6,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
+  | NAssign of string * string * expr
   | Call of string * expr list
   | Noexpr
 
@@ -25,6 +25,14 @@ type func_decl = {
     locals : string list;
     body : stmt list;
   }
+
+(*TODO*)
+type var_decl = {
+    vtype : string;
+    vname : string;
+  }
+
+
 
 type program = string list * func_decl list
 

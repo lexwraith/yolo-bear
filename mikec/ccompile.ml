@@ -28,6 +28,7 @@ let rec expr_s = function
                      Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
                      Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
+ | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
  | Call(f, es) -> "Call " ^ f ^ " [" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
  | Noexpr -> ""
