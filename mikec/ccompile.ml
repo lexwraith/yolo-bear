@@ -27,16 +27,16 @@ let rec expr_s = function
                      Div -> "Div" | Equal -> "Equal" | Neq -> "Neq" |
                      Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
                      Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
- | Assign(v, e) -> "Assign " ^ v ^ " (" ^ expr_s e ^ ")"
+ | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Call(f, es) -> "Call " ^ f ^ " [" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
- | Noexpr -> "Noexpr"
+ | Noexpr -> ""
 
 let rec stmt_s = function
-   Block(ss) -> "Block [" ^ String.concat ",\n"
-                             (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss) ^ "]"
- | Expr(e) -> "Expr (" ^ expr_s e ^ ")"
- | Return(e) -> "Return (" ^ expr_s e ^ ")"
+   Block(ss) -> String.concat ",\n"
+                              (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss) ^ "]"
+ | Expr(e) -> expr_s e
+ | Return(e) -> "return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
  | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ ") (" ^ expr_s e2 ^
@@ -46,8 +46,8 @@ let rec stmt_s = function
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^
   String.concat "," f.formals ^ "){\n" ^
-  String.concat ", " f.locals ^ " "  ^
-  String.concat ",\n" (List.map stmt_s f.body) ^
+  String.concat "\n " f.locals ^ ";\n"  ^
+  String.concat "\n" (List.map stmt_s f.body) ^
   "}\n"
 
 
@@ -81,9 +81,8 @@ let rec string_of_stmt = function
 
 let string_of_vdecl id = "int " ^ id ^ ";\n"
 
-
 let string_of_fdecl fdecl =
-  fdecl.ftype ^ " " ^ fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^
+  fdecl.ftype ^ " " ^ fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ "){\n" ^
   String.concat "" (List.map string_of_vdecl fdecl.locals) ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
@@ -92,10 +91,8 @@ let string_of_program (vars, funcs) =
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_fdecl funcs)
 
-(* Temporary function from AST to break down AST tree *)
-let compile_print (globals, functions) = print_string (String.concat "," globals ^ String.concat "\n" (List.map Ast.func_decl_s functions) ^ "" )
 
-let program_s (vars, funcs) = "([" ^ String.concat ", " vars ^ "],\n" ^
+let program_s (vars, funcs) = String.concat ", " vars ^ "\n" ^
   String.concat "\n" (List.map func_decl_s funcs) ^ ")"
 
 let translate (globals,functions) = print_string( program_s (globals,functions))

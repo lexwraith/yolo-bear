@@ -1,4 +1,5 @@
 make
+./microc -r < tests/test-base-1.mc
 ./microc -C < tests/test-base-1.mc
 
 ./microc -C < tests/test-base0.mc

@@ -29,12 +29,15 @@ program:
 
 fdecl:
      TYPE ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
-	{ { 
+	{ 
+	  { 
 	    ftype = $1;
 	    fname = $2;
 	    formals = $4;
 	    locals = List.rev $7;
-	    body = List.rev $8 } }
+	    body = List.rev $8 
+	  } 
+	}
 
 
 formals_opt: 
