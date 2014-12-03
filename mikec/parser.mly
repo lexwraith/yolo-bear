@@ -51,8 +51,8 @@ vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
-vdecl: /* TODO: Currently either returns type or ID. something about ordering. */
-   TYPE ID SEMI { $1 }
+vdecl: /* EXCLUSIVELY FOR BEGINNING OF FUNC - Is this part of C99? */
+   TYPE ID SEMI { $2 }
 
 stmt_list:
     /* nothing */  { [] }

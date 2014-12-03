@@ -29,7 +29,7 @@ type func_decl = {
   }
 
 (*TODO: is this needed? *)
-type var_decl = {
+type vdecl = {
     vtype : string;
     vname : string;
   }

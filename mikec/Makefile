@@ -1,19 +1,7 @@
 OBJS = ast.cmo parser.cmo scanner.cmo \
        ccompile.cmo microc.cmo
 
-TESTS = arith1 arith2 arith3 arith4 \
-	fib \
-	for1 for2 \
-	func1 func2 func3 func4 func5 \
-	gcd \
-	global1 \
-	hello \
-	if1 if2	if3 if4 if5 \
-	ops1 \
-	var1 var2 var3 var4 \
-	stmts1 \
-	while1 \
-	base0 base1 base2 base3
+TESTS = base-1 base0 base1 base2 base3
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	ast.ml ccode.ml ccompile.ml \
