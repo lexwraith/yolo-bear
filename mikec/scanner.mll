@@ -37,7 +37,7 @@ rule token = parse
 | "printf"  { PRINT }
 | "\""     { DQUOTE }
 | types as lxm { TYPE(lxm) }
-| ['0'-'9']+ as lxm { LITERAL(int_of_string lxm) } (*Scans literal integers*)
+| ['0'-'9']+ as lxm { ILITERAL(int_of_string lxm) } (*Scans literal integers*)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Scans IDs*)
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }

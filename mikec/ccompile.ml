@@ -1,5 +1,4 @@
 open Ast
-open Bytecode
 
 module StringMap = Map.Make(String)
 
@@ -20,7 +19,7 @@ let string_map_pairs map pairs =
   List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
 
 let rec expr_s = function
-   Literal(l) -> string_of_int l
+   ILiteral(l) -> string_of_int l
  | Id(v) -> "Id " ^ v
  | NId(t,v) -> t ^ " " ^ v ^ ";"
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
