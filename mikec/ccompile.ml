@@ -38,6 +38,7 @@ let rec stmt_s = function
    Block(ss) -> String.concat ",\n"
                               (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss) ^ "]"
  | Expr(e) -> expr_s e
+ | Print(s) -> "printf(" ^ expr_s s ^ ");\n"
  | Return(e) -> "return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"

@@ -1,6 +1,6 @@
 %{ open Ast %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA DQUOTE
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
 %token RETURN IF ELSE FOR WHILE
@@ -60,6 +60,7 @@ stmt_list:
 
 stmt:
   | expr SEMI { Expr($1) }
+  | PRINT LPAREN expr RPAREN SEMI { Print($3) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
@@ -75,7 +76,6 @@ expr_opt:
 expr:
     LITERAL          { Literal($1) }
   | ID               { Id($1) } /* Apparently I can remove this with no ill effect.*/
-  | TYPE ID          { NId($1,$2) } /* TODO: remove this? See vdecl */
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
