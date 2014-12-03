@@ -1,6 +1,11 @@
 make
+./microc -C < tests/test-base-1.mc
+
 ./microc -C < tests/test-base0.mc
+
 ./microc -C < tests/test-base1.mc
+
 ./microc -C < tests/test-base2.mc
+
 ./microc -C < tests/test-base3.mc
 

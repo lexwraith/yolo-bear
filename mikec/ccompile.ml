@@ -20,7 +20,7 @@ let string_map_pairs map pairs =
   List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
 
 let rec expr_s = function
-   Literal(l) -> "Literal " ^ string_of_int l
+   Literal(l) -> string_of_int l
  | Id(s) -> "Id " ^ s
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
@@ -44,11 +44,11 @@ let rec stmt_s = function
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
 
 let func_decl_s f =
-  f.fname ^ "\"\n   formals = [" ^
-  String.concat ", " f.formals ^ "]\n   locals = [" ^
-  String.concat ", " f.locals ^ "]\n   body = ["  ^
+  f.ftype ^ " " ^ f.fname ^ "(" ^
+  String.concat "," f.formals ^ "){\n" ^
+  String.concat ", " f.locals ^ " "  ^
   String.concat ",\n" (List.map stmt_s f.body) ^
-  "]}\n"
+  "}\n"
 
 
 let rec string_of_expr = function
@@ -83,7 +83,7 @@ let string_of_vdecl id = "int " ^ id ^ ";\n"
 
 
 let string_of_fdecl fdecl =
-  fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^
+  fdecl.ftype ^ " " ^ fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^
   String.concat "" (List.map string_of_vdecl fdecl.locals) ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
