@@ -1,3 +1,20 @@
+###TODO 12/4/14###
+Eli -
+* Create 25 test cases for core C to fully flesh out language
+* Create 10 test cases with broken semantics
+* Create another 10 in a separate folder that enables references without pointers 
+
+Prateek -
+* Remake testall.sh into a one-line run that microc -C all our test cases, gcc's it to an appropriate outfile, and runs the outfile, and compares it against the test case expected output
+
+###TODO 12/3/14###
+* Remove vdecl completely - Not part of C99 standard
+* Add in booleans
+* Resolve grammar conflicts
+* Update AST with new tokens
+* Add [] symbol with array obj -> expr ^ ';', obj? etc.
+
+
 ###12/2/14###
 Mike - 	
 * Code generation up and running!
