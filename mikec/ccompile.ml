@@ -47,12 +47,12 @@ let rec stmt_s = function
 
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^
-  String.concat "," f.formals ^ "){\n" ^
+  String.concat "," (List.map (fun (a,b) -> a ^ " " ^ b) f.formals) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body) ^
   "}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n\n" ^ 
-				String.concat ", " vars ^ "\n" ^
+				String.concat ", " (List.map (fun (a,b) -> a ^ " " ^ b) vars) ^ "\n" ^
 				String.concat "\n" (List.map func_decl_s funcs)
 
 let translate (globals,functions) = print_string( program_s (globals,functions))

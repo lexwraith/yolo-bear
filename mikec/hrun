@@ -1,19 +1,24 @@
 make clean
 clear
 make
-echo Base -1
+echo Just main, no body
 ./microc -C < tests/base/test-base-1.mc
-echo Base 0
+echo Uninitialized var in body
 ./microc -C < tests/base/test-base0.mc
-echo Base 1
+echo Assigning value to uninitialized var
 ./microc -C < tests/base/test-base1.mc
-echo Base 2
+echo Initializing and assigning to var
 ./microc -C < tests/base/test-base2.mc
-echo Base 3
+echo Return statement
 ./microc -C < tests/base/test-base3.mc
-echo Print Hello World
-./microc -C < tests/ps/1.mc
-echo Print Integer
-./microc -C < tests/ps/2.mc
-echo Print Sum of Integers
-./microc -C < tests/ps/3.mc
+echo Main has formal argument with type
+./microc -C < tests/base/test-base4.mc
+echo Global variables
+./microc -C < tests/base/test-base5.mc
+
+#echo Print Hello World
+#./microc -C < tests/ps/1.mc
+#echo Print Integer
+#./microc -C < tests/ps/2.mc
+#echo Print Sum of Integers
+#./microc -C < tests/ps/3.mc

@@ -22,9 +22,14 @@
 
 %%
 
+/* 
+program consists of two lists:
+1 - global vars of string * string list
+2 - func_decls list 
+*/
 program:
    /* nothing */ { [], [] }
- | program vdecl { ($2 :: fst $1), snd $1 }
+ | program vdecl { ($2 :: fst $1), snd $1 } 
  | program fdecl { fst $1, ($2 :: snd $1) }
 
 fdecl:
@@ -38,20 +43,21 @@ fdecl:
 	  } 
 	}
 
+/* Note that the following two fall under fdecl */
 formals_opt: 
     /* nothing */ { [] }
   | formal_list   { List.rev $1 }
 
-formal_list: /* TODO : Add in formal arguments types*/
-    ID                   { [$1] }
-  | formal_list COMMA ID { $3 :: $1 }
+formal_list:
+    TYPE ID                   { [($1,$2)] }
+  | formal_list COMMA TYPE ID { ($3,$4) :: $1 }
 
 vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
-vdecl: /* EXCLUSIVELY FOR BEGINNING OF FUNC - Is this part of C99? */
-   TYPE ID SEMI { $2 }
+vdecl:
+   TYPE ID SEMI { ($1,$2) }
 
 stmt_list:
     /* nothing */  { [] }
@@ -75,7 +81,7 @@ expr_opt:
 
 expr:
     ILITERAL          { ILiteral($1) }
-  | ID               { Id($1) } /* Apparently I can remove this with no ill effect.*/
+  | ID               { Id($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
