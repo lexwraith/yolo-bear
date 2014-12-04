@@ -4,7 +4,7 @@
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ
 %token RETURN IF ELSE FOR WHILE
-%token <string> TYPE
+%token <string> TYPE STR CHR
 %token <int> ILITERAL
 %token <string> ID
 %token EOF PRINT
@@ -83,7 +83,9 @@ expr_opt:
   | expr          { $1 }
 
 expr:
-    ILITERAL          { ILiteral($1) }
+    ILITERAL         { ILiteral($1) }
+  | STR              { String($1)}
+  | CHR             { Char($1)}
   | ID               { Id($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }

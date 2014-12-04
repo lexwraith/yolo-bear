@@ -2,6 +2,8 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
 type expr =
     ILiteral of int
+  | String of string
+  | Char of string
   | Id of string
   | Binop of expr * op * expr
   | Assign of string * expr
@@ -36,6 +38,8 @@ let tup_of_strstr = function (a,b) -> a ^ b
 
 let rec expr_s = function
    ILiteral(l) -> "Literal " ^ string_of_int l
+  | String(s) -> "String " ^ s
+  | Char(c) -> "Char" ^ c
  | Id(s) -> "Id " ^ s
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
@@ -76,6 +80,8 @@ let program_s (vars, funcs) = "([" ^ String.concat ", " (List.map tup_of_strstr 
 
 let rec string_of_expr = function
     ILiteral(l) -> string_of_int l
+  | String(s) -> s
+  | Char(c) -> c
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^
