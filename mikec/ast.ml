@@ -1,10 +1,8 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
-type type_decl = Void | Int | Char
 
 type expr =
     ILiteral of int
   | Id of string
-  | NId of string * string (* Variable declaration*)
   | Binop of expr * op * expr
   | Assign of string * expr
   | NAssign of string * string * expr (* Variable declaration AND assignment *)
@@ -28,14 +26,6 @@ type func_decl = {
     body : stmt list;
   }
 
-(*TODO: is this needed? *)
-type vdecl = {
-    vtype : string;
-    vname : string;
-  }
-
-
-
 type program = string list * func_decl list
 
 (* Low-level AST printing, to help debug the structure.  These functions are
@@ -50,6 +40,7 @@ let rec expr_s = function
                      Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
                      Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
  | Assign(v, e) -> "Assign " ^ v ^ " (" ^ expr_s e ^ ")"
+ | NAssign(t,v,e) -> "New Assign " ^ t ^ v ^ " (" ^ expr_s e ^ ")"
  | Call(f, es) -> "Call " ^ f ^ " [" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
  | Noexpr -> "Noexpr"
@@ -65,6 +56,7 @@ let rec stmt_s = function
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v
+ | Print(s) -> "Print " ^ "\"Some string here\"" (* TODO: UNFUCK THIS *)
 
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
@@ -90,6 +82,7 @@ let rec string_of_expr = function
       | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
       string_of_expr e2
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
+  | NAssign(t, v, e) -> t ^ v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
@@ -106,9 +99,10 @@ let rec string_of_stmt = function
       "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
- | VDecl(t,v) -> t ^ " " ^ v
+  | VDecl(t,v) -> t ^ " " ^ v
+  | Print(s) -> "printf(\"%d\",SOMETHINGGOESHERE);" (* TODO: Unfuck this *)
 
-let string_of_vdecl id = "int " ^ id ^ ";\n"
+let string_of_vdecl id = "int " ^ id ^ ";\n" (* TODO: This is obsolete*)
 
 let string_of_fdecl fdecl =
   fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^

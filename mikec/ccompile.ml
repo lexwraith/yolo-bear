@@ -21,7 +21,6 @@ let string_map_pairs map pairs =
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
  | Id(v) -> "Id " ^ v
- | NId(t,v) -> t ^ " " ^ v ^ ";"
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
                      Div -> "Div" | Equal -> "Equal" | Neq -> "Neq" |
