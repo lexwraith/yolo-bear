@@ -97,8 +97,8 @@ expr:
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
-  | ID ASSIGN expr   { Assign($1, $3) }
-  | TYPE ID ASSIGN expr { NAssign($1, $2, $4) }
+  | ID ASSIGN expr   { Assign($1, $3) } /* TODO: This is a statement.*/
+  | TYPE ID ASSIGN expr { NAssign($1, $2, $4) } /* TODO: So is this.*/
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
 
