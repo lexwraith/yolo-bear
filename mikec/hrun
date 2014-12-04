@@ -2,12 +2,12 @@ make clean
 clear
 make
 ./microc -C < tests/test-base-1.mc
-
+echo -------------------------------
 ./microc -C < tests/test-base0.mc
-
+echo -------------------------------
 ./microc -C < tests/test-base1.mc
-
+echo -------------------------------
 ./microc -C < tests/test-base2.mc
-
+echo -------------------------------
 ./microc -C < tests/test-base3.mc
 

@@ -19,12 +19,12 @@ type stmt =
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | While of expr * stmt
+  | VDecl of string * string
 
 type func_decl = { 
     ftype : string;
     fname : string;
     formals : string list;
-    locals : string list;
     body : stmt list;
   }
 
@@ -64,11 +64,11 @@ let rec stmt_s = function
  | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ ") (" ^ expr_s e2 ^
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
+ | VDecl(t,v) -> t ^ " " ^ v
 
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
-  String.concat ", " f.formals ^ "]\n   locals = [" ^
-  String.concat ", " f.locals ^ "]\n   body = ["  ^
+  String.concat ", " f.formals ^ "]\n   body = ["  ^
   String.concat ",\n" (List.map stmt_s f.body) ^
   "]}\n"
 
@@ -106,12 +106,12 @@ let rec string_of_stmt = function
       "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+ | VDecl(t,v) -> t ^ " " ^ v
 
 let string_of_vdecl id = "int " ^ id ^ ";\n"
 
 let string_of_fdecl fdecl =
   fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^
-  String.concat "" (List.map string_of_vdecl fdecl.locals) ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
 

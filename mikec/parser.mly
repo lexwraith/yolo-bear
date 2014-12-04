@@ -28,14 +28,13 @@ program:
  | program fdecl { fst $1, ($2 :: snd $1) }
 
 fdecl:
-     TYPE ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+     TYPE ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
 	{ 
 	  { 
 	    ftype = $1;
 	    fname = $2;
 	    formals = $4;
-	    locals = List.rev $7;
-	    body = List.rev $8 
+	    body = List.rev $7 
 	  } 
 	}
 
@@ -60,6 +59,7 @@ stmt_list:
 
 stmt:
   | expr SEMI { Expr($1) }
+  | TYPE ID SEMI { VDecl($1,$2) }
   | PRINT LPAREN expr RPAREN SEMI { Print($3) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }

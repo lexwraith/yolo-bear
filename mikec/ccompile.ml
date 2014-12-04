@@ -28,7 +28,7 @@ let rec expr_s = function
                      Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
                      Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
- | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
+ | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";\n"
  | Call(f, es) -> "Call " ^ f ^ " [" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
  | Noexpr -> ""
@@ -44,11 +44,11 @@ let rec stmt_s = function
  | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ ") (" ^ expr_s e2 ^
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
+ | VDecl(t,v) -> t ^ " " ^ v ^ ";"
 
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^
   String.concat "," f.formals ^ "){\n" ^
-  String.concat "\n " f.locals ^ ";\n"  ^
   String.concat "\n" (List.map stmt_s f.body) ^
   "}\n"
 
