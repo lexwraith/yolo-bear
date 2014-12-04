@@ -52,11 +52,13 @@ formal_list:
     TYPE ID                   { [($1,$2)] }
   | formal_list COMMA TYPE ID { ($3,$4) :: $1 }
 
+/* Next two exclusively for file/global scope declarations */
 vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
 /* Note that in C, no statements or expressiosn allowed in file scope */
+/* TODO: Make declaration only? Change program first element to stringstringstring */
 vdecl:
    TYPE ID SEMI { ($1,$2) } 
 
