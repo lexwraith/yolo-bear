@@ -24,6 +24,7 @@ Prateek -
 Mike -
 * Var Declaration can occur anywhere, e.g. int x; now works like c99 standard
 * All grammar rules accounted for with two conflicts
+* Formal arguments take type now
 * Print accounted for
 * Added three print test cases in tests/ps/
 * Global variable INITIALIZATION in (seems useless)
