@@ -9,4 +9,12 @@
  *       Operations checking, e.g. string + int
  *       Return type check
  *       *)
+
+(* globals consists of string*string *)
+(* functions is a list of structs with 4 fields:
+	ftype
+	fname
+	arguments (refer to ast for name)
+	body (which is really another program in itself)
+	*)
 let check (globals,functions) = function

@@ -1,10 +1,21 @@
+#C Without Pointers...And References?#
+
+
+
+Mikhail/Yuchen - Start working on semantic analyzer.
+
+I've left notes in there with what needs to be done, and what your input is. Refer to ast.ml for help.
+
+After the tests are made I'm going to spend most of my time fixing up the grammar so we pass all our cases.
+
+
 ###TODO 12/4/14###
 Eli -
-* Confirm that only variable declaration is allowed in file scope
+* Question -> Only variable declaration is allowed in file scope?
+* Create test cases based off of this README regarding the UNTESTED stuff
 * Create 25 test cases for core C to fully flesh out language
 * Create 10 test cases with broken semantics
 * Create another 10 in a separate folder that enables references without pointers 
-
 
 Prateek -
 * Remake testall.sh into a one-line run that microc -C all our test cases, gcc's it to an appropriate outfile, and runs the outfile, and compares it against the test case expected output
