@@ -10,16 +10,14 @@ Prateek -
 * Remake testall.sh into a one-line run that microc -C all our test cases, gcc's it to an appropriate outfile, and runs the outfile, and compares it against the test case expected output
 
 ###12/3/14###
+Mike -
 * Var Declaration can occur anywhere, e.g. int x; now works like c99 standard
 * All grammar rules accounted for with two conflicts
 * Print accounted for
 * Added three print test cases in tests/ps/
 * Global variable INITIALIZATION in (seems useless)
-
-TODO:
-* Add in booleans
-* Add [] symbol with array obj -> expr ^ ';', obj? etc.
-
+* UNTESTED - Strings added to lexer/parser/compiler
+* UNTESTED - Chars added, same as strings
 
 ###12/2/14###
 Mike - 	
