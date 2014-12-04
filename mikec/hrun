@@ -1,13 +1,19 @@
 make clean
 clear
 make
-./microc -C < tests/test-base-1.mc
-echo -------------------------------
-./microc -C < tests/test-base0.mc
-echo -------------------------------
-./microc -C < tests/test-base1.mc
-echo -------------------------------
-./microc -C < tests/test-base2.mc
-echo -------------------------------
-./microc -C < tests/test-base3.mc
-
+echo Base -1
+./microc -C < tests/base/test-base-1.mc
+echo Base 0
+./microc -C < tests/base/test-base0.mc
+echo Base 1
+./microc -C < tests/base/test-base1.mc
+echo Base 2
+./microc -C < tests/base/test-base2.mc
+echo Base 3
+./microc -C < tests/base/test-base3.mc
+echo Print Hello World
+./microc -C < tests/ps/1.mc
+echo Print Integer
+./microc -C < tests/ps/2.mc
+echo Print Sum of Integers
+./microc -C < tests/ps/3.mc
