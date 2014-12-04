@@ -1,6 +1,4 @@
 int a;
-int b = 3;
-a = 5;
 
 int main(int g){
   int a;

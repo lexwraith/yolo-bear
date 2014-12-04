@@ -56,8 +56,9 @@ vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
+/* Note that in C, no statements or expressiosn allowed in file scope */
 vdecl:
-   TYPE ID SEMI { ($1,$2) }
+   TYPE ID SEMI { ($1,$2) } 
 
 stmt_list:
     /* nothing */  { [] }
