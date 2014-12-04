@@ -102,7 +102,7 @@ let rec string_of_stmt = function
   | VDecl(t,v) -> t ^ " " ^ v
   | Print(s) -> "printf(\"%d\",SOMETHINGGOESHERE);" (* TODO: Unfuck this *)
 
-let string_of_vdecl id = "int " ^ id ^ ";\n" (* TODO: This is obsolete*)
+let string_of_vdecl id = "int " ^ id ^ ";\n" (* TODO - global declarations?*)
 
 let string_of_fdecl fdecl =
   fdecl.fname ^ "(" ^ String.concat ", " fdecl.formals ^ ")\n{\n" ^
