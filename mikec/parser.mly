@@ -60,7 +60,8 @@ vdecl_list:
 /* Note that in C, no statements or expressiosn allowed in file scope */
 /* TODO: Make declaration only? Change program first element to stringstringstring */
 vdecl:
-   TYPE ID SEMI { ($1,$2) } 
+    TYPE ID ASSIGN ILITERAL SEMI { ($1,$2, string_of_int $4) }
+  | TYPE ID ASSIGN STR SEMI { ($1, $2, $4) }
 
 stmt_list:
     /* nothing */  { [] }
@@ -87,9 +88,7 @@ expr_opt:
 /* Resolve into something (no side effects) */
 
 expr:
-    ILITERAL         { ILiteral($1) }
-  | STR              { String($1) }
-  | CHR              { Char($1) }
+  literals           { $1 }
   | ID               { Id($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
@@ -104,6 +103,12 @@ expr:
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
   | ID ASSIGN expr { Assign($1, $3) } /* For chained assignments */
+
+literals:
+    ILITERAL         { ILiteral($1) }
+  | STR              { String($1) }
+  | CHR              { Char($1) }
+
 
 actuals_opt:
     /* nothing */ { [] }

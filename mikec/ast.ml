@@ -32,11 +32,11 @@ type func_decl = {
     body : stmt list;
   }
 
-type program = (string * string) list * func_decl list
+type program = (string * string * string) list * func_decl list
 
 (* Custom printing tools because Ocaml *)
-let tup_of_strstr = function (a,b) -> a ^ b
-
+let strstr = function (a,b) -> a ^ b
+let strstrstr = function (a,b,c) -> a ^ b ^ c
 (* Low-level AST printing, to help debug the structure.  These functions are
    only for debugging (the -r flag) and can be removed. *)
 
@@ -71,11 +71,11 @@ let rec stmt_s = function
  
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
-  String.concat ", " (List.map tup_of_strstr f.formals) ^ "]\n   body = ["  ^
+  String.concat ", " (List.map strstr f.formals) ^ "]\n   body = ["  ^
   String.concat ",\n" (List.map stmt_s f.body) ^
   "]}\n"
 
-let program_s (vars, funcs) = "([" ^ String.concat ", " (List.map tup_of_strstr vars) ^ "],\n" ^
+let program_s (vars, funcs) = "([" ^ String.concat ", " (List.map strstrstr vars) ^ "],\n" ^
   String.concat "\n" (List.map func_decl_s funcs) ^ ")"
 
 (* "Pretty printed" version of the AST, meant to generate a MicroC program
@@ -116,11 +116,11 @@ let rec string_of_stmt = function
   | NAssign(t, v, e) -> t ^ v ^ " = " ^ string_of_expr e
 
 let string_of_fdecl fdecl =
-  fdecl.fname ^ "(" ^ String.concat ", " (List.map tup_of_strstr fdecl.formals) ^ ")\n{\n" ^
+  fdecl.fname ^ "(" ^ String.concat ", " (List.map strstr fdecl.formals) ^ ")\n{\n" ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
 
 let string_of_program (vars, funcs) =
-  String.concat "" (List.map tup_of_strstr vars) ^ "\n" ^
+  String.concat "" (List.map strstrstr vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_fdecl funcs)
 

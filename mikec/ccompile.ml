@@ -18,6 +18,9 @@ let rec enum stride n = function
 let string_map_pairs map pairs =
   List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
 
+let strstr = function (a,b) -> a ^ b
+let strstrstr = function (a,b,c) -> a ^ b ^ c
+
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
  | String(s) -> s
@@ -49,12 +52,12 @@ let rec stmt_s = function
 
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^
-  String.concat "," (List.map (fun (a,b) -> a ^ " " ^ b) f.formals) ^ "){\n" ^
+  String.concat "," (List.map strstr f.formals) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body) ^
   "}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n\n" ^ 
-				String.concat ", " (List.map (fun (a,b) -> a ^ " " ^ b) vars) ^ "\n" ^
+				String.concat ", " (List.map strstrstr vars) ^ "\n" ^
 				String.concat "\n" (List.map func_decl_s funcs)
 
 let translate (globals,functions) = print_string( program_s (globals,functions))
