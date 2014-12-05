@@ -71,7 +71,7 @@ stmt_list:
 stmt:
   | expr SEMI { Expr($1) } /* TODO: This should never happen */
   | TYPE ID SEMI { VDecl($1,$2) }
-  | PRINT LPAREN expr RPAREN SEMI { Print($3) }
+  | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
@@ -109,6 +109,10 @@ literals:
   | STR              { String($1) }
   | CHR              { Char($1) }
 
+strliterals:
+    ILITERAL         {string_of_int $1}
+  | STR              { $1 }
+  | CHR              { $1 }
 
 actuals_opt:
     /* nothing */ { [] }

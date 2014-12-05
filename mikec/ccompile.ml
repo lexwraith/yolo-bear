@@ -33,15 +33,15 @@ let rec expr_s = function
                      Less -> " < " | Leq -> " <= " | Greater -> " > " |
                      Geq -> " >= ") ^ expr_s e2  
  | Call(f, es) -> f ^ "(" ^
-        String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
+        String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
 
 let rec stmt_s = function
    Block(ss) -> String.concat ",\n"
-                              (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss) ^ "]"
+                              (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss)
  | Expr(e) -> expr_s e
- | Print(s) -> "printf(" ^ expr_s s ^ ");\n"
+ | Print(s) -> "printf(" ^ s ^ ");"
  | Return(e) -> "return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
@@ -49,13 +49,12 @@ let rec stmt_s = function
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v ^ ";"
- | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";\n"
+ | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
 
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^
   String.concat "," (List.map strstr f.formals) ^ "){\n" ^
-  String.concat "\n" (List.map stmt_s f.body) ^
-  "}\n"
+  String.concat "\n" (List.map stmt_s f.body) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n\n" ^ 
 				String.concat ", " (List.map strstrstr vars) ^ "\n" ^
