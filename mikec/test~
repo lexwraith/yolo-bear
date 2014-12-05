@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+import os
+import glob
+
+if __name__ == "__main__":
+names=[]
+
+for file in glob.glob("*.c"):
+	name = file.split('.')
+	names.append(name[0])
+
+for i in names:
+	os.system("./microc -C <" + str(i) + ".mc >" +str(i) + ".c")
+for i in names:
+	os.system("gcc -v -g3 -o3 " + str(i) + ".c -o " + str(i) + ".out")
+for i in names:
+	os.system("./" +str(i)+".out >"+str(i)+"_gcc.txt")
+for i in names:
+	os.system("diff -b "+str(i)+"_gcc.txt "+str(i)+".txt > "+str(i)+"_diff.txt")
+
+

@@ -1,32 +1,37 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
-* TYPE ID+
+* PENDING VJ - Array TOKENS, due to situations like i[][].
+* TYPE ID+ (for declaration chaining)
 * Chained variable declarations
-* Arrays
-* Addresses for reference passing?
-* {} symbols for array declaration
-* sizeof - Treat as builtin function
+* {} symbols for array declaration - Use nesting strategy
+* PENDING ELI - sizeof/malloc - Treat as builtin function
+
+Prateek -
+* Implement argparse with flags to target directors at command line e.g. test /test/optional
+* More test cases
+* Conslidate test cases
+* 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+
+Eli -
+* Write a full implementation plan of an idea of how we're going to go pointerless
 
 ###12/4/14###
 Mike -
-* UNTESTED - Added in array optionals that come after ID Token
+* IN PROGRESS - Added in array optionals that come after ID Token
 * Adjusted TYPE ID ASSIGN expr to statements. CONSIDER MOVING BACK TO EXPR FOR CHAINED.
 * Global declarations are now ALWAYS TYPE ID ASSIGN LITERAL.
 * Arithmetic operations working as expected
 * UNTESTED - float literals - currently viewed as strings
 * UNTESTED/OPTIONAL - Added break,const,continue,extern,float,static 
 * UNTESTED - Added increment/decrement, NOT ADDED TO GRAMMAR YET
+* More test cases
 
 Eli -
-* Question -> Only variable declaration is allowed in file scope?
-* Create test cases based off of this README regarding the UNTESTED stuff
-* Create 25 test cases for core C to fully flesh out language
-* Create 10 test cases with broken semantics
-* Create another 10 in a separate folder that enables references without pointers 
+* Created more in-depth test cases 
 
 Prateek -
-* Remake testall.sh into a one-line run that microc -C all our test cases, gcc's it to an appropriate outfile, and runs the outfile, and compares it against the test case expected output
+* Added python test script
 
 ###12/3/14###
 Mike -
