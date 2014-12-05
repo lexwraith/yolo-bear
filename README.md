@@ -9,7 +9,12 @@ I've left notes in there with what needs to be done, and what your input is. Ref
 After the tests are made I'm going to spend most of my time fixing up the grammar so we pass all our cases.
 
 
-###TODO 12/4/14###
+###12/4/14###
+Mike -
+* UNTESTED - Added in array optionals that come after ID Token
+* Adjusted TYPE ID ASSIGN expr to statements. CONSIDER MOVING BACK TO EXPR FOR CHAINED.
+
+
 Eli -
 * Question -> Only variable declaration is allowed in file scope?
 * Create test cases based off of this README regarding the UNTESTED stuff
