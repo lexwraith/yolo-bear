@@ -22,16 +22,15 @@ let rec expr_s = function
    ILiteral(l) -> string_of_int l
  | String(s) -> s
  | Char(c) -> c 
- | Id(v) -> "Id " ^ v
- | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
-       (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
-                     Div -> "Div" | Equal -> "Equal" | Neq -> "Neq" |
-                     Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
-                     Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
- | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
- | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";\n"
- | Call(f, es) -> "Call " ^ f ^ " [" ^
+ | Id(v) ->  v
+ | Binop(e1, o, e2) -> expr_s e1 ^ 
+       (match o with Add -> " + " | Sub -> " - " | Mult -> " * " |
+                     Div -> " / " | Equal -> " == " | Neq -> " != " |
+                     Less -> " < " | Leq -> " <= " | Greater -> " > " |
+                     Geq -> " >= " ^ expr_s e2 ) 
+ | Call(f, es) -> f ^ "(" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
+ | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
 
 let rec stmt_s = function
@@ -46,6 +45,7 @@ let rec stmt_s = function
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v ^ ";"
+ | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";\n"
 
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^
