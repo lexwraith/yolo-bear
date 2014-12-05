@@ -1,19 +1,22 @@
 #C Without Pointers...And References?#
 
-
-
-Mikhail/Yuchen - Start working on semantic analyzer.
-
-I've left notes in there with what needs to be done, and what your input is. Refer to ast.ml for help.
-
-After the tests are made I'm going to spend most of my time fixing up the grammar so we pass all our cases.
-
+##TODO:##
+* TYPE ID+
+* Chained variable declarations
+* Arrays
+* Addresses for reference passing?
+* {} symbols for array declaration
+* sizeof - Treat as builtin function
 
 ###12/4/14###
 Mike -
 * UNTESTED - Added in array optionals that come after ID Token
 * Adjusted TYPE ID ASSIGN expr to statements. CONSIDER MOVING BACK TO EXPR FOR CHAINED.
 * Global declarations are now ALWAYS TYPE ID ASSIGN LITERAL.
+* Arithmetic operations working as expected
+* UNTESTED - float literals - currently viewed as strings
+* UNTESTED/OPTIONAL - Added break,const,continue,extern,float,static 
+* UNTESTED - Added increment/decrement, NOT ADDED TO GRAMMAR YET
 
 Eli -
 * Question -> Only variable declaration is allowed in file scope?
@@ -40,7 +43,7 @@ Mike -
 Mike - 	
 * Code generation up and running!
 * Basic formatting to do basic C code up.
-* UNTESTED - Added print statement to scanner and grammar (same as return)
+* UNTESTED - Added print statement to scanner and grammar
 * UNTESTED - Differentiated new variable declaration AND assignment
 * Removed all old code e.g. bytecode/compile (now ccompile), etc.
 * Removed all old test cases and modified Makefile for new environment
