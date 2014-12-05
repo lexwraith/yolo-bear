@@ -50,6 +50,7 @@ let rec stmt_s = function
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v ^ ";"
  | NAssign(t,v,e) -> t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
+ | Arr(t,v,l) -> t ^ " " ^ v ^ String.concat "-" (List.map (fun s-> string_of_int s) l) ^ ";"
 
 let func_decl_s f =
   f.ftype ^ " " ^ f.fname ^ "(" ^

@@ -4,9 +4,9 @@
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ 
 %token RETURN IF ELSE FOR WHILE
-%token <string> TYPE STR CHR
+%token BREAK CONST CONTINUE EXTERN STATIC DECR INCR
+%token <string> TYPE STR CHR ID FLITERAL
 %token <int> ILITERAL
-%token <string> ID
 %token EOF PRINT
 
 %nonassoc NOELSE
@@ -71,6 +71,7 @@ stmt_list:
 stmt:
   | expr SEMI { Expr($1) } /* TODO: This should never happen */
   | TYPE ID SEMI { VDecl($1,$2) }
+  | TYPE ID brackets_list { Arr($1,$2, List.rev $3) } 
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -90,6 +91,7 @@ expr_opt:
 expr:
   literals           { $1 }
   | ID               { Id($1) }
+  | FLITERAL         { Float($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -122,6 +124,12 @@ actuals_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
 
-array_opt:
-    /* No array*/ { [] }
-  | LBRAC ILITERAL RBRAC array_opt { [] } 
+/* Separate type for hopefully easier semantic checking */
+brackets_list:
+   LBRAC ILITERAL RBRAC { [$2] }
+  | LBRAC ILITERAL RBRAC brackets_list { $2::$4 }
+
+/* Brace declarations are nested 
+nested_braces:
+*/
+

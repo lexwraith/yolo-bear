@@ -7,7 +7,8 @@ let numbers = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 let alphanumeric = (numbers|alpha)
 let bool = ('0' | '1' | "false" | "true")
-let types = ("int" | "void" |"char")
+let types = ("int" | "void" |"char" | "float")
+let float = ['-' '+' ]?['0' - '9']* '.'? ['0'-'9']+ (['e' 'E']['-' '+']?['0'-'9']+?)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -20,6 +21,8 @@ rule token = parse
 | ']'      { RBRAC }
 | ';'      { SEMI }
 | ','      { COMMA }
+| "++"     { INCR }
+| "--"     { DECR }   
 | '+'      { PLUS }
 | '-'      { MINUS }
 | '*'      { TIMES }
@@ -36,12 +39,18 @@ rule token = parse
 | "for"    { FOR }
 | "while"  { WHILE }
 | "return" { RETURN }
-| "printf"  { PRINT }
+| "printf" { PRINT }
+| "break"  { BREAK }
+| "const"  { CONST }
+| "continue" { CONTINUE }
+| "extern" { EXTERN }
+| "static" { STATIC }
 | types as lxm { TYPE(lxm) }
 | ['0'-'9']+ as lxm { ILITERAL(int_of_string lxm) } (*Scans literal integers*)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Scans IDs*)
 | '"' ascii* '"' as lxm { STR(lxm) } (* Strings*)
 | '\'' ascii '\'' as lxm { CHR(lxm) } (* Chars *)
+| float as lxm { FLITERAL(lxm) }
 | eof { EOF } 
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 

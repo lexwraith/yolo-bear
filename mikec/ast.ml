@@ -1,11 +1,8 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
-type array_index = 
-  Ind of int
-  | Inds of int * array_index
-
 type expr =
     ILiteral of int
+  | Float of string (* TODO: Consider changing this*)
   | String of string
   | Char of string
   | Id of string
@@ -24,6 +21,7 @@ type stmt =
   | While of expr * stmt
   | VDecl of string * string
   | NAssign of string * string * expr (* Variable declaration AND assignment *)
+  | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
  
 type func_decl = { 
     ftype : string;
@@ -43,8 +41,8 @@ let strstrstr = function (a,b,c) -> a ^ b ^ c
 
 let rec expr_s = function
    ILiteral(l) -> "Literal " ^ string_of_int l
-  | String(s) -> "String " ^ s
-  | Char(c) -> "Char" ^ c
+ | String(s) -> "String " ^ s
+ | Char(c) -> "Char" ^ c
  | Id(s) -> "Id " ^ s
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |

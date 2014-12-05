@@ -13,13 +13,14 @@ echo Return statement
 ./microc -C < tests/base/test-base3.mc
 echo Main has formal argument with type
 ./microc -C < tests/base/test-base4.mc
-echo Global variables
+echo Arrays
 ./microc -C < tests/base/test-base5.mc
+echo Global variables
 ./microc -C < tests/base/test-base6.mc
-
 echo Strings/Chars/Arrays
 ./microc -C < tests/base/test-base7.mc
-
+echo Real Array
+./microc -C < tests/base/test-base8.mc
 #echo Print Hello World
 #./microc -C < tests/ps/1.mc
 #echo Print Integer
