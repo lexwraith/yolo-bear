@@ -17,6 +17,9 @@ echo Global variables
 ./microc -C < tests/base/test-base5.mc
 ./microc -C < tests/base/test-base6.mc
 
+echo Strings/Chars/Arrays
+./microc -C < tests/base/test-base7.mc
+
 #echo Print Hello World
 #./microc -C < tests/ps/1.mc
 #echo Print Integer

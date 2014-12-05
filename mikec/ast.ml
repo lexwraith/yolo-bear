@@ -37,6 +37,7 @@ type program = (string * string * string) list * func_decl list
 (* Custom printing tools because Ocaml *)
 let strstr = function (a,b) -> a ^ b
 let strstrstr = function (a,b,c) -> a ^ b ^ c
+
 (* Low-level AST printing, to help debug the structure.  These functions are
    only for debugging (the -r flag) and can be removed. *)
 

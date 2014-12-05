@@ -57,11 +57,11 @@ vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
-/* Note that in C, no statements or expressiosn allowed in file scope */
-/* TODO: Make declaration only? Change program first element to stringstringstring */
+/* TODO : Consider cleaning this up */
 vdecl:
     TYPE ID ASSIGN ILITERAL SEMI { ($1,$2, string_of_int $4) }
   | TYPE ID ASSIGN STR SEMI { ($1, $2, $4) }
+  | TYPE ID ASSIGN CHR SEMI { ($1, $2, $4) }
 
 stmt_list:
     /* nothing */  { [] }

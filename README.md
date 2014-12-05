@@ -13,7 +13,7 @@ After the tests are made I'm going to spend most of my time fixing up the gramma
 Mike -
 * UNTESTED - Added in array optionals that come after ID Token
 * Adjusted TYPE ID ASSIGN expr to statements. CONSIDER MOVING BACK TO EXPR FOR CHAINED.
-
+* Global declarations are now ALWAYS TYPE ID ASSIGN LITERAL.
 
 Eli -
 * Question -> Only variable declaration is allowed in file scope?

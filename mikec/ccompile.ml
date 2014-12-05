@@ -18,8 +18,9 @@ let rec enum stride n = function
 let string_map_pairs map pairs =
   List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
 
-let strstr = function (a,b) -> a ^ b
-let strstrstr = function (a,b,c) -> a ^ b ^ c
+let strstr = function (a,b) -> a ^ " " ^ b
+
+let strstrstr = function (a,b,c) -> a ^ " " ^ b ^ " = " ^ c ^ ";" (* Currently only for global vars *)
 
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
@@ -30,7 +31,7 @@ let rec expr_s = function
        (match o with Add -> " + " | Sub -> " - " | Mult -> " * " |
                      Div -> " / " | Equal -> " == " | Neq -> " != " |
                      Less -> " < " | Leq -> " <= " | Greater -> " > " |
-                     Geq -> " >= " ^ expr_s e2 ) 
+                     Geq -> " >= ") ^ expr_s e2  
  | Call(f, es) -> f ^ "(" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
