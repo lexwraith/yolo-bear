@@ -1,8 +1,8 @@
 %{ open Ast %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA DQUOTE
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
-%token EQ NEQ LT LEQ GT GEQ
+%token EQ NEQ LT LEQ GT GEQ 
 %token RETURN IF ELSE FOR WHILE
 %token <string> TYPE STR CHR
 %token <int> ILITERAL
@@ -66,8 +66,9 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
+/* Cause side effects */
 stmt:
-  | expr SEMI { Expr($1) }
+  | expr SEMI { Expr($1) } /* TODO: This should never happen */
   | TYPE ID SEMI { VDecl($1,$2) }
   | PRINT LPAREN expr RPAREN SEMI { Print($3) }
   | RETURN expr SEMI { Return($2) }
@@ -77,10 +78,13 @@ stmt:
   | FOR LPAREN expr_opt SEMI expr_opt SEMI expr_opt RPAREN stmt
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
+  | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) } /* TODO: This might need to move for chained assignments */
 
 expr_opt:
     /* nothing */ { Noexpr }
   | expr          { $1 }
+
+/* Resolve into something (no side effects) */
 
 expr:
     ILITERAL         { ILiteral($1) }
@@ -97,10 +101,9 @@ expr:
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
-  | ID ASSIGN expr   { Assign($1, $3) } /* TODO: This is a statement.*/
-  | TYPE ID ASSIGN expr { NAssign($1, $2, $4) } /* TODO: So is this.*/
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+  | ID ASSIGN expr { Assign($1, $3) } /* For chained assignments */
 
 actuals_opt:
     /* nothing */ { [] }
@@ -109,3 +112,7 @@ actuals_opt:
 actuals_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
+
+array_opt:
+    /* No array*/ { [] }
+  | LBRAC ILITERAL RBRAC array_opt { [] } 

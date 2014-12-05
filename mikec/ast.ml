@@ -1,15 +1,18 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
+type array_index = 
+  Ind of int
+  | Inds of int * array_index
+
 type expr =
     ILiteral of int
   | String of string
   | Char of string
   | Id of string
   | Binop of expr * op * expr
-  | Assign of string * expr
-  | NAssign of string * string * expr (* Variable declaration AND assignment *)
   | Call of string * expr list
   | Noexpr
+  | Assign of string * expr
 
 type stmt =
     Block of stmt list
@@ -20,7 +23,8 @@ type stmt =
   | For of expr * expr * expr * stmt
   | While of expr * stmt
   | VDecl of string * string
-
+  | NAssign of string * string * expr (* Variable declaration AND assignment *)
+ 
 type func_decl = { 
     ftype : string;
     fname : string;
@@ -46,10 +50,9 @@ let rec expr_s = function
                      Div -> "Div" | Equal -> "Equal" | Neq -> "Neq" |
                      Less -> "Less" | Leq -> "Leq" | Greater -> "Greater" |
                      Geq -> "Geq") ^ " (" ^ expr_s e2 ^ ")"
- | Assign(v, e) -> "Assign " ^ v ^ " (" ^ expr_s e ^ ")"
- | NAssign(t,v,e) -> "New Assign " ^ t ^ v ^ " (" ^ expr_s e ^ ")"
  | Call(f, es) -> "Call " ^ f ^ " [" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) ^ "]"
+ | Assign(v, e) -> "Assign " ^ v ^ " (" ^ expr_s e ^ ")"
  | Noexpr -> "Noexpr"
 
 let rec stmt_s = function
@@ -64,7 +67,8 @@ let rec stmt_s = function
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v
  | Print(_) -> "Print " ^ "\"Some string here\"" (* TODO: UNFUCK THIS *)
-
+ | NAssign(t,v,e) -> "New Assign " ^ t ^ v ^ " (" ^ expr_s e ^ ")"
+ 
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
   String.concat ", " (List.map tup_of_strstr f.formals) ^ "]\n   body = ["  ^
@@ -90,10 +94,9 @@ let rec string_of_expr = function
       | Equal -> "==" | Neq -> "!="
       | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
       string_of_expr e2
-  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-  | NAssign(t, v, e) -> t ^ v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Noexpr -> ""
 
 let rec string_of_stmt = function
@@ -110,6 +113,7 @@ let rec string_of_stmt = function
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | VDecl(t,v) -> t ^ " " ^ v
   | Print(_) -> "printf(\"%d\",SOMETHINGGOESHERE);" (* TODO: Unfuck this *)
+  | NAssign(t, v, e) -> t ^ v ^ " = " ^ string_of_expr e
 
 let string_of_fdecl fdecl =
   fdecl.fname ^ "(" ^ String.concat ", " (List.map tup_of_strstr fdecl.formals) ^ ")\n{\n" ^
