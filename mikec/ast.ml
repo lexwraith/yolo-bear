@@ -1,3 +1,4 @@
+open Types
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
 type expr =
@@ -20,7 +21,7 @@ type stmt =
   | For of expr * expr * expr * stmt
   | While of expr * stmt
   | VDecl of string * string
-  | NAssign of string * string * expr (* Variable declaration AND assignment *)
+  | NAssign of Types.t * string * expr (* Variable declaration AND assignment *)
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
  
 type func_decl = { 
@@ -66,7 +67,7 @@ let rec stmt_s = function
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v
  | Print(_) -> "Print " ^ "\"Some string here\"" (* TODO: UNFUCK THIS *)
- | NAssign(t,v,e) -> "New Assign " ^ t ^ v ^ " (" ^ expr_s e ^ ")"
+ | NAssign(t,v,e) -> "New Assign " ^ (Types.string_of_type t) ^ v ^ " (" ^ expr_s e ^ ")"
  
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
@@ -112,7 +113,7 @@ let rec string_of_stmt = function
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | VDecl(t,v) -> t ^ " " ^ v
   | Print(_) -> "printf(\"%d\",SOMETHINGGOESHERE);" (* TODO: Unfuck this *)
-  | NAssign(t, v, e) -> t ^ v ^ " = " ^ string_of_expr e
+  | NAssign(t, v, e) -> (Types.string_of_type t) ^ v ^ " = " ^ string_of_expr e
 
 let string_of_fdecl fdecl =
   fdecl.fname ^ "(" ^ String.concat ", " (List.map strstr fdecl.formals) ^ ")\n{\n" ^

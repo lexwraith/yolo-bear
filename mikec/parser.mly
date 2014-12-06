@@ -1,4 +1,5 @@
-%{ open Ast %}
+%{ open Ast%}
+%{ open Types%} /* in order to semantic types */
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
@@ -58,10 +59,11 @@ vdecl_list:
   | vdecl_list vdecl { $2 :: $1 }
 
 /* TODO : Consider cleaning this up */
+/* TYPE is changed from string to Semantic types. */
 vdecl:
-    TYPE ID ASSIGN ILITERAL SEMI { ($1,$2, string_of_int $4) }
-  | TYPE ID ASSIGN STR SEMI { ($1, $2, $4) }
-  | TYPE ID ASSIGN CHR SEMI { ($1, $2, $4) }
+    TYPE ID ASSIGN ILITERAL SEMI { (Types.Int, $2, string_of_int $4) }
+  | TYPE ID ASSIGN STR SEMI { (Types.String, $2, $4) }
+  | TYPE ID ASSIGN CHR SEMI { (Types.Char, $2, $4) }
 
 stmt_list:
     /* nothing */  { [] }

@@ -1,0 +1,9 @@
+.
+tests
+tests/ps
+tests/elitests
+tests/elitests/types
+tests/elitests/simply
+tests/elitests/control
+tests/base
+/usr/local/lib/ocaml
