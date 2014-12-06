@@ -7,6 +7,11 @@
 * {} symbols for array declaration - Use nesting strategy
 * PENDING ELI - sizeof/malloc - Treat as builtin function
 
+* Mikhail
+
+Yuchen -
+* Continue working on semantic - incremental is good
+
 Prateek -
 * Implement argparse with flags to target directors at command line e.g. test /test/optional
 * More test cases
@@ -15,6 +20,11 @@ Prateek -
 
 Eli -
 * Write a full implementation plan of an idea of how we're going to go pointerless
+
+###12/5/14###
+Yuchen -
+* Added Types.ml, Sast.ml
+* UNTESTED - Began work on Semantic; implemented: utility functions for AST traversal, scoping environments, equality tests, type checking, type requirements, environmeny var/func checks
 
 ###12/4/14###
 Mike -
