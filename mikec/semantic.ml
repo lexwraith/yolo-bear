@@ -25,16 +25,11 @@ open Ast
 open Sast
 open Types
 
-module S = struct
-  type symbol_table = {
-  	parent : symbol_table option;
-  	variables : variable_decl list 
-  }
-end
+module NameMap = Map.Make(String)
 
 type exception_scope = {
-	parent : exception_scope option;
-	exceptions : string list 
+	excep_parent : exception_scope option;
+	mutable exceptions : string list 
 }
 
 type translation_environment = {
@@ -66,7 +61,7 @@ let rec find_variable (scope : S.symbol_table) name =
 let require_integer (env:translation_environment) e str =
 	match e with
 		Types.Int -> ()
-	| _ -> (*env.exception_scope.exceptions <- str::env.exception_scope.exceptions; *)
+	| _ -> env.exception_scope.exceptions <- str::env.exception_scope.exceptions; 
 				 raise (Failure str) 
 				
 (* check if t1 and t2 are the same types *)				
@@ -74,6 +69,7 @@ let weak_eq_type t1 t2 =
 	match t1,t2 with
 		Types.Int,Types.Int -> true
 	| Types.Char,Types.Char -> true
+	| Types.Float,Types.Float -> true
 	| Types.String,Types.String -> true
 	| _, _ -> false
 
@@ -82,7 +78,7 @@ let rec expr (env : translation_environment)  = function
 		Ast.ILiteral(v) -> Sast.ILiteral(v), Types.Int
 	| Ast.Char(c) -> Sast.Char(c), Types.Char
 	| Ast.Float(f) -> Sast.Float(f), Types.Float
-	| Ast.String(s) -> Sast.String(s), Types.Float
+	| Ast.String(s) -> Sast.String(s), Types.String
 	| Ast.Noexpr -> Sast.Noexpr, Types.Void
   (* An identifier: verify it is in scope and return its type *)
 	| Ast.Id(vname) -> let vdecl = try
@@ -113,6 +109,16 @@ let rec expr (env : translation_environment)  = function
 							string_of_type t1 ^ "\" right is \"" ^
 							string_of_type t2 ^ "\"" ));
 		Sast.Binop(ep1, op, ep2), Types.Int (* Success: result is int *)
+	| Ast.Assign(id, ep2) ->
+		let e1 = expr env (Ast.Id(id)) in
+		let e2 = expr env ep2 in
+		let (ep1, t1) = e1 in
+		let (ep2, t2) = e2 in
+		if not (weak_eq_type t1 t2) then
+			raise (Failure ("Type mismatch in assign value: left is " ^
+							string_of_type t1 ^ "\" right is \"" ^
+							string_of_type t2 ^ "\"" ));
+		Sast.Assign(id,ep2), Types.Void
 
 let rec stmt env = function
 		(* Expression statement: just check the expression *)
@@ -141,14 +147,16 @@ let rec stmt env = function
 	
 	(* Initial local variables *)
 	| Ast.NAssign(t1,id,ep1) ->
+		let t1 = Types.type_from_string t1 in
 		let e2 = expr env ep1 in
-		let (_, t2) = e2 in
-		(* Shoul assign the same type as required *)
+		let (ep2, t2) = e2 in
+		(* Should assign the same type as required *)
 		if not (weak_eq_type t1 t2) then
-			raise (Failure ("Type mismatch in comparison: left is " ^
+			raise (Failure ("Type mismatch in variable declaration: left is " ^
 							string_of_type t1 ^ "\" right is \"" ^
 							string_of_type t2 ^ "\"" ));
 		env.scope.S.variables <- (id,t1) :: env.scope.S.variables;
+		Sast.NAssign(t1,id,ep2)
 		 
 	| Ast.Block(sl) ->
 		(* New scopes: parent is the existing scope, start out empty *)
@@ -175,23 +183,36 @@ let check (globals,functions) =
       NameMap.empty functions
   in
 	
+	(* Convert global:(string*string*string) to variable_decl list *)
+	let vars = List.fold_left
+			(fun varlist global1 -> 
+				let (t, name, _) = global1 in
+				let t = Types.type_from_string t in
+					(name,t)::varlist )
+			[] globals
+	in
+	
 	(* Body of "run": initialize global variables to 0, find and run "main" *)
-	let scope' = { S.variables = [] } 
-	and exceptions' = {  exceptions = [] } 
+	let scope' = { S.parent = None; S.variables = vars } 
+	and exceptions' = { excep_parent = None; exceptions = [] } 
 	in
     
 	(* New environment: same, but with new symbol tables *)
-	let env' = { env with scope = scope'; exception_scope = exceptions' }
+	let env' = { scope = scope'; exception_scope = exceptions' }
 	in
-		
+	
+	(*	
   let variables : variable_decl list = List.fold_left
       (fun globals vdecl -> NameMap.add vdecl (Int(0)) globals) NameMap.empty vars
   in
+	*)
 	
 	(* Find 'main' function *)
 	let main_fun = 
 	try
-   	NameMap.find "main" functions
+   	NameMap.find "main" func_decls
   with Not_found -> raise (Failure ("did not find the main() function"))
 	in
-	ignore (stmt env' main_fun.body)
+	stmt env' (Ast.Block(main_fun.body))
+	(*ignore (List.fold_left (fun env stmts -> stmt env stmts) env' main_fun.body)*)
+	
