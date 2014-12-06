@@ -1,12 +1,12 @@
 %{ open Ast%}
-%{ open Types%} /* in order to semantic types */
+%{ open Types%} /* add types */
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
 %token EQ NEQ LT LEQ GT GEQ 
 %token RETURN IF ELSE FOR WHILE
 %token BREAK CONST CONTINUE EXTERN STATIC DECR INCR
-%token <string> TYPE STR CHR ID FLITERAL
+%token <string> STR CHR ID FLITERAL TYPE
 %token <int> ILITERAL
 %token EOF PRINT
 
@@ -61,9 +61,9 @@ vdecl_list:
 /* TODO : Consider cleaning this up */
 /* TYPE is changed from string to Semantic types. */
 vdecl:
-    TYPE ID ASSIGN ILITERAL SEMI { (Types.Int, $2, string_of_int $4) }
-  | TYPE ID ASSIGN STR SEMI { (Types.String, $2, $4) }
-  | TYPE ID ASSIGN CHR SEMI { (Types.Char, $2, $4) }
+    TYPE ID ASSIGN ILITERAL SEMI { ($1, $2, string_of_int $4) }
+  | TYPE ID ASSIGN STR SEMI { ($1, $2, $4) }
+  | TYPE ID ASSIGN CHR SEMI { ($1, $2, $4) }
 
 stmt_list:
     /* nothing */  { [] }
