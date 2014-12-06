@@ -7,7 +7,7 @@ let numbers = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 let alphanumeric = (numbers|alpha)
 let bool = ('0' | '1' | "false" | "true")
-let types = ("int" | "void" |"char" | "float")
+let types = ("int" | "void" |"char" | "float" | "String" )
 let float = ['-' '+' ]?['0' - '9']* '.'? ['0'-'9']+ (['e' 'E']['-' '+']?['0'-'9']+?)
 
 rule token = parse
