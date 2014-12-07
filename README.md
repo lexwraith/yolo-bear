@@ -10,6 +10,9 @@ Eli -
 * Continue developing idea on dynamic arrays/garbage collection/memory management
 Yuchen -
 * Continue working on semantic - incremental is good
+* Add semantic checking and ast-sast converting for 'Return', 'Array', 'Print'...
+* Solve the problem with 'call' in semantic.ml
+* Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
 * Finish the tester and make it run tests
@@ -30,6 +33,12 @@ Yuchen -
 
 Prateek - 
 * Rewrote python test script
+
+###12/6/14###
+Yuchen - 
+* Add semantic checking and ast-sast converting for 'While', 'For', 'VDecl' 
+  UNTESTED - semantic checking and ast-sast converting for 'While', 'For'
+* Add semantic checking: if there is id confict when initialing new vairable in both 'VDecl' and 'NAssign'
 
 ###12/5/14###
 Yuchen -
