@@ -1,26 +1,42 @@
 make clean
 clear
 make
-echo Just main, no body
-./microc -C < tests/base/test-base-1.mc
-echo Uninitialized var in body
-./microc -C < tests/base/test-base0.mc
-echo Assigning value to uninitialized var
-./microc -C < tests/base/test-base1.mc
-echo Initializing and assigning to var
-./microc -C < tests/base/test-base2.mc
-echo Return statement
-./microc -C < tests/base/test-base3.mc
-echo Main has formal argument with type
-./microc -C < tests/base/test-base4.mc
-echo Arrays
-./microc -C < tests/base/test-base5.mc
-echo Global variables
+
+#echo Just main, no body
+#./microc -C < tests/base/test-base-1.mc
+
+#echo Uninitialized var in body
+#./microc -C < tests/base/test-base0.mc
+
+#echo Assigning value to uninitialized var
+#./microc -C < tests/base/test-base1.mc
+
+#echo Initializing and assigning to var
+#./microc -C < tests/base/test-base2.mc
+
+#echo Return statement
+#./microc -C < tests/base/test-base3.mc
+
+#echo Main has formal argument with type
+#./microc -C < tests/base/test-base4.mc
+
+#echo Global variables
+#./microc -C < tests/base/test-base5.mc
+
+echo Single array declaration
 ./microc -C < tests/base/test-base6.mc
+
 echo Strings/Chars/Arrays
 ./microc -C < tests/base/test-base7.mc
+
 echo Real Array
 ./microc -C < tests/base/test-base8.mc
+
+echo Print Hello World
+./microc -C < tests/base/test-base9.mc
+
+
+
 #echo Print Hello World
 #./microc -C < tests/ps/1.mc
 #echo Print Integer
