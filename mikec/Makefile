@@ -1,6 +1,6 @@
-OBJS = types.cmo ast.cmo \
-		 sast.cmo parser.cmo semantic.cmo \
-		 scanner.cmo \
+OBJS = ast.cmo \
+       parser.cmo \
+       scanner.cmo \
        ccompile.cmo microc.cmo
 
 TESTS = base-1 base0 base1 base2 base3
