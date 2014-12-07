@@ -72,7 +72,7 @@ stmt_list:
 stmt:
   | expr SEMI { Expr($1) } /* TODO: This should never happen */
   | TYPE ID SEMI { VDecl($1,$2) }
-  | TYPE ID brackets_list { Arr($1,$2, List.rev $3) } 
+  | TYPE ID brackets_list SEMI { Arr($1,$2, List.rev $3) } 
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -126,6 +126,10 @@ actuals_list:
   | actuals_list COMMA expr { $3 :: $1 }
 
 /* Separate type for hopefully easier semantic checking */
+brackets_opt:
+  /*Nothing*/ {[]}
+  | brackets_list { $1 }
+
 brackets_list:
    LBRAC ILITERAL RBRAC { [$2] }
   | LBRAC ILITERAL RBRAC brackets_list { $2::$4 }
