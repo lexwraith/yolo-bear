@@ -1,25 +1,35 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
-* PENDING VJ - Array TOKENS, due to situations like i[][].
 * TYPE ID+ (for declaration chaining)
 * Chained variable declarations
 * {} symbols for array declaration - Use nesting strategy
 * PENDING ELI - sizeof/malloc - Treat as builtin function
 
-* Mikhail
-
+Eli -
+* Continue developing idea on dynamic arrays/garbage collection/memory management
 Yuchen -
 * Continue working on semantic - incremental is good
 
 Prateek -
-* Implement argparse with flags to target directors at command line e.g. test /test/optional
+* Finish the tester and make it run tests
 * More test cases
 * Conslidate test cases
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
 
+
+###12/6/14###
+Mike -
+* Nested Arrays are in
+
 Eli -
-* Write a full implementation plan of an idea of how we're going to go pointerless
+* Strategy for implementing pointerless C done
+
+Yuchen - 
+* Worked towards putting SAST between AST -> CCompile
+
+Prateek - 
+* Rewrote python test script
 
 ###12/5/14###
 Yuchen -
