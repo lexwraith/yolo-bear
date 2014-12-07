@@ -35,7 +35,11 @@ echo Real Array
 #echo Print Hello World
 #./microc -C < tests/base/test-base9.mc
 
+echo Array with assignment
+./microc -C < tests/base/test-base10.mc
 
+echo Matrix with assignment
+./microc -C < tests/base/test-base11.mc
 
 #echo Print Hello World
 #./microc -C < tests/ps/1.mc

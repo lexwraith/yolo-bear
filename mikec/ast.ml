@@ -22,7 +22,9 @@ type stmt =
   | VDecl of string * string
   | NAssign of string * string * expr (* Variable declaration AND assignment *)
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
- 
+  | Braces of string list list 
+   
+
 type func_decl = { 
     ftype : string;
     fname : string;
