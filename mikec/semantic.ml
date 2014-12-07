@@ -57,6 +57,14 @@ let rec find_variable (scope : S.symbol_table) name =
     	Some(parent) -> find_variable parent name 
   	| _ -> raise Not_found
 
+let rec is_new_variable (scope : S.symbol_table) name =
+    (* TODO can global variable be redeclared? *)
+	try
+  	let (_,_) = List.find (fun (s, _) -> s = name) scope.variables in
+		raise (Failure ( name ^ " already exists"));
+		()
+  with Not_found -> ()
+
 (* check if e has type integer *)
 let require_integer (env:translation_environment) e str =
 	match e with
@@ -112,7 +120,7 @@ let rec expr (env : translation_environment)  = function
 	| Ast.Assign(id, ep2) ->
 		let e1 = expr env (Ast.Id(id)) in
 		let e2 = expr env ep2 in
-		let (ep1, t1) = e1 in
+		let (_, t1) = e1 in
 		let (ep2, t2) = e2 in
 		if not (weak_eq_type t1 t2) then
 			raise (Failure ("Type mismatch in assign value: left is " ^
@@ -134,7 +142,25 @@ let rec stmt env = function
 		require_integer env t "Predicate of if must be integer"; 
 		
 		Sast.If(ep, stmt env s1, stmt env s2) (* Check then, else *)
+
+	| Ast.For(e1,e2,e3,s) ->
+		(* TODO type constraint about e1? e2? e3? *)
+		let e1 = expr env e1 in
+		let e2 = expr env e2 in
+		let e3 = expr env e3 in
+		let (ep1,_) = e1 in
+		let (ep2,_) = e2 in
+		let (ep3,_) = e3 in 
+		let s = stmt env s in 
+		Sast.For(ep1,ep2,ep3,s)
 	
+	| Ast.While(e, s)  ->
+		(* TODO type constraint about e? *)
+		let e = expr env e in
+		let (ep,_) = e in
+		let s = stmt env s in
+		Sast.While(ep,s)
+		
 	(* These codes are in the slides, but I cannot figure out how they work *)
 	(*	
 	| Ast.VDecl(vdecl) ->
@@ -147,6 +173,7 @@ let rec stmt env = function
 	
 	(* Initial local variables *)
 	| Ast.NAssign(t1,id,ep1) ->
+		is_new_variable env.scope id;
 		let t1 = Types.type_from_string t1 in
 		let e2 = expr env ep1 in
 		let (ep2, t2) = e2 in
@@ -157,6 +184,12 @@ let rec stmt env = function
 							string_of_type t2 ^ "\"" ));
 		env.scope.S.variables <- (id,t1) :: env.scope.S.variables;
 		Sast.NAssign(t1,id,ep2)
+		
+	| Ast.VDecl(t,id) ->
+		is_new_variable env.scope id;
+		let t = Types.type_from_string t in
+		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
+		Sast.VDecl(t,id)
 		 
 	| Ast.Block(sl) ->
 		(* New scopes: parent is the existing scope, start out empty *)
@@ -197,7 +230,7 @@ let check (globals,functions) =
 	and exceptions' = { excep_parent = None; exceptions = [] } 
 	in
     
-	(* New environment: same, but with new symbol tables *)
+	(* New environment for globals *)
 	let env' = { scope = scope'; exception_scope = exceptions' }
 	in
 	

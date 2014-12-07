@@ -25,9 +25,9 @@ type stmt_detail =
   | Print of string
   | Return of expr
   | If of expr_detail * stmt_detail * stmt_detail
-  | For of expr * expr * expr * stmt
-  | While of expr * stmt
-  | VDecl of string * string
+  | For of expr_detail * expr_detail * expr_detail * stmt_detail
+  | While of expr_detail * stmt_detail
+  | VDecl of Types.t * string
   | NAssign of Types.t * string * expr_detail (* Variable declaration AND assignment *)
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
 

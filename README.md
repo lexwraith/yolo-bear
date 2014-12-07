@@ -11,6 +11,9 @@
 
 Yuchen -
 * Continue working on semantic - incremental is good
+* Add semantic checking and ast-sast converting for 'Return', 'Array', 'Print'...
+* Solve the problem with 'call' in semantic.ml
+* Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
 * Implement argparse with flags to target directors at command line e.g. test /test/optional
@@ -20,6 +23,12 @@ Prateek -
 
 Eli -
 * Write a full implementation plan of an idea of how we're going to go pointerless
+
+###12/6/14###
+Yuchen - 
+* Add semantic checking and ast-sast converting for 'While', 'For', 'VDecl' 
+  UNTESTED - semantic checking and ast-sast converting for 'While', 'For'
+* Add semantic checking: if there is id confict when initialing new vairable in both 'VDecl' and 'NAssign'
 
 ###12/5/14###
 Yuchen -
