@@ -20,10 +20,10 @@ make
 #echo Main has formal argument with type
 #./microc -C < tests/base/test-base4.mc
 
-echo Arrays
-./microc -C < tests/base/test-base5.mc
+#echo Global variables
+#./microc -C < tests/base/test-base5.mc
 
-echo Global variables
+echo Single array declaration
 ./microc -C < tests/base/test-base6.mc
 
 echo Strings/Chars/Arrays
