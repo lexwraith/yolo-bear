@@ -1,5 +1,4 @@
 %{ open Ast%}
-%{ open Types%} /* add types */
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
