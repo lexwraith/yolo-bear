@@ -27,6 +27,7 @@ let rec expr_s = function
  | String(s) -> s
  | Char(c) -> c 
  | Id(v) ->  v
+ | Float(s) -> s
  | Binop(e1, o, e2) -> expr_s e1 ^ 
        (match o with Add -> " + " | Sub -> " - " | Mult -> " * " |
                      Div -> " / " | Equal -> " == " | Neq -> " != " |

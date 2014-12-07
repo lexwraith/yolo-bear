@@ -43,6 +43,7 @@ let rec expr_s = function
    ILiteral(l) -> "Literal " ^ string_of_int l
  | String(s) -> "String " ^ s
  | Char(c) -> "Char" ^ c
+ | Float(s) -> "Float" ^ s
  | Id(s) -> "Id " ^ s
  | Binop(e1, o, e2) -> "Binop (" ^ expr_s e1 ^ ") " ^
        (match o with Add -> "Add" | Sub -> "Sub" | Mult -> "Mult" |
@@ -65,8 +66,9 @@ let rec stmt_s = function
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v
- | Print(_) -> "Print " ^ "\"Some string here\"" (* TODO: UNFUCK THIS *)
+ | Print(s) -> "Print " ^ s(* TODO: UNFUCK THIS *)
  | NAssign(t,v,e) -> "New Assign " ^  t ^ v ^ " (" ^ expr_s e ^ ")"
+ | Arr(_,_,_) -> "" (* TODO *)
  
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
@@ -86,6 +88,7 @@ let rec string_of_expr = function
   | String(s) -> s
   | Char(c) -> c
   | Id(s) -> s
+  | Float(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^
       (match o with
@@ -97,7 +100,7 @@ let rec string_of_expr = function
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Noexpr -> ""
-
+ 
 let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
@@ -113,6 +116,7 @@ let rec string_of_stmt = function
   | VDecl(t,v) -> t ^ " " ^ v
   | Print(_) -> "printf(\"%d\",SOMETHINGGOESHERE);" (* TODO: Unfuck this *)
   | NAssign(t, v, e) ->  t ^ v ^ " = " ^ string_of_expr e
+  | Arr(t,i,lst) -> t ^ i
 
 let string_of_fdecl fdecl =
   fdecl.fname ^ "(" ^ String.concat ", " (List.map strstr fdecl.formals) ^ ")\n{\n" ^
