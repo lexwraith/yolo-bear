@@ -68,7 +68,7 @@ let rec stmt_s = function
  | VDecl(t,v) -> t ^ " " ^ v
  | Print(s) -> "Print " ^ s
  | NAssign(t,v,e) -> "New Assign " ^  t ^ v ^ " (" ^ expr_s e ^ ")"
- | Arr(t,s,_) -> t ^ " Array " ^ s 
+ | Arr(t,s,il) -> t ^ " Array " ^ s 
  
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^

@@ -71,9 +71,9 @@ stmt_list:
 /* Cause side effects */
 stmt:
   | expr SEMI { Expr($1) } /* TODO: This should never happen */
-  | TYPE ID SEMI { VDecl($1,$2) }
-  | TYPE ID brackets_list SEMI { Arr($1,$2, List.rev $3) } 
-  | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
+ /* | TYPE ID SEMI { VDecl($1,$2) }*/ /* Do we really need this? */ 
+  | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) } 
+  | PRINT LPAREN strliterals RPAREN SEMI { Print($3) } /* Can we merge literals? */
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
@@ -92,7 +92,6 @@ expr_opt:
 expr:
   literals           { $1 }
   | ID               { Id($1) }
-  | FLITERAL         { Float($1) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -109,6 +108,7 @@ expr:
 
 literals:
     ILITERAL         { ILiteral($1) }
+  | FLITERAL         { Float($1) }
   | STR              { String($1) }
   | CHR              { Char($1) }
 
@@ -125,14 +125,13 @@ actuals_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
 
-/* Separate type for hopefully easier semantic checking */
 brackets_opt:
   /*Nothing*/ {[]}
   | brackets_list { $1 }
 
 brackets_list:
    LBRAC ILITERAL RBRAC { [$2] }
-  | LBRAC ILITERAL RBRAC brackets_list { $2::$4 }
+  | brackets_list LBRAC ILITERAL RBRAC { $3::$1 }
 
 /* Brace declarations are nested 
 nested_braces:
