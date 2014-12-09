@@ -22,8 +22,9 @@ Prateek -
 * Conslidate test cases
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
 
-###12/6/14###
-* Problem with 'call' is solved and tested. Function's name and type, arguments' number and types are checked.'
+###12/8/14###
+Yuchen -
+* Problem with 'call' is solved and tested. Function's name and type, arguments' number and types are checked.
 * Add semantic checking and ast-sast converting for 'Call', 'Return'
 
 
