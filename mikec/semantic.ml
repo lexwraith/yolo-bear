@@ -10,7 +10,7 @@
  *       Return type check
  *	 Index type check - we could make this a grammar rule, but a semantic check is fine too
 *        ID name validation (no crazy characters though scanner helps)
-
+*	Check braces in array actual assignment for right type/size
  *       *)
 
 (* globals consists of string*string*string for Type/ID/Value *)

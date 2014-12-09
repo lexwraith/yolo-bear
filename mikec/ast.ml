@@ -22,7 +22,9 @@ type stmt =
   | VDecl of string * string
   | NAssign of string * string * expr (* Variable declaration AND assignment *)
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
- 
+  | Braces of string list list 
+   
+
 type func_decl = { 
     ftype : string;
     fname : string;
@@ -66,9 +68,9 @@ let rec stmt_s = function
                             ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> t ^ " " ^ v
- | Print(s) -> "Print " ^ s(* TODO: UNFUCK THIS *)
+ | Print(s) -> "Print " ^ s
  | NAssign(t,v,e) -> "New Assign " ^  t ^ v ^ " (" ^ expr_s e ^ ")"
- | Arr(_,_,_) -> "" (* TODO *)
+ | Arr(t,s,il) -> t ^ " Array " ^ s 
  
 let func_decl_s f =
   " { fname = \"" ^ f.fname ^ "\"\n   formals = [" ^
