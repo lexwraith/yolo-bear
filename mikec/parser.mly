@@ -146,8 +146,11 @@ elemlist:
 
 /* What's actually in the array declaration */
 braces_list: 
-  /* Nothing */ { [] }
+  { [] }
   
 braces_nested:
-  /* Nothing */ { [] }
+  { [] }
 
+  id_list:
+  ID { [$1] }
+  |  ID COMMA id_list { $1 :: $3}
