@@ -22,6 +22,7 @@ Prateek -
 ###12/10/14###
 Mike -
 * Redid tester = fully operational pending further features
+* I fucking hate recursive data types - can't figure out how to do array
 
 ###12/9/14###
 Eli -
