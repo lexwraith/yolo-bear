@@ -67,7 +67,6 @@ if __name__ == "__main__":
     Temporarily disabled gcc and pass cases
     """
     flags.nogcc = True
-    flags.nopass = True
     setup() 
     for t in getTestPaths():
         test(t)

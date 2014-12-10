@@ -71,9 +71,9 @@ stmt_list:
 /* Cause side effects */
 stmt:
   | expr SEMI { Expr($1) } /* TODO: This should never happen */
- /* | TYPE ID SEMI { VDecl($1,$2) }*/ /* Do we really need this? */ 
+/* | TYPE ID SEMI { VDecl($1,$2) }*/ /* Do we really need this? */ 
   | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) }
-  | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) } /* TODO: This might need to move for chained assignments */
+  | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) } /* TODO: Chained assignments */
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) } /* Can we merge literals? */
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -135,22 +135,17 @@ brackets_list:
    LBRAC ILITERAL RBRAC { [$2] }
   | brackets_list LBRAC ILITERAL RBRAC { $3::$1 }
 
-/* Array assignment */
-braces_opt:
-  LBRACE elemlist RBRACE { [$2] }
-  | LBRACE braces_list RBRACE { $2 }
+/* Actual array */
+elem_list_braces:
+  LBRACE elem_list RBRACE { $2 } /*Gets rid of braces*/
 
-elemlist:
-  /**/ {[]}
- | strliterals COMMA elemlist { $1 :: $3}
+						 elem_list:
+  elem { [$1] }
+  | elem COMMA elem_list {$1 :: $3} 
 
-/* What's actually in the array declaration */
-braces_list: 
-  { [] }
-  
-braces_nested:
-  { [] }
-
+elem:
+  strliterals { [$1] } 
+/*  | elem_list_braces { $1 }*/ /* What the fuck. */
 id_list:
   ID { [$1] }
   |  ID COMMA id_list { $1 :: $3}
