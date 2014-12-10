@@ -12,8 +12,7 @@ Eli -
 Yuchen -
 * Continue working on semantic - incremental is good
 * Add semantic checking and ast-sast converting for 'Array', 'Print'...
-* Problems with global environment scope
-* Problems with the scope inside the parenthesis of 'While' and 'For' 
+* Add return type checking 
 * Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
@@ -21,6 +20,11 @@ Prateek -
 * More test cases
 * Conslidate test cases
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+
+###12/9/14###
+Yuchen -
+* Most problems about scope are solved and tested (Scope for 'While' and 'For', scope for global environment, scope for multi functions, scope for formals)
+* Add test cases for scope and multi functions
 
 ###12/8/14###
 Yuchen -
