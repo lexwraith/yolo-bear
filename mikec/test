@@ -48,7 +48,7 @@ def test(filepath):
         p = Popen([microcpath,'-C'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
         out,err = p.communicate(input=code)
         if "error" in out and not flags.nofail:
-            pt(1,"%s" % out)
+            pt(1,"%s\n%s" % (filepath,out))
             pt(3, code)
         elif not flags.nopass:
             pt(2, "%s PASSED" % filepath)

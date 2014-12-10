@@ -139,7 +139,7 @@ brackets_list:
 elem_list_braces:
   LBRACE elem_list RBRACE { $2 } /*Gets rid of braces*/
 
-						 elem_list:
+elem_list:
   elem { [$1] }
   | elem COMMA elem_list {$1 :: $3} 
 
