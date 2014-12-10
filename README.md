@@ -1,10 +1,10 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
+* Add in full printf functionality
 * TYPE ID+ (for declaration chaining)
 * Chained variable declarations
 * {} symbols for array declaration - Use nesting strategy
-* PENDING ELI - sizeof/malloc - Treat as builtin function
 
 Eli -
 * Continue developing idea on dynamic arrays/garbage collection/memory management
@@ -17,19 +17,22 @@ Yuchen -
 * Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
-* Finish the tester and make it run tests
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+
+###12/10/14###
+Mike -
+* Redid tester = fully operational pending further features
+
+###12/9/14###
+Eli -
+* Added more tests cases to account for arrays
+* Progress on dynamic arrays and automatic garbage collection
 
 ###12/8/14###
 Yuchen -
 * Problem with 'call' is solved and tested. Function's name and type, arguments' number and types are checked.
 * Add semantic checking and ast-sast converting for 'Call', 'Return'
 
-
-###12/9/14###
-Eli -
-* Added more tests cases to account for arrays
-* Progress on dynamic arrays and automatic garbage collection
 
 ###12/6/14###
 Mike -

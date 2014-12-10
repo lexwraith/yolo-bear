@@ -5,7 +5,7 @@ import os
 
 from pprint import pprint
 from subprocess import call, Popen, STDOUT, PIPE
-
+from sys import exit
 
 pt = lambda x,y: print("\033[%sm%s\033[0m" % (30 + x,y)) # Where 0 <= x <= 7
 
@@ -31,9 +31,12 @@ def getTestPaths():
 def setup():
     show = False if flags.nomillic else True
     try:
-        call(['make'])
+        c = call(['make'])
+        if c != 0:
+            pt(1, "Makefile failed: Error Code %s" % c)
+            exit()
     except Exception as e:
-        pt(1, "Make failed:%s" % e)
+        pt(1, "Makefile failed:%s" % e)
 
 def test(filepath):
     code = open(filepath).read().encode('ascii','ignore')
@@ -57,6 +60,11 @@ def test(filepath):
         pt(3, "Failed GCC %s:%s" % (filepath,e))
 
 if __name__ == "__main__":
+    """
+    Temporarily disabled gcc and pass cases
+    """
+    flags.nogcc = True
+    flags.nopass = True
     setup() 
     for t in getTestPaths():
         test(t)
