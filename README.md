@@ -11,13 +11,19 @@ Eli -
 
 Yuchen -
 * Continue working on semantic - incremental is good
-* Add semantic checking and ast-sast converting for 'Return', 'Array', 'Print'...
-* Solve the problem with 'call' in semantic.ml
+* Add semantic checking and ast-sast converting for 'Array', 'Print'...
+* Problems with global environment scope
+* Problems with the scope inside the parenthesis of 'While' and 'For' 
 * Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
 * Finish the tester and make it run tests
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+
+###12/8/14###
+Yuchen -
+* Problem with 'call' is solved and tested. Function's name and type, arguments' number and types are checked.
+* Add semantic checking and ast-sast converting for 'Call', 'Return'
 
 
 ###12/9/14###

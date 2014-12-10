@@ -15,7 +15,7 @@ type expr_detail =
   | Char of string
   | Id of variable_decl
   | Binop of expr_detail * Ast.op * expr_detail
-  | Call of string * expr list
+  | Call of string * expr_detail list
   | Noexpr
   | Assign of string * expr_detail
 
@@ -23,7 +23,7 @@ type stmt_detail =
     Block of S.symbol_table * stmt_detail list
   | Expr of expr_detail * Types.t
   | Print of string
-  | Return of expr
+  | Return of expr_detail
   | If of expr_detail * stmt_detail * stmt_detail
   | For of expr_detail * expr_detail * expr_detail * stmt_detail
   | While of expr_detail * stmt_detail
