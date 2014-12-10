@@ -13,7 +13,10 @@ parser = argparse.ArgumentParser(description="Super testing suite for MilliC")
 parser.add_argument('--nomillic', help='Disables makefile error messages', action="store_true")
 parser.add_argument('--nogcc', help="Does full compile but no running", action="store_true")
 parser.add_argument('--noclean', help='Disable cleanup post run', action="store_true")
+parser.add_argument('--nopass', help="Disables showing passing test cases", action='store_true')
 flags = parser.parse_args()
+
+microcpath = os.getcwd() + "/microc"
 
 def getTestPaths():
     allPaths = []
@@ -33,11 +36,18 @@ def setup():
         pt(1, "Make failed:%s" % e)
 
 def test(filepath):
+    code = open(filepath).read().encode('ascii','ignore')
     try:
-        target = './microc -C < %s' % filepath
-        Popen([target], shell = True)
+        p = Popen([microcpath,'-C'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
+        out,err = p.communicate(input=code)
+        if "error" in out:
+            pt(1,"%s" % out)
+            pt(3, code)
+        elif not flags.nopass:
+            pt(2, "%s PASSED" % filepath)
     except Exception as e:
-        pt(4, "Failed MilliC %s:%s" % (filepath,e))
+        pt(3, "Failed MilliC %s:%s" % (filepath,e))
+
     if flags.nogcc:
         return
     try:
