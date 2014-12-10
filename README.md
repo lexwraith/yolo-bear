@@ -8,6 +8,7 @@
 
 Eli -
 * Continue developing idea on dynamic arrays/garbage collection/memory management
+
 Yuchen -
 * Continue working on semantic - incremental is good
 * Add semantic checking and ast-sast converting for 'Return', 'Array', 'Print'...
@@ -16,10 +17,13 @@ Yuchen -
 
 Prateek -
 * Finish the tester and make it run tests
-* More test cases
-* Conslidate test cases
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
 
+
+###12/9/14###
+Eli -
+* Added more tests cases to account for arrays
+* Progress on dynamic arrays and automatic garbage collection
 
 ###12/6/14###
 Mike -
