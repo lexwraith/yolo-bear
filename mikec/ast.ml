@@ -15,6 +15,7 @@ type stmt =
     Block of stmt list
   | Expr of expr
   | Print of string
+  | Printlist of string * string list
   | Return of expr
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt

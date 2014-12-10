@@ -151,6 +151,6 @@ braces_list:
 braces_nested:
   { [] }
 
-  id_list:
+id_list:
   ID { [$1] }
   |  ID COMMA id_list { $1 :: $3}
