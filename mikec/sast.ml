@@ -32,3 +32,12 @@ type stmt_detail =
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
 
 type expression = expr_detail * Types.t
+
+
+type func_decl_detail = { 
+    ftype_s : Types.t;
+    fname_s : string;
+    formals_s : (Types.t * string) list;
+    body_s : stmt_detail list;
+  }
+
