@@ -282,6 +282,13 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 
 	(* Begin of function 'check' *)
 	(* Convert global:(string*string*string) to variable_decl list *)
+	let sast_globals = List.fold_left
+			(fun varlist global1 -> 
+				let (t, name, v) = global1 in
+				let t = Types.type_from_string t in
+					(name,t,v)::varlist )
+			[] globals
+	in
 	let vars = List.fold_left
 			(fun varlist global1 -> 
 				let (t, name, _) = global1 in
@@ -347,7 +354,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 					List.rev body')::fdecl_list
 			) [] functions
 		in
-		(List.rev vars, List.rev sast_fdecls);
+		(List.rev sast_globals, List.rev sast_fdecls);
 						 
 		
 				
