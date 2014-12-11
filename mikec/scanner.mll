@@ -46,7 +46,7 @@ rule token = parse
 | "extern" { EXTERN }
 | "static" { STATIC }
 | types as lxm { TYPE(lxm) }
-| ['0'-'9']+ as lxm { ILITERAL(int_of_string lxm) } (*Scans literal integers*)
+| ['-' '+']?['0'-'9']+ as lxm { ILITERAL(int_of_string lxm) } (*Scans literal integers*)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Scans IDs*)
 | '"' ascii* '"' as lxm { STR(lxm) } (* Strings*)
 | '\'' ascii '\'' as lxm { CHR(lxm) } (* Chars *)
