@@ -1,9 +1,6 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
-* Add in full printf functionality
-* TYPE ID+ (for declaration chaining)
-* Chained variable declarations
 * {} symbols for array declaration - Use nesting strategy
 
 Eli -
@@ -23,6 +20,7 @@ Prateek -
 Mike -
 * Redid tester = fully operational pending further features
 * I fucking hate recursive data types - can't figure out how to do array
+* Printf now works with (str,args);
 
 ###12/9/14###
 Eli -
