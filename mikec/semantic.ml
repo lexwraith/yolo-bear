@@ -286,7 +286,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			(fun varlist global1 -> 
 				let (t, name, v) = global1 in
 				let t = Types.type_from_string t in
-					(name,t,v)::varlist )
+					(t, name, v)::varlist )
 			[] globals
 	in
 	let vars = List.fold_left
@@ -348,10 +348,14 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 					[] fdecl.body
 				in
 				
-				( ftype,
-					fdecl.fname,
-					List.rev formals',
-					List.rev body')::fdecl_list
+				let func = 
+					{
+						ftype_s = ftype;
+    				fname_s = fdecl.fname;
+    				formals_s =List.rev formals';
+    				body_s =List.rev body';
+					} in
+				func::fdecl_list
 			) [] functions
 		in
 		(List.rev sast_globals, List.rev sast_fdecls);
