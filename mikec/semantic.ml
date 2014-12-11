@@ -1,13 +1,13 @@
 (* Takes in ast.program (see definition) and raises error if something doesn't add up*)
 
-(* TODO: Parameter length checking
- *       Type checking for variable declarations
- *       Type checking for function calls 
- *       Lexical scope checking
- *       Global scope checking
- *       Array index checking
- *       Operations checking, e.g. string + int
- *       Return type check
+(* TODO: Parameter length checking - number of parameter? - done
+ *       Type checking for variable declarations - done
+ *       Type checking for function calls - done
+ *       Lexical scope checking  - done
+ *       Global scope checking - done
+ *       Array index checking - 
+ *       Operations checking, e.g. string + int - done
+ *       Return type check - 
  *	 Index type check - we could make this a grammar rule, but a semantic check is fine too
 *        ID name validation (no crazy characters though scanner helps)
 *	Check braces in array actual assignment for right type/size
@@ -36,6 +36,7 @@ type exception_scope = {
 type translation_environment = {
   scope:S.symbol_table;			                (* symbol table for vars *)
 	exception_scope : exception_scope; 			(* sym tab for exceptions *)
+	return_type: string * Types.t;
   (*
 	return_type : Types.t;
   in_switch : bool;
@@ -81,6 +82,7 @@ let weak_eq_type t1 t2 =
 	| Types.Char,Types.Char -> true
 	| Types.Float,Types.Float -> true
 	| Types.String,Types.String -> true
+	| Types.Void, Types.Void -> true
 	| _, _ -> false
 
 let check ((globals: (string * string * string) list), (functions : Ast.func_decl list)) = 
@@ -248,6 +250,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   	| Ast.Return(e) ->
   		let e = expr env e in
   		let (ep, t) = e in
+			let (fname, return_type) = env.return_type in
+			if not (weak_eq_type t return_type ) then
+  			raise (Failure ("Return type mismatch: return type of function '" ^
+								fname ^ "' is " ^ 
+  							string_of_type return_type ^ "', but '" ^
+  							string_of_type t ^ "' is found." ));
   		Sast.Return(ep)
   		 
   	| Ast.Block(sl) ->
@@ -283,9 +291,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 	in
 	let scope' = { S.parent = None; S.variables = vars } 
 	and exceptions' = { excep_parent = None; exceptions = [] } 
+	and return_type' = ("global",Types.Void);
 	in
 	(* New environment for globals *)
-	let env' = { scope = scope'; exception_scope = exceptions' }
+	let env' = { scope = scope'; 
+							 exception_scope = exceptions';
+							 return_type = return_type'}
 	in
 	
 	(*	
@@ -304,11 +315,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				let ftype = Types.type_from_string fdecl.ftype in
 				 
 				(* Environment for current function should include globals and formals *)
-				let scope = { S.parent = Some(env'.scope); S.variables = [] } 
+				let scope_p = { S.parent = Some(env'.scope); S.variables = [] } 
 				and exceptions = { excep_parent = Some(env'.exception_scope); exceptions = [] } 
+				and return_type_p = (fdecl.fname,ftype)
 				in
 	
-				let env = { scope = scope; exception_scope = exceptions }
+				let env = { scope = scope_p; exception_scope = exceptions; return_type = return_type_p }
 				in
 								
 				(* Convert formals *)
