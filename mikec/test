@@ -18,10 +18,11 @@ parser.add_argument('--nopass', help="Disables showing passing test cases", acti
 parser.add_argument('--nofail', help="Disables showing failing test cases", action='store_true')
 
 flags = parser.parse_args()
-
 microcpath = os.getcwd() + "/microc"
+FAIL,PASS,TOTALTESTS,TESTING = 0,0,0,0
 
 def getTestPaths():
+    global TOTALTESTS,TESTING
     allPaths = []
     current = os.getcwd()
     print(current)
@@ -29,7 +30,9 @@ def getTestPaths():
         for test in tup[2]:
             allPaths.append(current + tup[0][1:] + '/' + test)
     allPaths = filter(lambda x: x[-2:] == 'mc', allPaths)
+    TOTALTESTS = len(allPaths)
     allPaths = filter(lambda x: flags.directory in x, allPaths)
+    TESTING = len(allPaths)
     return allPaths
 
 def setup():
@@ -44,14 +47,17 @@ def setup():
 
 def test(filepath):
     code = open(filepath).read().encode('ascii','ignore')
+    global FAIL,PASS
     try:
         p = Popen([microcpath,'-C'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
         out,err = p.communicate(input=code)
         if "error" in out and not flags.nofail:
             pt(1,"%s\n%s" % (filepath,out))
             pt(3, code)
+            FAIL += 1
         elif not flags.nopass:
             pt(2, "%s PASSED" % filepath)
+            PASS += 1
     except Exception as e:
         pt(3, "Failed MilliC %s:%s" % (filepath,e))
     if flags.nogcc:
@@ -72,3 +78,6 @@ if __name__ == "__main__":
         test(t)
     if not flags.noclean:
         call(['make','clean'])
+    pt(4,"Testing %s / %s Total" % (TESTING,TOTALTESTS))
+    pt(4,"%s FAILED %s PASSED" % (FAIL,PASS))
+

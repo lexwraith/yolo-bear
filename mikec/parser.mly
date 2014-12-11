@@ -70,11 +70,12 @@ stmt_list:
 
 /* Cause side effects */
 stmt:
-  | expr SEMI { Expr($1) } /* TODO: This should never happen */
-/* | TYPE ID SEMI { VDecl($1,$2) }*/ /* Do we really need this? */ 
+  | expr SEMI { Expr($1) }
+  | TYPE ID SEMI { VDecl($1,$2) }
   | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) }
   | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) } /* TODO: Chained assignments */
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) } /* Can we merge literals? */
+  | PRINT LPAREN strliterals COMMA id_list RPAREN SEMI {Printlist($3,$5)}
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
@@ -118,6 +119,10 @@ strliterals:
   | STR              { $1 }
   | CHR              { $1 }
 
+id_list:
+  ID { [$1] }
+  |  ID COMMA id_list { $1 :: $3}
+
 actuals_opt:
     /* nothing */ { [] }
   | actuals_list  { List.rev $1 }
@@ -146,6 +151,4 @@ elem_list:
 elem:
   strliterals { [$1] } 
 /*  | elem_list_braces { $1 }*/ /* What the fuck. */
-id_list:
-  ID { [$1] }
-  |  ID COMMA id_list { $1 :: $3}
+
