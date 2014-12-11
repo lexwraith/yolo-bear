@@ -84,6 +84,10 @@ stmt:
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
+vdecl_opt:
+  /* nothing */ { Noexpr}
+  | expr {$1}
+
 expr_opt:
     /* nothing */ { Noexpr }
   | expr          { $1 }
@@ -93,6 +97,9 @@ expr_opt:
 expr:
   literals           { $1 }
   | ID               { Id($1) }
+  | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
+  | LPAREN expr RPAREN { $2 }
+  | ID ASSIGN expr{ Assign($1, $3) } /* For chained assignments */
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -103,9 +110,6 @@ expr:
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
-  | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
-  | LPAREN expr RPAREN { $2 }
-  | ID ASSIGN expr { Assign($1, $3) } /* For chained assignments */
 
 literals:
     ILITERAL         { ILiteral($1) }
