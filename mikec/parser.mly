@@ -75,7 +75,7 @@ stmt:
   | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) }
   | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) } /* TODO: This might need to move for chained assignments */
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) } /* Can we merge literals? */
-  | RETURN expr SEMI { Return($2) }
+  | RETURN expr_opt SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
