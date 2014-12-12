@@ -1,5 +1,7 @@
-OBJS = scanner.cmo parser.cmo ast.cmo ccompile.cmo microc.cmo \
-#       types.cmo sast.cmo semantic.cmo\
+OBJS = scanner.cmo parser.cmo ast.cmo \
+       types.cmo sast.cmo semantic.cmo\
+       ccompilesast.cmo \
+	   ccompile.cmo microc.cmo
 
 TESTS = base-1 base0 base1 base2 base3
 
@@ -8,7 +10,9 @@ TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	microc.ml \
 	$(TESTS:%=tests/test-%.mc) \
 	$(TESTS:%=tests/test-%.out) \
-#	types.ml sast.ml semantic.ml
+	types.ml sast.ml semantic.ml \
+	ccompliesast.ml;
+
 microc : $(OBJS)
 	ocamlc -o microc $(OBJS)
 
