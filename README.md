@@ -1,25 +1,30 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
-* TYPE ID+ (for declaration chaining)
-* Chained variable declarations
 * {} symbols for array declaration - Use nesting strategy
-* PENDING ELI - sizeof/malloc - Treat as builtin function
 
 Eli -
 * Continue developing idea on dynamic arrays/garbage collection/memory management
 
 Yuchen -
-* Continue working on semantic - incremental is good
 * Add semantic checking and ast-sast converting for 'Array', 'Print'...
 * Add return type checking 
 * Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
-* Finish the tester and make it run tests
-* More test cases
-* Conslidate test cases
-* 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+* 100 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+
+###12/12/14###
+Mike -
+* Huge consolidation of Yuchen
+* Fleshing out GCC in test
+
+###12/11/14###
+Eli -
+* Split up all test cases into incremental
+
+Yuchen -
+* Worked miracles in semantic analyzer
 
 ###12/10/14###
 Mike -
