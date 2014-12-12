@@ -1,7 +1,10 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
+* TYPE ID+ (for declaration chaining)
+* Chained variable declarations
 * {} symbols for array declaration - Use nesting strategy
+* PENDING ELI - sizeof/malloc - Treat as builtin function
 
 Eli -
 * Continue developing idea on dynamic arrays/garbage collection/memory management
@@ -9,11 +12,13 @@ Eli -
 Yuchen -
 * Continue working on semantic - incremental is good
 * Add semantic checking and ast-sast converting for 'Array', 'Print'...
-* Problems with global environment scope
-* Problems with the scope inside the parenthesis of 'While' and 'For' 
+* Add return type checking 
 * Write the function converting 'program' in ast to 'program' in sast
 
 Prateek -
+* Finish the tester and make it run tests
+* More test cases
+* Conslidate test cases
 * 25 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
 
 ###12/10/14###

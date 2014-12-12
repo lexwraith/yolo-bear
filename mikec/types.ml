@@ -14,10 +14,23 @@ let rec string_of_type t1 =
 	|	Int -> "Int"
 	| Char -> "Char"
 	| String -> "String"
+	| Float -> "Float"
 	| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*)
 	| Array(t_a, num) ->  (string_of_type t_a) ^ "[" ^ (string_of_int num) ^ "]"	              
 	| Exception(s) -> "Exception: " ^ s
 	| _ -> "Unknown type"
+
+let rec output_of_type t1 =
+	match t1 with
+		Void -> "void"
+	|	Int -> "int"
+	| Char -> "char"
+	| String -> "String"
+	| Float -> "float"
+	(*| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*) *)
+	| Array(t_a, _) ->  output_of_type t_a	              
+	| Exception(_) -> "exception"
+	| _ -> ""
 
 let type_from_string s1 =
 	match s1 with

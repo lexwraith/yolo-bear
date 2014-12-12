@@ -1,13 +1,13 @@
 (* Takes in ast.program (see definition) and raises error if something doesn't add up*)
 
-(* TODO: Parameter length checking
- *       Type checking for variable declarations
- *       Type checking for function calls 
- *       Lexical scope checking
- *       Global scope checking
- *       Array index checking
- *       Operations checking, e.g. string + int
- *       Return type check
+(* TODO: Parameter length checking - number of parameter? - done
+ *       Type checking for variable declarations - done
+ *       Type checking for function calls - done
+ *       Lexical scope checking  - done
+ *       Global scope checking - done
+ *       Array index checking - 
+ *       Operations checking, e.g. string + int - done
+ *       Return type check - 
  *	 Index type check - we could make this a grammar rule, but a semantic check is fine too
 *        ID name validation (no crazy characters though scanner helps)
 *	Check braces in array actual assignment for right type/size
@@ -27,6 +27,7 @@ open Types
 
 module NameMap = Map.Make(String)
 
+
 type exception_scope = {
 	excep_parent : exception_scope option;
 	mutable exceptions : string list 
@@ -34,7 +35,8 @@ type exception_scope = {
 
 type translation_environment = {
   scope:S.symbol_table;			                (* symbol table for vars *)
-	exception_scope : exception_scope; 			(* sym tab for exceptions *) 
+	exception_scope : exception_scope; 			(* sym tab for exceptions *)
+	return_type: string * Types.t;
   (*
 	return_type : Types.t;
   in_switch : bool;
@@ -51,16 +53,17 @@ type translation_environment = {
 (* Find variable in current scope ant its parent scopes *)
 let rec find_variable (scope : S.symbol_table) name =
   try
-  	List.find (fun (s, _) -> s = name) scope.variables
+  	List.find (fun (s, _) -> s = name) scope.S.variables
   with Not_found ->
-    match scope.parent with
+    match scope.S.parent with
     	Some(parent) -> find_variable parent name 
   	| _ -> raise Not_found
 
-let rec is_new_variable (scope : S.symbol_table) name =
+(* Check if the name of variable conflicts with declared variables in current scope*)
+let is_new_variable (scope : S.symbol_table) name =
     (* TODO can global variable be redeclared? *)
 	try
-  	let (_,_) = List.find (fun (s, _) -> s = name) scope.variables in
+  	let (_,_) = List.find (fun (s, _) -> s = name) scope.S.variables in
 		raise (Failure ( name ^ " already exists"));
 		()
   with Not_found -> ()
@@ -79,12 +82,13 @@ let weak_eq_type t1 t2 =
 	| Types.Char,Types.Char -> true
 	| Types.Float,Types.Float -> true
 	| Types.String,Types.String -> true
+	| Types.Void, Types.Void -> true
 	| _, _ -> false
 
-let check (globals,functions) = 
+let check ((globals: (string * string * string) list), (functions : Ast.func_decl list)) = 
 	(* Construct a map of functions' name and functions' decl *)
-	let func_decls : (func_decl NameMap.t) = List.fold_left
-      (fun funcs fdecl -> NameMap.add fdecl.fname fdecl funcs)
+	let func_decls : (Ast.func_decl NameMap.t) = List.fold_left
+      (fun funcs (fdecl:Ast.func_decl) -> NameMap.add fdecl.fname fdecl funcs)
       NameMap.empty functions
   in
 
@@ -100,7 +104,7 @@ let check (globals,functions) =
   	| Ast.Id(vname) -> let vdecl = try
   			find_variable env.scope vname (* locate a variable by name *) 
     	with Not_found ->
-    		raise (Failure ("undeclared identifier " ^ vname))
+    		raise (Failure ("Undeclared identifier: " ^ vname))
     	in
     	let (_, typ) = vdecl in (* get the variable’s type *) 
     	Sast.Id(vdecl), typ
@@ -121,9 +125,9 @@ let check (globals,functions) =
   			(* error ("Type mismatch in comparison: left is " ^
   							Printer.string_of_sast_type t1 ^ "\" right is \"" ^
   							Printer.string_of_sast_type t2 ^ "\"" ) loc; *)
-  			raise (Failure ("Type mismatch in comparison: left is " ^
-  							string_of_type t1 ^ "\" right is \"" ^
-  							string_of_type t2 ^ "\"" ));
+  			raise (Failure ("Type mismatch in comparison: left is '" ^
+  							string_of_type t1 ^ "' right is '" ^
+  							string_of_type t2 ^ "'" ));
   		Sast.Binop(ep1, op, ep2), Types.Int (* Success: result is int *)
   	| Ast.Assign(id, ep2) ->
   		let e1 = expr env (Ast.Id(id)) in
@@ -131,9 +135,9 @@ let check (globals,functions) =
   		let (_, t1) = e1 in
   		let (ep2, t2) = e2 in
   		if not (weak_eq_type t1 t2) then
-  			raise (Failure ("Type mismatch in assign value: left is " ^
-  							string_of_type t1 ^ "\" right is \"" ^
-  							string_of_type t2 ^ "\"" ));
+  			raise (Failure ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
+  							string_of_type t1 ^ "', but '" ^
+  							string_of_type t2 ^ "' is given." ));
   		Sast.Assign(id,ep2), Types.Void
   		
   	| Ast.Call(name, args) ->
@@ -226,9 +230,9 @@ let check (globals,functions) =
   		let (ep2, t2) = e2 in
   		(* Should assign the same type as required *)
   		if not (weak_eq_type t1 t2) then
-  			raise (Failure ("Type mismatch in variable declaration: left is " ^
-  							string_of_type t1 ^ "\" right is \"" ^
-  							string_of_type t2 ^ "\"" ));
+  			raise (Failure ("Type mismatch in variable declaration: left is '" ^
+  							string_of_type t1 ^ "' right is '" ^
+  							string_of_type t2 ^ "'" ));
   		env.scope.S.variables <- (id,t1) :: env.scope.S.variables;
   		Sast.NAssign(t1,id,ep2)
   		
@@ -246,7 +250,23 @@ let check (globals,functions) =
   	| Ast.Return(e) ->
   		let e = expr env e in
   		let (ep, t) = e in
+			let (fname, return_type) = env.return_type in
+			if not (weak_eq_type t return_type ) then
+  			raise (Failure ("Return type mismatch: return type of function '" ^
+								fname ^ "' is " ^ 
+  							string_of_type return_type ^ "', but '" ^
+  							string_of_type t ^ "' is found." ));
   		Sast.Return(ep)
+			
+		| Ast.Print(s) ->
+			Sast.Print(s)
+			
+		| Ast.Arr(t,id,ind) ->
+			let t = Types.type_from_string t in
+			Sast.Arr(t,id,ind)
+			
+		| Ast.Braces(s)->
+			Sast.Braces(s)			
   		 
   	| Ast.Block(sl) ->
   		(* New scopes: parent is the existing scope, start out empty *)
@@ -272,6 +292,13 @@ let check (globals,functions) =
 
 	(* Begin of function 'check' *)
 	(* Convert global:(string*string*string) to variable_decl list *)
+	let sast_globals = List.fold_left
+			(fun varlist global1 -> 
+				let (t, name, v) = global1 in
+				let t = Types.type_from_string t in
+					(t, name, v)::varlist )
+			[] globals
+	in
 	let vars = List.fold_left
 			(fun varlist global1 -> 
 				let (t, name, _) = global1 in
@@ -279,14 +306,14 @@ let check (globals,functions) =
 					(name,t)::varlist )
 			[] globals
 	in
-	
-	(* Body of "run": initialize global variables to 0, find and run "main" *)
 	let scope' = { S.parent = None; S.variables = vars } 
 	and exceptions' = { excep_parent = None; exceptions = [] } 
+	and return_type' = ("global",Types.Void);
 	in
-    
 	(* New environment for globals *)
-	let env' = { scope = scope'; exception_scope = exceptions' }
+	let env' = { scope = scope'; 
+							 exception_scope = exceptions';
+							 return_type = return_type'}
 	in
 	
 	(*	
@@ -295,12 +322,66 @@ let check (globals,functions) =
   in
 	*)
 	
+	(* Convert functions in ast to functions in sast *)
+	let sast_fdecls = 
+		List.fold_left 
+			(fun fdecl_list (fdecl:Ast.func_decl)->
+				
+				(* Convert fdecl in ast to fdecl in sast, perform semantic checking for each fdecl*)
+				(* Convert ftype *)
+				let ftype = Types.type_from_string fdecl.ftype in
+				 
+				(* Environment for current function should include globals and formals *)
+				let scope_p = { S.parent = Some(env'.scope); S.variables = [] } 
+				and exceptions = { excep_parent = Some(env'.exception_scope); exceptions = [] } 
+				and return_type_p = (fdecl.fname,ftype)
+				in
+	
+				let env = { scope = scope_p; exception_scope = exceptions; return_type = return_type_p }
+				in
+								
+				(* Convert formals *)
+				let formals' = List.fold_left
+					(fun formal_list formal->
+						let (t, id) = formal in 
+						let t = Types.type_from_string t in
+						env.scope.S.variables <- (id,t) :: env.scope.S.variables;
+						(t, id)::formal_list)
+					[] fdecl.formals
+				in
+				
+				(* Convert body *)
+				let body' = List.fold_left 
+					(fun stmt_list body->
+						let stmt_detail = stmt env body in
+						stmt_detail::stmt_list)
+					[] fdecl.body
+				in
+				
+				let func = 
+					{
+						ftype_s = ftype;
+    				fname_s = fdecl.fname;
+    				formals_s =List.rev formals';
+    				body_s =List.rev body';
+					} in
+				func::fdecl_list
+			) [] functions
+		in
+		(List.rev sast_globals, List.rev sast_fdecls);
+						 
+		
+				
+	
 	(* Find 'main' function *)
+	
+	(*
 	let main_fun = 
 	try
    	NameMap.find "main" func_decls
-  with Not_found -> raise (Failure ("did not find the main() function"))
+  with Not_found -> raise (Failure ("Cannot find the main() function"))
 	in
 	stmt env' (Ast.Block(main_fun.body))
+	*)
 	(*ignore (List.fold_left (fun env stmts -> stmt env stmts) env' main_fun.body)*)
 	
