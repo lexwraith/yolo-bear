@@ -11,7 +11,7 @@ def compiling(direc):
 	gcc_passed = []
 	gcc_failed = []
 
-	path = "/home/prateek/Desktop/yolo-bear/mikec/tests/" + direc + "/"
+	path = "/yolo-bear/mikec/tests/" + direc + "/"
 
 	# get all file name
 	for file in glob.glob(path + "*.mc"):
@@ -96,7 +96,7 @@ def semantic(direc):
 	failed = []
 	passed = []
 	
-	path = "/home/prateek/Desktop/yolo-bear/mikec/tests/" + direc + "/"
+	path = "/yolo-bear/mikec/tests/" + direc + "/"
 
 	# get all file name
 	for file in glob.glob(path + "*.mc"):
@@ -138,4 +138,4 @@ if __name__ == "__main__":
 	else:
 		direct = args.Semantic
 		semantic(direct)
-	#print a
+	
