@@ -1,0 +1,14 @@
+/*test while*/
+
+int main()
+{
+	int i;
+	int sum;
+	sum =0;
+	i = 1;
+	while ( i > 5) {
+		i = i -1;
+		sum = sum + i;
+	}
+	return sum;
+}
