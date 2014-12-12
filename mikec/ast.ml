@@ -26,6 +26,14 @@ type stmt =
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
   | Braces of string list list 
 
+
+(*type elem_list = 
+  elem list
+
+type elem =
+   string
+  | elem_list 
+*)
 type func_decl = { 
     ftype : string;
     fname : string;

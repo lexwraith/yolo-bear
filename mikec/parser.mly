@@ -152,7 +152,10 @@ elem_list:
   elem { [$1] }
   | elem COMMA elem_list {$1 :: $3} 
 
-elem:
+/* Consider force typing arrays */
+/* Two levels */
+/* (string="", elem_list_braces)*/
+elem: 
   strliterals { [$1] } 
 /*  | elem_list_braces { $1 }*/ /* What the fuck. */
 
