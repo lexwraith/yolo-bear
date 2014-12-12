@@ -4,14 +4,12 @@ import glob
 import sys
 import argparse
  
-def compiling(direc):
+def compiling(direc,path):
 	names = []
 	failed = []
 	passed = []
 	gcc_passed = []
 	gcc_failed = []
-
-	path = "/yolo-bear/mikec/tests/" + direc + "/"
 
 	# get all file name
 	for file in glob.glob(path + "*.mc"):
@@ -91,12 +89,10 @@ def compiling(direc):
 		else:
 			os.system("rm -f -r " + path + i + "_diff.txt")
 
-def semantic(direc):
+def semantic(direc,path):
 	names = []
 	failed = []
 	passed = []
-	
-	path = "/yolo-bear/mikec/tests/" + direc + "/"
 
 	# get all file name
 	for file in glob.glob(path + "*.mc"):
@@ -134,8 +130,10 @@ if __name__ == "__main__":
 		parser.error('No action requested, add -Compile or -Semantic')
 	elif args.Compile:
 		direct = args.Compile
-		compiling(direct)
+		path = "/yolo-bear/mikec/tests/" + direct + "/"
+		compiling(direct,path)
 	else:
 		direct = args.Semantic
-		semantic(direct)
+		path = "/yolo-bear/mikec/tests/" + direct + "/"
+		semantic(direct,path)
 	
