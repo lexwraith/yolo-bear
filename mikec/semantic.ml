@@ -257,6 +257,16 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type return_type ^ "', but '" ^
   							string_of_type t ^ "' is found." ));
   		Sast.Return(ep)
+			
+		| Ast.Print(s) ->
+			Sast.Print(s)
+			
+		| Ast.Arr(t,id,ind) ->
+			let t = Types.type_from_string t in
+			Sast.Arr(t,id,ind)
+			
+		| Ast.Braces(s)->
+			Sast.Braces(s)			
   		 
   	| Ast.Block(sl) ->
   		(* New scopes: parent is the existing scope, start out empty *)
