@@ -52,15 +52,18 @@ let rec expr_s = function
 let rec stmt_s = function
    Block(symbol_table,ss,unused_vars) -> "{\n"^ (String.concat "\n"
                               (List.map (fun s -> stmt_s s ) ss)) ^"\n"
+															(*
 															^ "/*Variables do not need any more:" 
 															^ (print_vars symbol_table.S.variables)
-															^ "\n*/\n}"
+															^ "\n*/\n" *)
+															^ "}"
  | Expr(e,_) -> expr_s e
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Return(e, vars) -> 
+	(*
 		"/*\nVariables to be cleaned before return:" ^
-		(print_vars vars) ^ "\n*/\n" ^
+		(print_vars vars) ^ "\n*/\n" ^ *)
 		"return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
