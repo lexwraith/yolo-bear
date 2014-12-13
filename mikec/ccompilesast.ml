@@ -87,7 +87,10 @@ let rec stmt_s = function
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
  | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> string_of_int s) l) ^ "];"
  | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
-
+ | AAssign(t,id,ind, e) -> Types.output_of_type t ^ " " ^ id ^
+			"[" ^ String.concat "][" (List.map (fun s-> string_of_int s) ind) ^ "]" ^
+		 	" = " ^ expr_s e ^ ";"
+ | DArr(t,id,dim)-> Types.output_of_type t ^ " " ^ id ^ " dim: " ^ (string_of_int dim) 
 let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ " " ^ f.fname_s ^ "(" ^
   String.concat "\n" (List.map typstr f.formals_s) ^ "){\n" ^

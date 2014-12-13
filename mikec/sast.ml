@@ -32,7 +32,9 @@ type stmt_detail =
   | NAssign of Types.t * string * expr_detail (* Variable declaration AND assignment *)
   | Arr of Types.t * string * int list  (* Type, and ID, and a list of indices *)
   | Braces of Types.t * string * int list * Ast.elem list(* Type, ID, Indices, Values *)
-
+	| DArr of Types.t * string * int (*Type, ID, Dimensions *)
+  | AAssign of Types.t * string * int list * expr_detail (*Type, ID,value position, new value*)
+	
 type expression = expr_detail * Types.t
 
 

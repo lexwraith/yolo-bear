@@ -295,7 +295,31 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			
 		| Ast.Braces(t,id,ind,elem)->
 			let t = Types.type_from_string t in
-			Sast.Braces(t,id,ind,elem)			
+			Sast.Braces(t,id,ind,elem)	
+		
+		(* Dynamic Array *)
+		| Ast.DArr(t,id,dim) -> 
+			is_new_variable env.scope id;
+  		let t = Types.type_from_string t in
+			let t = Types.DArray(t,dim) in
+			env.scope.S.variables <- (id,t) :: env.scope.S.variables;
+			Sast.DArr(t,id,dim)
+		
+		| Ast.AAssign(t,id,ind,ep) ->
+			(*is_new_variable env.scope id;*)
+			let t1 = Types.type_from_string t in
+  		let e2 = expr env ep in
+  		let (ep2, t2) = e2 in
+  		(*
+  		if not (weak_eq_type t1 t2) then
+  			raise (Failure ("Type mismatch in array declaration: array '"^ id ^
+								 "' is '" ^
+  							string_of_type t1 ^ "' array, but right is '" ^
+  							string_of_type t2 ^ "'" ));
+			*)
+  		env.scope.S.variables <- (id,t1) :: env.scope.S.variables;
+  		Sast.AAssign(t1,id,ind,ep2)
+			
   		 
   	| Ast.Block(sl) ->
   		(* New scopes: parent is the existing scope, start out empty *)
