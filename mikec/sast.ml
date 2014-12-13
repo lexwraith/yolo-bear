@@ -20,11 +20,11 @@ type expr_detail =
   | Assign of string * expr_detail
 
 type stmt_detail =
-    Block of S.symbol_table * stmt_detail list
+    Block of S.symbol_table * stmt_detail list * variable_decl list
   | Expr of expr_detail * Types.t
   | Print of string
 	| Printlist of string * string list
-  | Return of expr_detail
+  | Return of expr_detail * variable_decl list
   | If of expr_detail * stmt_detail * stmt_detail
   | For of expr_detail * expr_detail * expr_detail * stmt_detail
   | While of expr_detail * stmt_detail
