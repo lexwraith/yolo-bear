@@ -265,8 +265,9 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			let t = Types.type_from_string t in
 			Sast.Arr(t,id,ind)
 			
-		| Ast.Braces(s)->
-			Sast.Braces(s)			
+		| Ast.Braces(t,id,ind,elem)->
+			let t = Types.type_from_string t in
+			Sast.Braces(t,id,ind,elem)			
   		 
   	| Ast.Block(sl) ->
   		(* New scopes: parent is the existing scope, start out empty *)
