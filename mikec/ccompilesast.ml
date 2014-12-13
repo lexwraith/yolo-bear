@@ -26,12 +26,19 @@ let strstr = function (a,b) -> a ^ " " ^ b
 
 let strstrstr = function (a,b,c) -> a ^ " " ^ b ^ " = " ^ c ^ ";" (* Currently only for global vars *)
 
-let print_vars = function unused_vars->
+let print_vars = function vars->
 	List.fold_left 
 		(fun str var -> 
 			let (id,t) = var in
 			str ^ "\n" ^ (Types.string_of_type t) ^ " "^ id)
-		"" unused_vars
+		"" vars
+		
+let free_array = function array->
+	List.fold_left 
+		(fun str var -> 
+			let (id,t) = var in
+			str ^ "\nfreeArray(" ^ (Types.string_of_type t) ^ " "^ id ^ ")")
+		"" array		
 
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
@@ -52,9 +59,9 @@ let rec expr_s = function
 let rec stmt_s = function
    Block(symbol_table,ss,unused_vars) -> "{\n"^ (String.concat "\n"
                               (List.map (fun s -> stmt_s s ) ss)) ^"\n"
-															(*
-															^ "/*Variables do not need any more:" 
-															^ (print_vars symbol_table.S.variables)
+														(*
+															^ "/*Free Arrays:" 
+															^ (free_array symbol_table.S.variables)
 															^ "\n*/\n" *)
 															^ "}"
  | Expr(e,_) -> expr_s e
@@ -62,13 +69,14 @@ let rec stmt_s = function
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Return(e, vars) -> 
 	(*
-		"/*\nVariables to be cleaned before return:" ^
-		(print_vars vars) ^ "\n*/\n" ^ *)
+		"/*\nFree Arrays:" ^
+		(free_array vars) ^ "\n*/\n" ^ 
+		*)
 		"return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
- | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ ") (" ^ expr_s e2 ^
-                            ") (" ^ expr_s e3 ^ ") (" ^ stmt_s s ^ ")"
+ | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ " " ^ expr_s e2 ^
+                            "; " ^ expr_s e3 ^ ") " ^ stmt_s s ^ ""
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
@@ -79,7 +87,7 @@ let func_decl_s (f:func_decl_detail) =
   String.concat "\n" (List.map typstr f.formals_s) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
-let program_s (vars, funcs) = "#include <stdio.h>\n\n" ^ 
+let program_s (vars, funcs) = "#include <stdio.h>\n#include \"array.h\"\n\n" ^ 
 				String.concat ", " (List.map typstrstr vars) ^ "\n" ^
 				String.concat "\n" (List.map func_decl_s funcs)
 
