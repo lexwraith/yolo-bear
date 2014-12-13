@@ -64,9 +64,29 @@ let is_new_variable (scope : S.symbol_table) name =
     (* TODO can global variable be redeclared? *)
 	try
   	let (_,_) = List.find (fun (s, _) -> s = name) scope.S.variables in
-		raise (Failure ( name ^ " already exists"));
+		raise (Failure ( "'" ^ name ^ "' already exists"));
 		()
   with Not_found -> ()
+	
+let check_unused_var (scope : S.symbol_table) = 
+	match scope.S.parent with
+	| Some(parent) -> 
+		List.fold_left (fun list var -> 
+			try
+				let (name,_) = var in
+					ignore(find_variable parent name);
+				list 
+			with Not_found -> var::list)
+			[] scope.S.variables 
+	| _ -> scope.S.variables 
+
+let rec clean_vars (scope : S.symbol_table) = 
+	match scope.S.parent with
+	| Some(parent) -> 
+		let vars = scope.S.variables in
+		let parent_vars = clean_vars parent in
+		List.append vars parent_vars
+	| _ -> [] 
 
 (* check if e has type integer *)
 let require_integer (env:translation_environment) e str =
@@ -245,6 +265,9 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   	(* TODO Should it check the type of s? *)
   	| Ast.Print(s) ->
   		Sast.Print(s)
+			
+		| Ast.Printlist(s,l) ->
+			Sast.Printlist(s,l)
   		
   	(* TODO Should not be functions here? *)
   	| Ast.Return(e) ->
@@ -256,13 +279,18 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 								fname ^ "' is " ^ 
   							string_of_type return_type ^ "', but '" ^
   							string_of_type t ^ "' is found." ));
-  		Sast.Return(ep)
+			let scope = env.scope in
+			let vars_to_clean = clean_vars scope in
+  		Sast.Return(ep,vars_to_clean)
 			
 		| Ast.Print(s) ->
 			Sast.Print(s)
 			
 		| Ast.Arr(t,id,ind) ->
-			let t = Types.type_from_string t in
+			is_new_variable env.scope id;
+  		let t = Types.type_from_string t in
+			let t = Types.Array(t,ind) in
+  		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
 			Sast.Arr(t,id,ind)
 			
 		| Ast.Braces(t,id,ind,elem)->
@@ -284,8 +312,8 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let sl = List.map (fun s -> stmt env' s) sl in
   		scope'.S.variables <-
   			List.rev scope'.S.variables; (* side-effect *) 
-  			
-  		Sast.Block(scope', sl) (* Success: return block with symbols *)	
+  		let unused_var = check_unused_var scope' in
+  		Sast.Block(scope', sl, unused_var) (* Success: return block with symbols *)	
 	in
 	
 	(* End of statement check *)
