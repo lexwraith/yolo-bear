@@ -1,5 +1,9 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
+type elem = 
+    ElemLiteral of string
+  | ElemList of elem list
+
 type expr =
     ILiteral of int
   | Float of string (* TODO: Consider changing this*)
@@ -10,6 +14,7 @@ type expr =
   | Call of string * expr list
   | Noexpr
   | Assign of string * expr
+  | Array of elem
 
 type stmt =
     Block of stmt list
@@ -24,11 +29,8 @@ type stmt =
   | VDecllist of (string * string) list
   | NAssign of string * string * expr (* Variable declaration AND assignment *)
   | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
-  | Braces of string list list 
+  | Braces of string * string * int list * elem list (* Type, ID, Indices, Values *)
 
-type elem = 
-    ElemLiteral of string
-  | ElemList of elem list
 
 type func_decl = { 
     ftype : string;

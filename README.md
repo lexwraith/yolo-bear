@@ -2,10 +2,10 @@
 
 ##TODO:##
 Mike -
+
 ####GRAMMAR####
 * Fix "return"; -doesn't work
 * Fix control structures;
-* {} symbols for array declaration - Use nesting strategy
 
 
 Eli -
@@ -20,7 +20,11 @@ Prateek -
 ###12/12/14###
 Mike -
 * Huge consolidation of Yuchen's work
-
+* Fixed all tests cases that use single line comments
+* Added more static array test cases
+* UNTESTED - Array value assignment in
+Eli -
+* Added set of test cases for dynamic arrays
 
 ###12/11/14###
 Eli -
