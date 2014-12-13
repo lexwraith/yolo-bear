@@ -15,7 +15,9 @@ parser.add_argument('--nomillic', help='Disables makefile error messages', actio
 parser.add_argument('--nogcc', help="Does full compile but no running", action="store_true")
 parser.add_argument('--noclean', help='Disable cleanup post run', action="store_true")
 parser.add_argument('--nopass', help="Disables showing passing test cases", action='store_true')
+parser.add_argument('--showpass', help="Shows passing test cases", action='store_true')
 parser.add_argument('--nofail', help="Disables showing failing test cases", action='store_true')
+parser.add_argument('--showfail', help="Shows failing test cases", action='store_true')
 
 flags = parser.parse_args()
 microcpath = os.getcwd() + "/microc"
@@ -53,10 +55,11 @@ def test(filepath):
         out,err = p.communicate(input=code)
         if "error" in out and not flags.nofail:
             pt(1,"%s\n%s" % (filepath,out))
-            pt(3, code)
+            if flags.showfail:  pt(3, code)
             FAIL += 1
         elif not flags.nopass:
             pt(2, "%s PASSED" % filepath)
+            if flags.showpass: pt(5,code)
             PASS += 1
     except Exception as e:
         pt(3, "Failed MilliC %s:%s" % (filepath,e))
