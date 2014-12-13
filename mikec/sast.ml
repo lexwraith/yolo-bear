@@ -23,6 +23,7 @@ type stmt_detail =
     Block of S.symbol_table * stmt_detail list
   | Expr of expr_detail * Types.t
   | Print of string
+	| Printlist of string * string list
   | Return of expr_detail
   | If of expr_detail * stmt_detail * stmt_detail
   | For of expr_detail * expr_detail * expr_detail * stmt_detail

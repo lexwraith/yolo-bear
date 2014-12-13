@@ -47,7 +47,7 @@ let rec stmt_s = function
                               (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss)
  | Expr(e,_) -> expr_s e
  | Print(s) -> "printf(" ^ s ^ ");"
-(* | Printlist(s,l) -> "printf(" ^ s ^ String.concat "," l *)
+ | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Return(e) -> "return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"

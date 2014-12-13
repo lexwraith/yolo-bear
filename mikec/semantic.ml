@@ -64,7 +64,7 @@ let is_new_variable (scope : S.symbol_table) name =
     (* TODO can global variable be redeclared? *)
 	try
   	let (_,_) = List.find (fun (s, _) -> s = name) scope.S.variables in
-		raise (Failure ( name ^ " already exists"));
+		raise (Failure ( "'" ^ name ^ "' already exists"));
 		()
   with Not_found -> ()
 
@@ -245,6 +245,9 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   	(* TODO Should it check the type of s? *)
   	| Ast.Print(s) ->
   		Sast.Print(s)
+			
+		| Ast.Printlist(s,l) ->
+			Sast.Printlist(s,l)
   		
   	(* TODO Should not be functions here? *)
   	| Ast.Return(e) ->
@@ -262,7 +265,10 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			Sast.Print(s)
 			
 		| Ast.Arr(t,id,ind) ->
-			let t = Types.type_from_string t in
+			is_new_variable env.scope id;
+  		let t = Types.type_from_string t in
+			let t = Types.Array(t,ind) in
+  		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
 			Sast.Arr(t,id,ind)
 			
 		| Ast.Braces(s)->
