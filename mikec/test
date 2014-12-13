@@ -49,7 +49,7 @@ def test(filepath):
     code = open(filepath).read().encode('ascii','ignore')
     global FAIL,PASS
     try:
-        p = Popen([microcpath,'-C'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
+        p = Popen([microcpath,'-SC'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
         out,err = p.communicate(input=code)
         if "error" in out and not flags.nofail:
             pt(1,"%s\n%s" % (filepath,out))

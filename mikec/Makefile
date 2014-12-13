@@ -11,7 +11,7 @@ TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	$(TESTS:%=tests/test-%.mc) \
 	$(TESTS:%=tests/test-%.out) \
 	types.ml sast.ml semantic.ml \
-	ccompliesast.ml;
+	ccompilesast.ml;
 
 microc : $(OBJS)
 	ocamlc -o microc $(OBJS)

@@ -1,3 +1,3 @@
 int main(char z){
-print("Hello World!");
+printf("Hello World!");
 }

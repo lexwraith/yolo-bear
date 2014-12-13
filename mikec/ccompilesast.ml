@@ -33,10 +33,10 @@ let rec expr_s = function
  | Id(v, _) ->  v
  | Float(s) -> s
  | Binop(e1, o, e2) -> expr_s e1 ^ 
-       (match o with Add -> " + " | Sub -> " - " | Mult -> " * " |
-                     Div -> " / " | Equal -> " == " | Neq -> " != " |
-                     Less -> " < " | Leq -> " <= " | Greater -> " > " |
-                     Geq -> " >= ") ^ expr_s e2  
+       (match o with Ast.Add -> " + " | Ast.Sub -> " - " | Ast.Mult -> " * " |
+                     Ast.Div -> " / " | Ast.Equal -> " == " | Ast.Neq -> " != " |
+                     Ast.Less -> " < " | Ast.Leq -> " <= " | Ast.Greater -> " > " |
+                     Ast.Geq -> " >= ") ^ expr_s e2  
  | Call(f, es) -> f ^ "(" ^
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
