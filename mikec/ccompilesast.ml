@@ -29,8 +29,7 @@ let strstrstr = function (a,b,c) -> a ^ " " ^ b ^ " = " ^ c ^ ";" (* Currently o
 let rec string_of_elem = function elem -> 
 	match elem with 
 		Ast.ElemLiteral(e) -> e
-	|	Ast.ElemList(elist) -> List.fold_left 
-			(fun str elemlist-> str ^ (string_of_elem elem)) "" elist
+	|	Ast.ElemList(elist) -> "{" ^ String.concat "," (List.map string_of_elem elist)^ "}"
 			
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
@@ -63,7 +62,7 @@ let rec stmt_s = function
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
  | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> string_of_int s) l) ^ "];"
- | Braces (t, id, ind, elem) -> List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem
+ | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
 
 let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ " " ^ f.fname_s ^ "(" ^

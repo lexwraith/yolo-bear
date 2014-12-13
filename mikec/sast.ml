@@ -30,7 +30,7 @@ type stmt_detail =
   | VDecl of Types.t * string
   | NAssign of Types.t * string * expr_detail (* Variable declaration AND assignment *)
   | Arr of Types.t * string * int list  (* Type, and ID, and a list of indices *)
-	| Braces of Types.t * string * int list * Ast.elem list(* Type, ID, Indices, Values *)
+  | Braces of Types.t * string * int list * Ast.elem list(* Type, ID, Indices, Values *)
 
 type expression = expr_detail * Types.t
 

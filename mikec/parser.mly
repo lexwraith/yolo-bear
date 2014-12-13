@@ -57,9 +57,8 @@ vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
-/* TODO : Consider cleaning this up */
-/* TYPE is changed from string to Semantic types. */
 
+/* Trying to fix this results in error AFTER compiler is written. Strange. */
 vdecl:
     TYPE ID ASSIGN ILITERAL SEMI { ($1, $2, string_of_int $4) }
   | TYPE ID ASSIGN STR SEMI { ($1, $2, $4) }
@@ -70,12 +69,16 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
+/* TODO: Could consolidate opt/list pairs */
 stmt:
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }
-  | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) }
+  | TYPE ID brackets_list SEMI { Arr($1,$2, List.rev $3) }
   | TYPE ID brackets_list ASSIGN elem_list_braces SEMI { Braces($1,$2, $3, $5) }
+  | TYPE ID brackets_list ASSIGN expr SEMI { AAssign($1, $2, $3, $5) }
   | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) }
+  | TYPE ID dbrackets_list SEMI { DArr($1, $2, $3) }
+  | ID brackets_list ASSIGN expr SEMI { AAssign("", $1, $2, $4) }
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | PRINT LPAREN strliterals COMMA id_list RPAREN SEMI {Printlist($3,$5)}
   | RETURN expr SEMI { Return($2) }
@@ -94,7 +97,9 @@ expr_opt:
     /* nothing */ { Noexpr }
   | expr          { $1 }
 
-/* Resolve into something (no side effects) */
+dbrackets_list:
+  LBRAC RBRAC { 1 }
+  | LBRAC RBRAC dbrackets_list { 1 + $3 }
 
 expr:
   literals           { $1 }
@@ -105,7 +110,7 @@ expr:
   | binop            { $1 }
 
 binop:
-   expr PLUS   expr { Binop($1, Add,   $3) }
+   expr PLUS   expr  { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
   | expr DIVIDE expr { Binop($1, Div,   $3) }
@@ -140,7 +145,6 @@ actuals_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
 
-/* Array declaration */
 brackets_opt:
   /*Nothing*/ {[]}
   | brackets_list { $1 }
@@ -149,7 +153,6 @@ brackets_list:
    LBRAC ILITERAL RBRAC { [$2] }
   | brackets_list LBRAC ILITERAL RBRAC { $3::$1 }
 
-/* Actual values */
 elem_list_braces:
   LBRACE elem_list RBRACE { $2 }
 
@@ -159,5 +162,5 @@ elem_list:
 
 elem: 
   strliterals { ElemLiteral($1) } 
-/*  | elem_list_braces { ElemList($1) }*/ /* What the fuck. */
+  | LBRACE elem_list RBRACE { ElemList($2) }
 
