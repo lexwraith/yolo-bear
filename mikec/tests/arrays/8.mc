@@ -1,3 +1,4 @@
+/*Initialize 2d array*/
 int main() {
     int a[5][5];
     a[0][0] = 00;

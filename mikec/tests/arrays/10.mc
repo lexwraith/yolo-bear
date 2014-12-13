@@ -1,3 +1,4 @@
+/*Initialize row 0 and 6 of 2d array*/
 int main() {
 
     int a[5][5];

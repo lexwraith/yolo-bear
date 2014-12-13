@@ -1,3 +1,4 @@
+/*Initialize array*/
 int main(){
     int a[5];
     a[0] = 0;
