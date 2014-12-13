@@ -10,3 +10,4 @@ testall.log
 *.swp
 microc
 *~
+*.orig
