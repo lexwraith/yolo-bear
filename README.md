@@ -18,8 +18,8 @@ Prateek -
 
 ###12/12/14###
 Mike -
-* Huge consolidation of Yuchen
-* Fleshing out GCC in test
+* Huge consolidation of Yuchen's work
+
 
 ###12/11/14###
 Eli -
