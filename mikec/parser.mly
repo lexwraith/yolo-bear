@@ -22,11 +22,6 @@
 
 %%
 
-/* 
-program consists of two lists:
-1 - global vars of string * string list
-2 - func_decls list 
-*/
 program:
    /* nothing */ { [], [] }
  | program vdecl { ($2 :: fst $1), snd $1 } 
@@ -74,7 +69,7 @@ stmt:
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }
   | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) }
-  | TYPE ID brackets_list ASSIGN elem_list_braces { Braces($1,$2, $3, $5) }
+/*  | TYPE ID brackets_list ASSIGN elem_list_braces { Braces($1,$2, $3, $5) }*/
   | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) }
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | PRINT LPAREN strliterals COMMA id_list RPAREN SEMI {Printlist($3,$5)}
