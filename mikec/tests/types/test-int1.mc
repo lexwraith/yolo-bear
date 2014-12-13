@@ -1,5 +1,3 @@
-//test basic int initialization and assignment
-
 int main(){
 
     int a;

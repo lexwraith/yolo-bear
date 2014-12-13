@@ -73,8 +73,8 @@ stmt:
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }
   | TYPE ID brackets_opt SEMI { Arr($1,$2, List.rev $3) }
-  | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) } /* TODO: Chained assignments */
-  | PRINT LPAREN strliterals RPAREN SEMI { Print($3) } /* Can we merge literals? */
+  | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) }
+  | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | PRINT LPAREN strliterals COMMA id_list RPAREN SEMI {Printlist($3,$5)}
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -113,8 +113,6 @@ binop:
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
-
-   
 
 literals:
     ILITERAL         { ILiteral($1) }
@@ -161,6 +159,6 @@ elem_list:
 /* Two levels */
 /* (string="", elem_list_braces)*/
 elem: 
-  strliterals { [$1] } 
-/*  | elem_list_braces { $1 }*/ /* What the fuck. */
+  strliterals { [ElemLiteral($1)] } 
+/*  | elem_list_braces { ElemList[$1] }*/ /* What the fuck. */
 

@@ -1,4 +1,3 @@
-//test basic float initialization and assignment
 
 int main(){
 
