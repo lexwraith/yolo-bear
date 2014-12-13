@@ -26,18 +26,26 @@ let strstr = function (a,b) -> a ^ " " ^ b
 
 let strstrstr = function (a,b,c) -> a ^ " " ^ b ^ " = " ^ c ^ ";" (* Currently only for global vars *)
 
+<<<<<<< HEAD
 let rec string_of_elem = function elem -> 
 	match elem with 
 		Ast.ElemLiteral(e) -> e
 	|	Ast.ElemList(elist) -> "{" ^ String.concat "," (List.map string_of_elem elist)^ "}"
 			
 
+let print_vars = function unused_vars->
+=======
 let print_vars = function vars->
+>>>>>>> origin/yz_1212
 	List.fold_left 
 		(fun str var -> 
 			let (id,t) = var in
 			str ^ "\n" ^ (Types.string_of_type t) ^ " "^ id)
+<<<<<<< HEAD
+		"" unused_vars
+=======
 		"" vars
+		
 let free_array = function array->
 	List.fold_left 
 		(fun str var -> 
@@ -45,6 +53,7 @@ let free_array = function array->
 			str ^ "\nfreeArray(" ^ (Types.string_of_type t) ^ " "^ id ^ ")")
 		"" array		
 
+>>>>>>> origin/yz_1212
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
  | String(s) -> s
