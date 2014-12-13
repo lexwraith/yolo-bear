@@ -5,7 +5,7 @@ type t =
 	| Char
 	| String
 	| Struct of string * ((string * t) array) (* name, fields *)
-	| Array of t * int												(* type, size *)                       
+	| Array of t * int list												(* type, size *)                       
 	| Exception of string
 
 let rec string_of_type t1 =
@@ -16,7 +16,12 @@ let rec string_of_type t1 =
 	| String -> "String"
 	| Float -> "Float"
 	| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*)
-	| Array(t_a, num) ->  (string_of_type t_a) ^ "[" ^ (string_of_int num) ^ "]"	              
+	| Array(t_a, num) -> 
+		let ind = 
+			List.fold_left 
+				(fun output list -> output ^ "[" ^ (string_of_int list) ^ "]") "" num
+		in 
+		(string_of_type t_a) ^ ind	              
 	| Exception(s) -> "Exception: " ^ s
 	| _ -> "Unknown type"
 

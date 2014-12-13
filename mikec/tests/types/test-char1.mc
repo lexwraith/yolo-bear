@@ -1,5 +1,3 @@
-//test basic char initialization and assignment
-
 int main(){
 
     char a;

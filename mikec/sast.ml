@@ -20,17 +20,18 @@ type expr_detail =
   | Assign of string * expr_detail
 
 type stmt_detail =
-    Block of S.symbol_table * stmt_detail list
+    Block of S.symbol_table * stmt_detail list * variable_decl list
   | Expr of expr_detail * Types.t
   | Print of string
-  | Return of expr_detail
+	| Printlist of string * string list
+  | Return of expr_detail * variable_decl list
   | If of expr_detail * stmt_detail * stmt_detail
   | For of expr_detail * expr_detail * expr_detail * stmt_detail
   | While of expr_detail * stmt_detail
   | VDecl of Types.t * string
   | NAssign of Types.t * string * expr_detail (* Variable declaration AND assignment *)
   | Arr of Types.t * string * int list  (* Type, and ID, and a list of indices *)
-	| Braces of string list list 
+  | Braces of Types.t * string * int list * Ast.elem list(* Type, ID, Indices, Values *)
 
 type expression = expr_detail * Types.t
 

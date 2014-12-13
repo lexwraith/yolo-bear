@@ -26,6 +26,18 @@ let strstr = function (a,b) -> a ^ " " ^ b
 
 let strstrstr = function (a,b,c) -> a ^ " " ^ b ^ " = " ^ c ^ ";" (* Currently only for global vars *)
 
+let rec string_of_elem = function elem -> 
+	match elem with 
+		Ast.ElemLiteral(e) -> e
+	|	Ast.ElemList(elist) -> "{" ^ String.concat "," (List.map string_of_elem elist)^ "}"
+			
+
+let print_vars = function unused_vars->
+	List.fold_left 
+		(fun str var -> 
+			let (id,t) = var in
+			str ^ "\n" ^ (Types.string_of_type t) ^ " "^ id)
+		"" unused_vars
 let rec expr_s = function
    ILiteral(l) -> string_of_int l
  | String(s) -> s
@@ -43,12 +55,21 @@ let rec expr_s = function
  | Noexpr -> ""
 
 let rec stmt_s = function
-   Block(_,ss) -> String.concat ",\n"
-                              (List.map (fun s -> "(" ^ stmt_s s ^ ")") ss)
+   Block(symbol_table,ss,unused_vars) -> "{\n"^ (String.concat "\n"
+                              (List.map (fun s -> stmt_s s ) ss)) ^"\n"
+															(*
+															^ "/*Variables do not need any more:" 
+															^ (print_vars symbol_table.S.variables)
+															^ "\n*/\n" *)
+															^ "}"
  | Expr(e,_) -> expr_s e
  | Print(s) -> "printf(" ^ s ^ ");"
-(* | Printlist(s,l) -> "printf(" ^ s ^ String.concat "," l *)
- | Return(e) -> "return" ^ " " ^ expr_s e ^ ";" 
+ | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
+ | Return(e, vars) -> 
+	(*
+		"/*\nVariables to be cleaned before return:" ^
+		(print_vars vars) ^ "\n*/\n" ^ *)
+		"return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
  | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ ") (" ^ expr_s e2 ^
@@ -57,10 +78,11 @@ let rec stmt_s = function
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
  | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> string_of_int s) l) ^ "];"
+ | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
 
 let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ " " ^ f.fname_s ^ "(" ^
-  String.concat "," (List.map typstr f.formals_s) ^ "){\n" ^
+  String.concat "\n" (List.map typstr f.formals_s) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n\n" ^ 

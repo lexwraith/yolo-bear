@@ -2,10 +2,10 @@
 
 ##TODO:##
 Mike -
+
 ####GRAMMAR####
 * Fix "return"; -doesn't work
 * Fix control structures;
-* {} symbols for array declaration - Use nesting strategy
 
 
 Eli -
@@ -13,14 +13,26 @@ Eli -
 
 Yuchen -
 * Printlist
-
+* Add semantic checking and ast-sast converting for 'Array', 'Print'...
+* Add return type checking 
+* Write the function converting 'program' in ast to 'program' in sast
 Prateek -
 * 100 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
 
 ###12/12/14###
 Mike -
 * Huge consolidation of Yuchen's work
+* Fixed all tests cases that use single line comments
+* Added more static array test cases
+* UNTESTED - Array value assignment in
 
+Eli -
+* Added set of test cases for dynamic arrays
+* Single dynamic array C header up
+
+Yuchen -
+* Add 'Printlist' in sast
+* Add semantic checking for static array declaration
 
 ###12/11/14###
 Eli -
@@ -28,6 +40,8 @@ Eli -
 
 Yuchen -
 * Worked miracles in semantic analyzer
+* Add 'Array' and 'Print' in sast
+* Make the compile using sast work
 
 ###12/10/14###
 Mike -
@@ -35,10 +49,18 @@ Mike -
 * I fucking hate recursive data types - can't figure out how to do array
 * Printf now works with (str,args);
 
+Yuchen
+* Add return type checking
+* Write the function convert program in ast to program in sast and merge sast into the pipeline
+
 ###12/9/14###
 Eli -
 * Added more tests cases to account for arrays
 * Progress on dynamic arrays and automatic garbage collection
+
+Yuchen -
+* Most problems about scope are solved and tested (Scope for 'While' and 'For', scope for global environment, scope for multi functions, scope for formals)
+* Add test cases for scope and multi functions
 
 ###12/8/14###
 Yuchen -
