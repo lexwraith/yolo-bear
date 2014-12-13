@@ -1,13 +1,12 @@
 OBJS = scanner.cmo parser.cmo ast.cmo \
        types.cmo sast.cmo semantic.cmo\
        ccompilesast.cmo \
-	   ccompile.cmo microc.cmo
+	   microc.cmo
 
 TESTS = base-1 base0 base1 base2 base3
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
-	ast.ml ccode.ml ccompile.ml \
-	microc.ml \
+	ast.ml microc.ml \
 	$(TESTS:%=tests/test-%.mc) \
 	$(TESTS:%=tests/test-%.out) \
 	types.ml sast.ml semantic.ml \
