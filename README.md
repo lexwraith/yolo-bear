@@ -2,38 +2,44 @@
 
 ##TODO:##
 Mike -
-
-####GRAMMAR####
-* Fix "return"; -doesn't work
+* Fix "return";
 * Fix control structures;
-
+* Fix passing in arrays as args
+ 
+Yuchen -
+* Work miracles
 
 Eli -
-* Continue developing idea on dynamic arrays/garbage collection/memory management
+* Test dynamic arrays/garbage collection/memory management
+* Write final report
 
-Yuchen -
-* Printlist
-* Add semantic checking and ast-sast converting for 'Array', 'Print'...
-* Add return type checking 
-* Write the function converting 'program' in ast to 'program' in sast
 Prateek -
 * 100 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
+* Help Eli with final report
 
 ###12/12/14###
 Mike -
-* Huge consolidation of Yuchen's work
+* Consolidated pipeline
 * Fixed all tests cases that use single line comments
 * Added more static array test cases
-* UNTESTED - Array value assignment in
+* Added more features to test suite
+* Static arrays fully functional
+* Dynamic array declarations in
 
 Eli -
 * Added set of test cases for dynamic arrays
 * Single dynamic array C header up
+* Prototype for C automatic garbage collction up
 
 Yuchen -
+* Consolidated pipeline
 * Add 'Printlist' in sast
 * Add semantic checking for static array declaration
+* Worked more miracles
 
+Prateek -
+* Doubled test cases to ~100
+* Reorganized all test cases into PASS/-feature and FAIL/-feature folders to test individual features
 ###12/11/14###
 Eli -
 * Split up all test cases into incremental
