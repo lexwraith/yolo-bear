@@ -1,0 +1,8 @@
+/* Assigne -ve value to int */
+int main(){
+    int hello_int;
+
+    hello_int = -5;
+
+    return hello_int;
+}
