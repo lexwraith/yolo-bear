@@ -2,16 +2,17 @@
 
 ##TODO:##
 Mike -
-* Is return; valid?
+####GRAMMAR####
+* Fix "return"; -doesn't work
+* Fix control structures;
 * {} symbols for array declaration - Use nesting strategy
+
 
 Eli -
 * Continue developing idea on dynamic arrays/garbage collection/memory management
 
 Yuchen -
-* Add semantic checking and ast-sast converting for 'Array', 'Print'...
-* Add return type checking 
-* Write the function converting 'program' in ast to 'program' in sast
+* Printlist
 
 Prateek -
 * 100 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
