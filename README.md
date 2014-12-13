@@ -1,6 +1,8 @@
 #C Without Pointers...And References?#
 
 ##TODO:##
+Mike -
+* Is return; valid?
 * {} symbols for array declaration - Use nesting strategy
 
 Eli -
