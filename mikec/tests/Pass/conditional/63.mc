@@ -1,0 +1,18 @@
+/* if else */
+int fun(int a , int b)
+{
+	return a + b;
+}
+
+int main()
+{
+	int a;
+	int b;
+	a = 7;
+	b = 9;
+	if ( a + b > a - b) {
+	    return b;
+	} else {
+		return a;
+	}
+}
