@@ -12,7 +12,7 @@ pt = lambda x,y: print("\033[%sm%s\033[0m" % (30 + x,y)) # Where 0 <= x <= 7
 parser = argparse.ArgumentParser(description="Super testing suite for MilliC")
 parser.add_argument('directory', help="Which test directory to use e.g. 'base'. Use '.' for all tests")
 parser.add_argument('--nomillic', help='Disables makefile error messages', action="store_true")
-parser.add_argument('--nogcc', help="Does full compile but no running", action="store_true")
+parser.add_argument('--gcc', help="Does full compile but no running", action="store_true")
 parser.add_argument('--noclean', help='Disable cleanup post run', action="store_true")
 parser.add_argument('--nopass', help="Disables showing passing test cases", action='store_true')
 parser.add_argument('--showpass', help="Shows passing test cases", action='store_true')
@@ -75,7 +75,7 @@ def test(filepath):
     except Exception as e:
         pt(3, "Failed MilliC %s:%s" % (filepath,e))
 
-    if flags.nogcc : return
+    if not flags.gcc : return
 
     try:
         Popen(['gcc', "-o " + outc, outfile])
