@@ -6,9 +6,14 @@ type t =
 	| String
 	| Nonetype
 	| Struct of string * ((string * t) array) (* name, fields *)
-	| Array of t * int list										(* type, size *)
+	| Array of t * int												(* type, dimension *)
 	| DArray of t * int 											(* type, dimension *)                     
 	| Exception of string
+
+let rec print_array_bracket = function n ->
+	match n with
+	 0 -> ""
+	| _ -> "[]" ^ print_array_bracket (n-1) 
 
 let rec string_of_type t1 =
 	match t1 with
@@ -19,11 +24,7 @@ let rec string_of_type t1 =
 	| Float -> "Float"
 	| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*)
 	| Array(t_a, num) -> 
-		let ind = 
-			List.fold_left 
-				(fun output list -> output ^ "[" ^ (string_of_int list) ^ "]") "" num
-		in 
-		(string_of_type t_a) ^ ind	              
+		(string_of_type t_a) ^	(print_array_bracket num)              
 	| Exception(s) -> "Exception: " ^ s
 	| Nonetype
 	| _ -> "Unknown type"
