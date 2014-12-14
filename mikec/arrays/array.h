@@ -13,7 +13,8 @@
 */
 
 typedef struct Array {
- int datatype;
+ 
+ int datatype;	//set to 1 if it holds arrays
  union Data {
     int i;
     char c;
@@ -35,6 +36,7 @@ void initArray(Array *a) {
 
 //insert Data type element
 void insert(Array *a, int offset, Data element) {
+
   while (a->size <= offset ) {
     a->size *= 2;
     a->array = (Data *)realloc(a->array, a->size * sizeof(Data));
@@ -45,6 +47,31 @@ void insert(Array *a, int offset, Data element) {
     a->used = offset;
   }
   a->array[offset] = element;
+}
+
+void insertInt(Array *a, int offset, int element){
+  Data temp;
+  temp.i = element;
+  insert(a, offset, temp);
+}
+
+void insertChar(Array *a, int offset, char element){
+  Data temp;
+  temp.c = element;
+  insert(a, offset, temp);
+}
+
+void insertFloat(Array *a, int offset, float element){
+  Data temp;
+  temp.f = element;
+  insert(a, offset, temp);
+}
+
+void insertArray(Array *a, int offset, Array *element){
+  Data temp;
+  temp.a = element;
+  insert(a, offset, temp);
+  a->datatype = 1;
 }
 
 void freeArray(Array *ar) {
