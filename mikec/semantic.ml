@@ -128,6 +128,23 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
     	in
     	let (_, typ) = vdecl in (* get the variable’s type *) 
     	Sast.Id(vdecl), typ
+		| Ast.Array(e) ->
+			Sast.Array(e), Types.Void
+		| Ast.ArrId(name,n) ->
+  			let id = try
+    			find_variable env.scope name (* locate a variable by name *) 
+      	with Not_found ->
+      		raise (Failure ("Undeclared identifier: " ^ name))
+      	in
+    	let (_, typ) = id in
+			let t = 
+  			match typ with
+  			Types.Array(t,_) -> t
+				|_ -> typ
+			in
+			Sast.ArrId(name,n), t
+		| Ast.DArrId(s,n)->
+			Sast.DArrId(s,n), Types.Void
   	| Ast.Binop(e1, op, e2) ->
   		let e1 = expr env e1 (* Check left and right children *) 
   		and e2 = expr env e2 in
@@ -177,7 +194,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let make_sast_args sast_args args formals =
   			let e = expr env' args in
   			let (ep1, t1) = e in
-  			let (t2, n2) = formals in
+  			let (t2, n2, _) = formals in
 				let t2 = Types.type_from_string t2 in
   				if not (weak_eq_type t1 t2) then
   					raise (Failure ("Type mismatch in function '" ^ name ^ "': " 
@@ -396,10 +413,10 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				(* Convert formals *)
 				let formals' = List.fold_left
 					(fun formal_list formal->
-						let (t, id) = formal in 
+						let (t, id, dim) = formal in 
 						let t = Types.type_from_string t in
 						env.scope.S.variables <- (id,t) :: env.scope.S.variables;
-						(t, id)::formal_list)
+						(t, id, dim)::formal_list)
 					[] fdecl.formals
 				in
 				
