@@ -18,6 +18,13 @@ let rec enum stride n = function
 let string_map_pairs map pairs =
   List.fold_left (fun m (i, n) -> StringMap.add n i m) map pairs
 
+let rec print_formal_bracket = function n ->
+	match n with
+	 0 -> ""
+	| _ -> "[]" ^ print_formal_bracket (n-1)  
+
+let print_formals = function (a,b,c) ->(Types.output_of_type a) ^ " " ^ b ^ (print_formal_bracket c)
+
 let typstr = function (a,b) -> (Types.output_of_type a) ^ " " ^ b
 
 let typstrstr = function (a,b,c) -> (Types.output_of_type a) ^ " " ^ b ^ " = " ^ c ^ ";"
@@ -60,6 +67,7 @@ let rec expr_s = function
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
+ | ArrId(name,n) -> "array " ^ name    
 
 let rec stmt_s = function
    Block(symbol_table,ss,unused_vars) -> "{\n"^ (String.concat "\n"
@@ -93,7 +101,7 @@ let rec stmt_s = function
  | DArr(t,id,dim)-> Types.output_of_type t ^ " " ^ id ^ " dim: " ^ (string_of_int dim) 
 let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ " " ^ f.fname_s ^ "(" ^
-  String.concat "\n" (List.map typstr f.formals_s) ^ "){\n" ^
+  String.concat "\n" (List.map print_formals f.formals_s) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n#include \"array.h\"\n\n" ^ 

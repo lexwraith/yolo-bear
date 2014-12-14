@@ -18,6 +18,9 @@ type expr_detail =
   | Call of string * expr_detail list
   | Noexpr
   | Assign of string * expr_detail
+	| Array of Ast.elem
+  | ArrId of string * int list
+  | DArrId of string * int
 
 type stmt_detail =
     Block of S.symbol_table * stmt_detail list * variable_decl list
@@ -41,7 +44,7 @@ type expression = expr_detail * Types.t
 type func_decl_detail = { 
     ftype_s : Types.t;
     fname_s : string;
-    formals_s : (Types.t * string) list;
+    formals_s : (Types.t * string * int) list;
     body_s : stmt_detail list;
   }
 
