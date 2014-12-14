@@ -12,7 +12,7 @@ int main(){
 
     char d, e, f;
      
-    printf("a: %c, b: %c, c: %c\n", a, b, c);
+    printf("a: %c, b: %c, c: %c", a, b, c);
 
     return 0;
 }

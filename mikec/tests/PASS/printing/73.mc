@@ -16,7 +16,7 @@ int main(){
     f = 1.5e2;
     g = 1.5e-2;    
      
-    printf("a=1: %f, b=2.2: %f, c=3.33: %f, d=-1.0: %f, e=-0: %f, f=1.5e2: %f, g = 1.5e-2: %f\n", a, b, c, d, e, f, g);
+    printf("a=1: %f, b=2.2: %f, c=3.33: %f, d=-1.0: %f, e=-0: %f, f=1.5e2: %f, g = 1.5e-2: %f", a, b, c, d, e, f, g);
 
     return 0;
 }

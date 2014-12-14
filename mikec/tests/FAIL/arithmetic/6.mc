@@ -9,7 +9,7 @@ int main(){
     b = 'b';
     b = b - 32;
 
-    printf("A: %c, B: %c\n", a, b);
+    printf("A: %c, B: %c", a, b);
 
     return 0;
 }

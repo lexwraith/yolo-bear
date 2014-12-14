@@ -7,7 +7,7 @@ int main()
  
    a = a + b;
  
-   printf("%d\n", a);
+   printf("%d", a);
  
    return 0;
 }

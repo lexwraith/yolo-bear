@@ -10,7 +10,7 @@ main()
  
    sum = addition(first, second);
  
-   printf("%d\n", sum);
+   printf("%d ", sum);
  
    return 0;
 }

@@ -13,7 +13,7 @@ int main(){
     int d, e;
     int d = -1;
      
-    printf("a: %d, b: %d, c: %d, d: %d\n", a, b, c, d);
+    printf("a: %d, b: %d, c: %d, d: %d", a, b, c, d);
 
     return 0;
 }

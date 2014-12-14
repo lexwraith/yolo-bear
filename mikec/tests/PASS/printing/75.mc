@@ -2,6 +2,6 @@
 
 int main(){
 
-    printf("%c \n", 'a');
+    printf("%c ", 'a');
 
 }

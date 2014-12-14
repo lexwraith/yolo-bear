@@ -8,7 +8,7 @@ int main()
  
    c = a + b;
  
-   printf("c = %d\n",c);
+   printf("c = %d",c);
  
    return 0;
 }
