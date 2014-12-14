@@ -52,7 +52,6 @@ def writeC(outfile,code):
     with open(outfile, "w") as f:
         f.write(code) 
 
-
 def test(filepath):
     outfile = filepath[:-3] + ".c"
     outc = filepath[:-3] + ".exe"
@@ -67,6 +66,7 @@ def test(filepath):
             pt(1,"%s\n%s" % (filepath,out))
             if flags.showfail:  pt(3, code)
             FAIL += 1
+            return
         elif not flags.nopass:
             pt(2, "%s PASSED" % filepath)
             if flags.showpass: pt(5,out)
@@ -78,14 +78,12 @@ def test(filepath):
     if not flags.gcc : return
 
     try:
-        Popen(['gcc', "-o " + outc, outfile])
+        print(outfile)
+        Popen(['gcc', "-Iarrays", outfile])
     except Exception as e:
         pt(3, "Failed GCC %s:%s" % (filepath,e))
 
 if __name__ == "__main__":
-    """
-    Temporarily disabled gcc and pass cases
-    """
     setup() 
     for t in getTestPaths():
         test(t)
@@ -93,4 +91,5 @@ if __name__ == "__main__":
         call(['make','clean'])
     pt(4,"Testing %s / %s Total" % (TESTING,TOTALTESTS))
     pt(4,"%s FAILED %s PASSED" % (FAIL,PASS))
+    pt(4,"%s GCC FAILED %s GCC PASSED" % (CFAIL,CPASS))
 
