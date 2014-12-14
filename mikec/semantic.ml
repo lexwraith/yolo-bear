@@ -130,8 +130,17 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
     	Sast.Id(vdecl), typ
 		| Ast.Array(e) ->
 			Sast.Array(e), Types.Void
-		| Ast.ArrId(name,n) ->
-  			let id = try
+		| Ast.ArrId(name,expr_list) ->
+			let expr_list = 
+			List.fold_left
+					(fun list epr -> 
+						let e = expr env epr in
+						let (ep, t) = e in
+						require_integer env t ("Index of array '" ^ name ^ "' is not Int.");
+						ep::list
+					) [] expr_list
+			in		
+  		let id = try
     			find_variable env.scope name (* locate a variable by name *) 
       	with Not_found ->
       		raise (Failure ("Undeclared identifier: " ^ name))
@@ -142,7 +151,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   			Types.Array(t,_) -> t
 				|_ -> typ
 			in
-			Sast.ArrId(name,n), t
+			Sast.ArrId(name,List.rev expr_list), t
 		| Ast.DArrId(s,n)->
 			Sast.DArrId(s,n), Types.Void
   	| Ast.Binop(e1, op, e2) ->
@@ -175,7 +184,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   			raise (Failure ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
   							string_of_type t1 ^ "', but '" ^
   							string_of_type t2 ^ "' is given." ));
-  		Sast.Assign(id,ep2), Types.Void
+  		Sast.Assign(id,ep2), t1
   		
   	| Ast.Call(name, args) ->
   		let func = 
@@ -303,16 +312,38 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 		| Ast.Print(s) ->
 			Sast.Print(s)
 			
-		| Ast.Arr(t,id,ind) ->
+		| Ast.Arr(t,id,expr_list) ->
 			is_new_variable env.scope id;
-  		let t = Types.type_from_string t in
-			let t = Types.Array(t,ind) in
+  		let elem_t = Types.type_from_string t in
+			let expr_list = 
+			List.fold_left
+					(fun list epr -> 
+						let e = expr env epr in
+						let (ep, t) = e in
+						require_integer env t ("Index of array '" ^ id ^ "' is not Int.");
+						ep::list
+					) [] expr_list
+			in	
+			let t = Types.Array(elem_t,List.length expr_list) in
   		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
-			Sast.Arr(t,id,ind)
+			Sast.Arr(t,id,List.rev expr_list)
 			
 		| Ast.Braces(t,id,ind,elem)->
-			let t = Types.type_from_string t in
-			Sast.Braces(t,id,ind,elem)	
+			is_new_variable env.scope id;
+			is_new_variable env.scope id;
+  		let elem_t = Types.type_from_string t in
+			let expr_list = 
+			List.fold_left
+					(fun list epr -> 
+						let e = expr env epr in
+						let (ep, t) = e in
+						require_integer env t ("Index of array '" ^ id ^ "' is not Int.");
+						ep::list
+					) [] ind
+			in	
+			let t = Types.Array(elem_t,List.length expr_list) in
+  		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
+			Sast.Braces(t,id,List.rev expr_list, elem)	
 		
 		(* Dynamic Array *)
 		| Ast.DArr(t,id,dim) -> 
@@ -327,6 +358,17 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			let t1 = Types.type_from_string t in
   		let e2 = expr env ep in
   		let (ep2, t2) = e2 in
+			
+			let expr_list = 
+			List.fold_left
+					(fun list epr -> 
+						let e = expr env epr in
+						let (ep, t) = e in
+						require_integer env t ("Index of array '" ^ id ^ "' is not Int.");
+						ep::list
+					) [] ind
+			in	
+			
   		(*
   		if not (weak_eq_type t1 t2) then
   			raise (Failure ("Type mismatch in array declaration: array '"^ id ^
@@ -334,8 +376,8 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type t1 ^ "' array, but right is '" ^
   							string_of_type t2 ^ "'" ));
 			*)
-  		env.scope.S.variables <- (id,t1) :: env.scope.S.variables;
-  		Sast.AAssign(t1,id,ind,ep2)
+  		(*env.scope.S.variables <- (id,t1) :: env.scope.S.variables;*)
+  		Sast.AAssign(t1,id,List.rev expr_list,ep2)
 			
   		 
   	| Ast.Block(sl) ->

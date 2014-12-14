@@ -109,13 +109,17 @@ dbrackets_list:
 
 expr:
   literals           { $1 }
-  | ID               { Id($1) }
-  | ID dbrackets_list { DArrId($1,$2) }
-  | ID brackets_list { ArrId($1, $2) }
+ 	| ids              { $1 }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
   | ID ASSIGN expr      { Assign($1, $3) } /* For chained assignments */
   | binop            { $1 }
+
+ids:
+  ID               { Id($1) }
+  | ID dbrackets_list { DArrId($1,$2) }
+  | ID brackets_list { ArrId($1, $2) }
+
 
 binop:
    expr PLUS   expr  { Binop($1, Add,   $3) }
@@ -158,8 +162,8 @@ brackets_opt:
   | brackets_list { $1 }
 
 brackets_list:
-   LBRAC ILITERAL RBRAC { [$2] }
-  | brackets_list LBRAC ILITERAL RBRAC { $3::$1 }
+   LBRAC expr RBRAC { [$2] }
+  | brackets_list LBRAC expr RBRAC { $3::$1 }
 
 elem_list_braces:
   LBRACE elem_list RBRACE { $2 }

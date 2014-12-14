@@ -67,7 +67,8 @@ let rec expr_s = function
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
- | ArrId(name,n) -> "array " ^ name    
+ | ArrId(name,nlist) -> "array " ^ name  
+ | DArrId(name,n) -> name ^ print_formal_bracket n
 
 let rec stmt_s = function
    Block(symbol_table,ss,unused_vars) -> "{\n"^ (String.concat "\n"
@@ -93,10 +94,10 @@ let rec stmt_s = function
  | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
- | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> string_of_int s) l) ^ "];"
+ | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> expr_s s) l) ^ "];"
  | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
  | AAssign(t,id,ind, e) -> Types.output_of_type t ^ " " ^ id ^
-			"[" ^ String.concat "][" (List.map (fun s-> string_of_int s) ind) ^ "]" ^
+			"[" ^ String.concat "][" (List.map (fun s-> expr_s s) ind) ^ "]" ^
 		 	" = " ^ expr_s e ^ ";"
  | DArr(t,id,dim)-> Types.output_of_type t ^ " " ^ id ^ " dim: " ^ (string_of_int dim) 
 let func_decl_s (f:func_decl_detail) =

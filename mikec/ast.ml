@@ -15,7 +15,7 @@ type expr =
   | Noexpr
   | Assign of string * expr
   | Array of elem
-  | ArrId of string * int list
+  | ArrId of string * expr list (* now expr *)
   | DArrId of string * int
 
 type stmt =
@@ -29,11 +29,11 @@ type stmt =
   | While of expr * stmt
   | VDecl of string * string
   | VDecllist of (string * string) list
-  | NAssign of string * string * expr (* Variable declaration AND assignment *)
-  | Arr of string * string * int list  (* Type, and ID, and a list of indices *)
-  | Braces of string * string * int list * elem list (* Type, ID, Indices, Values *)
+  | NAssign of string * string * expr (* Variable declaration AND assignment *) (* now expr *)
+  | Arr of string * string * expr list  (* Type, and ID, and a list of indices *) (* now expr *)
+  | Braces of string * string * expr list * elem list (* Type, ID, Indices, Values *) (* now expr *)
   | DArr of string * string * int (*Type, ID, Dimensions *)
-  | AAssign of string * string * int list * expr (*ID,value position, new value*)
+  | AAssign of string * string * expr list * expr (*ID,value position, new value*) (* now expr *)
 
 
 type func_decl = { 

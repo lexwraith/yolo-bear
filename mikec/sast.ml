@@ -19,7 +19,7 @@ type expr_detail =
   | Noexpr
   | Assign of string * expr_detail
 	| Array of Ast.elem
-  | ArrId of string * int list
+  | ArrId of string * expr_detail list 
   | DArrId of string * int
 
 type stmt_detail =
@@ -33,10 +33,10 @@ type stmt_detail =
   | While of expr_detail * stmt_detail
   | VDecl of Types.t * string
   | NAssign of Types.t * string * expr_detail (* Variable declaration AND assignment *)
-  | Arr of Types.t * string * int list  (* Type, and ID, and a list of indices *)
-  | Braces of Types.t * string * int list * Ast.elem list(* Type, ID, Indices, Values *)
+  | Arr of Types.t * string * expr_detail list  (* Type, and ID, and a list of indices *)
+  | Braces of Types.t * string * expr_detail list * Ast.elem list(* Type, ID, Indices, Values *)
 	| DArr of Types.t * string * int (*Type, ID, Dimensions *)
-  | AAssign of Types.t * string * int list * expr_detail (*Type, ID,value position, new value*)
+  | AAssign of Types.t * string * expr_detail list * expr_detail (*Type, ID,value position, new value*)
 	
 type expression = expr_detail * Types.t
 
