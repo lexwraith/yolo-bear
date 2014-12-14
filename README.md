@@ -4,7 +4,7 @@
 Mike -
 * Fix "return";
 * Fix control structures;
-* Fix passing in arrays as args
+* Add in continue/break
  
 Yuchen -
 * Work miracles
@@ -18,9 +18,11 @@ Prateek -
 * Help Eli with final report
 
 ###12/13/14###
-Mike -
-
-Yuchen -
+Mike/Yuchen -
+* Arrays now have their own ID type
+* Arrays can be used to describe formal arguments
+* Changed all iliterals into expressions that hopefully get resolved
+* Added in GCC to test suite
 
 Eli -
 * Added in more testing of the dynamic array header file

@@ -22,6 +22,7 @@ parser.add_argument('--showfail', help="Shows failing test cases", action='store
 flags = parser.parse_args()
 microcpath = os.getcwd() + "/microc"
 FAIL,PASS,TOTALTESTS,TESTING = 0,0,0,0
+CFAIL, CPASS, CTOTALTESTS, CTESTING = 0,0,0,0
 
 def getTestPaths():
     global TOTALTESTS,TESTING
@@ -47,9 +48,18 @@ def setup():
     except Exception as e:
         pt(1, "Makefile failed:%s" % e)
 
+def writeC(outfile,code):
+    with open(outfile, "w") as f:
+        f.write(code) 
+
+
 def test(filepath):
+    outfile = filepath[:-3] + ".c"
+    outc = filepath[:-3] + ".exe"
+    filebase = filepath[:filepath.rfind('/') + 1]
     code = open(filepath).read().encode('ascii','ignore')
     global FAIL,PASS
+
     try:
         p = Popen([microcpath,'-SC'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
         out,err = p.communicate(input=code)
@@ -61,13 +71,14 @@ def test(filepath):
             pt(2, "%s PASSED" % filepath)
             if flags.showpass: pt(5,code)
             PASS += 1
+            writeC(outfile,code)
     except Exception as e:
         pt(3, "Failed MilliC %s:%s" % (filepath,e))
-    if flags.nogcc:
-        return
+
+    if flags.nogcc : return
+
     try:
-        target = 'gcc -o %s %s' % (filepath[filepath.rfind('/'):] + ".exe" , filepath)
-        Popen([target], shell = True)
+        Popen(['gcc', "-o " + outc, outfile])
     except Exception as e:
         pt(3, "Failed GCC %s:%s" % (filepath,e))
 
@@ -75,7 +86,6 @@ if __name__ == "__main__":
     """
     Temporarily disabled gcc and pass cases
     """
-    flags.nogcc = True
     setup() 
     for t in getTestPaths():
         test(t)
