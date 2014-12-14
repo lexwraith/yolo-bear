@@ -104,6 +104,8 @@ dbrackets_list:
 expr:
   literals           { $1 }
   | ID               { Id($1) }
+	| ID dbrackets_list { DArrId($1,$2)}
+	| ID brackets_list { ArrId($1, $2) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
   | ID ASSIGN expr      { Assign($1, $3) } /* For chained assignments */

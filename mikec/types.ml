@@ -4,11 +4,7 @@ type t =
 	| Float
 	| Char
 	| String
-<<<<<<< HEAD
-	| NoneType
-=======
 	| Nonetype
->>>>>>> tbm
 	| Struct of string * ((string * t) array) (* name, fields *)
 	| Array of t * int list										(* type, size *)
 	| DArray of t * int 											(* type, dimension *)                     
@@ -29,11 +25,7 @@ let rec string_of_type t1 =
 		in 
 		(string_of_type t_a) ^ ind	              
 	| Exception(s) -> "Exception: " ^ s
-<<<<<<< HEAD
-	| NoneType
-=======
 	| Nonetype
->>>>>>> tbm
 	| _ -> "Unknown type"
 
 let rec output_of_type t1 =
@@ -47,11 +39,7 @@ let rec output_of_type t1 =
 	| Array(t_a, _) ->  output_of_type t_a	  
 	| DArray(t_a, _) -> output_of_type t_a            
 	| Exception(_) -> "exception"
-<<<<<<< HEAD
-	| NoneType -> ""
-=======
 	| Nonetype -> ""
->>>>>>> tbm
 	| _ -> ""
 
 let type_from_string s1 =
@@ -61,8 +49,4 @@ let type_from_string s1 =
 	| "char" -> Char
 	| "String" -> String
 	| "float" -> Float
-<<<<<<< HEAD
-	| _ -> NoneType
-=======
 	| _ -> Nonetype
->>>>>>> tbm
