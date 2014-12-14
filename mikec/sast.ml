@@ -44,6 +44,7 @@ type expression = expr_detail * Types.t
 
 type func_decl_detail = { 
     ftype_s : Types.t;
+		brackets_s : int;
     fname_s : string;
     formals_s : (Types.t * string * int) list;
     body_s : stmt_detail list;
