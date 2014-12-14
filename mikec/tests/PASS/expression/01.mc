@@ -1,0 +1,18 @@
+
+/* test expression */
+int main()
+{
+    int a;
+    int b;
+    int c;
+    
+    a = 14 - 19;
+    b = 0;
+    c = -9;
+
+    a = c + 10;
+    b = 9 * 6 - 24 + 39 *a;
+    c = -59 - -69;
+
+    return (a + b + b);
+}
