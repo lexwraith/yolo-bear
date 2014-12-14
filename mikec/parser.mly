@@ -75,7 +75,7 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
-/* TODO: Could consolidate opt/list pairs */
+    /* TODO: Could consolidate opt/list pairs */
 stmt:
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }

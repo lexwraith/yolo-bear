@@ -14,7 +14,6 @@ Eli -
 * Write final report
 
 Prateek -
-* 100 test cases, with a comment at the top, when run with test script, explains which tests passed and which tests failed, with the description of test
 * Help Eli with final report
 
 ###12/13/14###
@@ -24,11 +23,11 @@ Mike/Yuchen -
 * Changed all iliterals into expressions that hopefully get resolved
 * Added in GCC to test suite
 
+Yuchen/Eli
+* Code Generation of Static/Dynamic Arrays
+
 Eli -
 * Added in more testing of the dynamic array header file
-
-Prateek -
-* Added 50 test cases and reorganized the paths
 
 ###12/12/14###
 Mike -
