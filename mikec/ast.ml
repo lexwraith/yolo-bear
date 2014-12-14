@@ -29,11 +29,12 @@ type stmt =
   | While of expr * stmt
   | VDecl of string * string
   | VDecllist of (string * string) list
-  | NAssign of string * string * expr (* Variable declaration AND assignment *) (* now expr *)
-  | Arr of string * string * expr list  (* Type, and ID, and a list of indices *) (* now expr *)
-  | Braces of string * string * expr list * elem list (* Type, ID, Indices, Values *) (* now expr *)
+  | NAssign of string * string * expr (* Variable declaration AND assignment *) 
+  | Arr of string * string * expr list  (* Type, and ID, and a list of indices *) 
+  | Braces of string * string * expr list * elem list (* Type, ID, Indices, Values *) 
   | DArr of string * string * int (*Type, ID, Dimensions *)
-  | AAssign of string * string * expr list * expr (*ID,value position, new value*) (* now expr *)
+	| DBraces of string * string * int * elem list (* Type, ID, Dimensions, Values*)
+  | AAssign of string * string * expr list * expr (*ID,value position, new value*) 
 
 
 type func_decl = { 

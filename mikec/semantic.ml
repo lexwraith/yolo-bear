@@ -330,7 +330,6 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			
 		| Ast.Braces(t,id,ind,elem)->
 			is_new_variable env.scope id;
-			is_new_variable env.scope id;
   		let elem_t = Types.type_from_string t in
 			let expr_list = 
 			List.fold_left
@@ -343,8 +342,15 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			in	
 			let t = Types.Array(elem_t,List.length expr_list) in
   		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
-			Sast.Braces(t,id,List.rev expr_list, elem)	
-		
+			Sast.Braces(t,id,List.rev expr_list, elem)
+			
+		| Ast.DBraces(t,id,dim,elem)->
+			is_new_variable env.scope id;
+  		let elem_t = Types.type_from_string t in
+			let t = Types.DArray(elem_t,dim) in
+  		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
+			Sast.DBraces(t,id,dim, elem)
+			
 		(* Dynamic Array *)
 		| Ast.DArr(t,id,dim) -> 
 			is_new_variable env.scope id;
@@ -377,7 +383,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type t2 ^ "'" ));
 			*)
   		(*env.scope.S.variables <- (id,t1) :: env.scope.S.variables;*)
-  		Sast.AAssign(t1,id,List.rev expr_list,ep2)
+  		Sast.AAssign(t1,id, expr_list,ep2)
 			
   		 
   	| Ast.Block(sl) ->
