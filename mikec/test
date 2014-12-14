@@ -69,7 +69,7 @@ def test(filepath):
             FAIL += 1
         elif not flags.nopass:
             pt(2, "%s PASSED" % filepath)
-            if flags.showpass: pt(5,code)
+            if flags.showpass: pt(5,out)
             PASS += 1
             writeC(outfile,code)
     except Exception as e:
