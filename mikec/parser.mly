@@ -62,7 +62,7 @@ formal:
 vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
-
+  
 
 /* Trying to fix this results in error AFTER compiler is written. Strange. */
 vdecl:

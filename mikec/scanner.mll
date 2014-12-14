@@ -1,7 +1,7 @@
 { open Parser }
 
 let symbols = ['!' '@' '#' '$' '%' '^' '&' '*' '(' ')' '_' '+' '=' '-' '[' ']'
-              '{' '}' '|' '\\' ':' '"' ';' ''' '<' '>' '?' '.' '/' ' ']
+              '{' '}' '|' '\\' ':' '"' ';' ''' '<' '>' '?' '.' '/' ' ' '\n']
 let ascii = (['a'-'z' 'A'-'Z' '0'-'9']|symbols)
 let numbers = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
@@ -48,7 +48,7 @@ rule token = parse
 | types as lxm { TYPE(lxm) }
 | ['-' '+']?['0'-'9']+ as lxm { ILITERAL(int_of_string lxm) } (*Scans literal integers*)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) } (*Scans IDs*)
-| '"' ascii* '"' as lxm { STR(lxm) } (* Strings*)
+| '"' (ascii)* '"' as lxm { STR(lxm) } (* Strings*)
 | '\'' ascii '\'' as lxm { CHR(lxm) } (* Chars *)
 | float as lxm { FLITERAL(lxm) }
 | eof { EOF } 

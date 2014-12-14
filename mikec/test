@@ -71,7 +71,7 @@ def test(filepath):
             pt(2, "%s PASSED" % filepath)
             if flags.showpass: pt(5,out)
             PASS += 1
-            writeC(outfile,code)
+            writeC(outfile,out)
     except Exception as e:
         pt(3, "Failed MilliC %s:%s" % (filepath,e))
 
