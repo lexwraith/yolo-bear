@@ -18,9 +18,9 @@ Prateek -
 * Help Eli with final report
 
 ###12/13/14###
-Mike -
-
-Yuchen -
+Mike/Yuchen -
+* Arrays now have their own ID type
+* Arrays can be used to describe formal arguments
 
 Eli -
 * Added in more testing of the dynamic array header file
