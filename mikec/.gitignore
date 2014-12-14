@@ -11,3 +11,5 @@ testall.log
 microc
 *~
 *.orig
+*.c
+*.exe
