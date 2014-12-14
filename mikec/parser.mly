@@ -49,8 +49,14 @@ formals_opt:
   | formal_list   { List.rev $1 }
 
 formal_list:
-    TYPE ID                   { [($1,$2)] }
-  | formal_list COMMA TYPE ID { ($3,$4) :: $1 }
+    formal                    { [$1] }
+  | formal_list COMMA formal { $3 :: $1 }
+
+formal:
+    TYPE ID                   {  ($1 ,$2, 0)  }
+  | TYPE ID brackets_list     { ($1, $2, List.length $3) }
+  | TYPE ID dbrackets_list    { ($1, $2, $3) }
+
 
 /* Next two exclusively for file/global scope declarations */
 vdecl_list:
@@ -104,6 +110,8 @@ dbrackets_list:
 expr:
   literals           { $1 }
   | ID               { Id($1) }
+  | ID dbrackets_list { DArrId($1,$2) }
+  | ID brackets_list { ArrId($1, $2) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
   | ID ASSIGN expr      { Assign($1, $3) } /* For chained assignments */
