@@ -2,10 +2,15 @@
 
 ##TODO:##
 Mike -
-* Fix "return";
 * Fix control structures;
 * Add in continue/break
- 
+
+###Grammar Nice to haves### 
+* Var chaining just for declrations
+* Return with no argument
+* continue/break
+* Fix floats
+
 Yuchen -
 * Work miracles
 
