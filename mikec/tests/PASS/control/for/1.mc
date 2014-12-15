@@ -1,5 +1,6 @@
 int main(){
-    for(int z = 0; z < 10; z++)
+    int z;
+    for(z = 0; z < 10; z = z + 1 )
         {
         printf("z");
         }
