@@ -28,7 +28,7 @@ type stmt =
   | For of expr * expr * expr * stmt
   | While of expr * stmt
   | VDecl of string * string
-  | VDecllist of (string * string) list
+  | VDecllist of string * string list
   | NAssign of string * string * expr (* Variable declaration AND assignment *) 
   | Arr of string * string * expr list  (* Type, and ID, and a list of indices *) 
   | Braces of string * string * expr list * elem list (* Type, ID, Indices, Values *) 

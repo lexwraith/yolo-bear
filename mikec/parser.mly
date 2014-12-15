@@ -94,6 +94,7 @@ stmt_list:
 stmt:
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }
+  | TYPE id_list SEMI { VDecllist($1,$2) }
   | TYPE ID brackets_list SEMI { Arr($1,$2, List.rev $3) }
   | TYPE ID brackets_list ASSIGN elem_list_braces SEMI { Braces($1,$2, $3, $5) }
   | TYPE ID brackets_list ASSIGN expr SEMI { AAssign($1, $2, $3, $5) }
