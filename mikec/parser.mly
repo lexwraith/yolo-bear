@@ -1,4 +1,17 @@
-%{ open Ast%}
+%{ 
+open Ast
+
+let str_of_c s = Char.escaped s
+let explode s =
+  let rec exp i l =
+    if i < 0 
+        then l 
+    else if i > 0 && s.[i-1] = '\\'
+        then exp (i - 2) (String.concat "" [str_of_c s.[i-1];str_of_c s.[i]] :: l)
+    else exp (i - 1) ((str_of_c s.[i]) :: l) in
+  exp (String.length s - 1) []
+
+%}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
@@ -94,20 +107,22 @@ stmt_list:
 stmt:
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }
+  | TYPE id_list SEMI { VDecllist($1,$2) }
   | TYPE ID brackets_list SEMI { Arr($1,$2, List.rev $3) }
   | TYPE ID brackets_list ASSIGN elem_list_braces SEMI { Braces($1,$2, $3, $5) }
   | TYPE ID brackets_list ASSIGN expr SEMI { AAssign($1, $2, $3, $5) }
   | TYPE ID ASSIGN expr SEMI{ NAssign($1, $2, $4) }
   | TYPE ID dbrackets_list SEMI { DArr($1, $2, $3) }
-	| TYPE ID dbrackets_list ASSIGN elem_list_braces SEMI { DBraces($1,$2,$3,$5) }
+  | TYPE ID dbrackets_list ASSIGN elem_list_braces SEMI { DBraces($1,$2,$3,$5) }
+  | TYPE ID dbrackets_list ASSIGN strliterals SEMI { SAssign($1,$2,$3,explode($5))}
   | ID brackets_list ASSIGN expr SEMI { AAssign("", $1, $2, $4) }
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | PRINT LPAREN strliterals COMMA id_list RPAREN SEMI {Printlist($3,$5)}
   | RETURN expr SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
-  | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
-  | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | FOR LPAREN expr_opt SEMI expr_opt SEMI expr_opt RPAREN stmt
+  | IF LPAREN expr RPAREN stmt_list %prec NOELSE { If($3, $5, [Block([])]) }
+  | IF LPAREN expr RPAREN stmt_list ELSE stmt_list    { If($3, $5, $7) }
+  | FOR LPAREN expr_opt SEMI expr_opt SEMI expr_opt RPAREN stmt_list
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
@@ -125,10 +140,12 @@ dbrackets_list:
 
 expr:
   literals           { $1 }
- 	| ids              { $1 }
+  | ids              { $1 }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
   | ID ASSIGN expr      { Assign($1, $3) } /* For chained assignments */
+ /*  | ID INCR            { Id($1) + 1 } */
+/*  | ID DECR         { Id($1) + 1 } */
   | binop            { $1 }
 
 ids:
