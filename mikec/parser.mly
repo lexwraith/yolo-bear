@@ -1,4 +1,17 @@
-%{ open Ast%}
+%{ 
+open Ast
+
+let str_of_c s = Char.escaped s
+let explode s =
+  let rec exp i l =
+    if i < 0 
+        then l 
+    else if i > 0 && s.[i-1] = '\\'
+        then exp (i - 2) (String.concat "" [str_of_c s.[i-1];str_of_c s.[i]] :: l)
+    else exp (i - 1) ((str_of_c s.[i]) :: l) in
+  exp (String.length s - 1) []
+
+%}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
