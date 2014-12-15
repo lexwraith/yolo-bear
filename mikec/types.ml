@@ -37,7 +37,7 @@ let rec output_of_type t1 =
 		Void -> "void"
 	|	Int -> "int"
 	| Char -> "char"
-	| String -> "String"
+	| String -> "char[]"
 	| Float -> "float"
 	(*| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*) *)
 	| Array(t_a, _) ->  output_of_type t_a	  
