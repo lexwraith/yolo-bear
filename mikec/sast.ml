@@ -27,7 +27,7 @@ type stmt_detail =
   | Expr of expr_detail * Types.t
   | Print of string
 	| Printlist of string * string list
-  | Return of expr_detail * variable_decl list
+  | Return of expr_detail * variable_decl list * bool
   | If of expr_detail * stmt_detail * stmt_detail
   | For of expr_detail * expr_detail * expr_detail * stmt_detail
   | While of expr_detail * stmt_detail

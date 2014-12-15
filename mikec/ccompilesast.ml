@@ -125,7 +125,7 @@ let rec stmt_s = function
  | Expr(e,_) -> expr_s e
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
- | Return(e, vars) -> 
+ | Return(e, vars, is_darr) -> 
 		(*(free_array vars) ^ "\n" ^ *)
 		"Array *ptr;\n" ^
 		"while (stackEmpty(stack)==0){\n"^

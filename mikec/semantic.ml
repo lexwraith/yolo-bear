@@ -342,7 +342,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type t ^ "' is found." ));
 			let scope = env.scope in
 			let vars_to_clean = clean_vars env.fun_formals scope in
-  		Sast.Return(ep,vars_to_clean)
+			let is_darr = 
+				match return_type with
+				Types.DArray(_,_) -> true
+				| _ -> false
+			in
+  		Sast.Return(ep,vars_to_clean, is_darr)
 			
 		| Ast.Print(s) ->
 			Sast.Print(s)
