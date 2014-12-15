@@ -122,7 +122,7 @@ stmt:
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | FOR LPAREN expr_opt SEMI expr_opt SEMI expr_opt RPAREN stmt
+  | FOR LPAREN expr_opt SEMI expr_opt SEMI expr_opt RPAREN stmt_list
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
@@ -140,7 +140,7 @@ dbrackets_list:
 
 expr:
   literals           { $1 }
- 	| ids              { $1 }
+  | ids              { $1 }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
   | ID ASSIGN expr      { Assign($1, $3) } /* For chained assignments */
