@@ -24,7 +24,7 @@ type stmt =
   | Print of string
   | Printlist of string * string list
   | Return of expr
-  | If of expr * stmt * stmt
+  | If of expr * stmt list * stmt list
   | For of expr * expr * expr * stmt list
   | While of expr * stmt
   | VDecl of string * string
