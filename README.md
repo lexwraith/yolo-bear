@@ -24,6 +24,7 @@ Prateek -
 ###12/14/14###
 Mike - 
 * Strings are in e.g. char x[] = "test"; -- see SAssign in ast.ml
+* String declarations in char x[] = now string * string * string list
 * Escape characters are in treated as chars of max size 2.
 * Variable declaration chaining in e.g. int x,y; - see VDecllist in ast.ml
 

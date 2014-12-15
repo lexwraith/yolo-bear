@@ -33,9 +33,9 @@ type stmt =
   | Arr of string * string * expr list  (* Type, and ID, and a list of indices *) 
   | Braces of string * string * expr list * elem list (* Type, ID, Indices, Values *) 
   | DArr of string * string * int (*Type, ID, Dimensions *)
-	| DBraces of string * string * int * elem list (* Type, ID, Dimensions, Values*)
+  | DBraces of string * string * int * elem list (* Type, ID, Dimensions, Values*)
   | AAssign of string * string * expr list * expr (*ID,value position, new value*) 
-  | SAssign of string * string * int * string (* String assignment check if int == 1*)
+  | SAssign of string * string * int * string list (* String assignment check if int == 1*)
 
 type func_decl = { 
     ftype : string;
