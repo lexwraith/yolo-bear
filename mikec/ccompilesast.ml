@@ -28,7 +28,12 @@ let rec print_stars = function n ->
 	 0 -> ""
 	| _ -> "*" ^ print_stars (n-1) 
 
-let print_formals = function (a,b,c) ->(Types.output_of_type a) ^ (print_stars c) ^" " ^ b 
+let print_formals = function (a,b,c) ->
+	let star = match a with 
+	 Types.DArray(_,_) -> " *"
+	|_ -> " "
+	in
+	(Types.output_of_type a)  ^star ^ b 
 
 let typstr = function (a,b) -> (Types.output_of_type a) ^ " " ^ b
 
@@ -41,8 +46,7 @@ let strstrstr = function (a,b,c) -> a ^ " " ^ b ^ " = " ^ c ^ ";" (* Currently o
 let rec string_of_elem = function elem -> 
 	match elem with 
 		Ast.ElemLiteral(e) -> e
-	|	Ast.ElemList(elist) -> "{" ^ String.concat "," (List.map string_of_elem elist)^ "}"
-			
+	|	Ast.ElemList(elist) -> "{" ^ String.concat "," (List.map string_of_elem elist)^ "}"			
 
 let print_vars = function vars->
 	List.fold_left 
@@ -54,10 +58,21 @@ let free_array = function array->
 	List.fold_left 
 		(fun str var -> 
 			let (id,t) = var in
-			str ^ "\nfreeArray(" ^ (Types.string_of_type t) ^ " "^ id ^ ")")
+			match t with
+				Types.DArray(_,_) ->str ^ "\n//freeArray(" ^ (Types.string_of_type t) ^ " "^ id ^ ")"
+			| _ -> str ^ ""
+			)
 		"" array		
 
-let rec expr_s = function
+let rec expr_s = 
+	let rec string_of_ind = function (slist : expr_detail list) ->
+	 match slist with
+	  [hd] -> "array[" ^ expr_s hd ^ "]."
+		| hd::tail -> "array[" ^ expr_s hd ^ "].a->" ^ string_of_ind tail
+		
+		
+	in
+	function
    ILiteral(l) -> string_of_int l
  | String(s) -> s
  | Char(c) -> c 
@@ -72,8 +87,32 @@ let rec expr_s = function
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
- | ArrId(name,nlist) ->  name ^ "[" ^ String.concat "][" (List.map (fun s-> expr_s s) nlist) ^ "]"
+ | ArrId(typ,name,nlist) ->  
+	let tname = match typ with
+		Types.Int -> "i"
+	| Types.Float -> "f"
+	| Types.Char -> "c"
+	in	
+	name ^ "->" ^ string_of_ind nlist ^ tname
  | DArrId(name,n) -> name ^ print_formal_bracket n
+
+
+let rec checkArray id ind=
+		match ind with
+		[hd] -> ""
+		| hd::tail -> 
+			"if (!(" ^ id ^ "->array[" ^ expr_s hd ^ "].a)) {\n" ^
+			"Array temp;\n" ^
+			"initArray(&temp);\n" ^
+			"insertArray(" ^ id ^ "," ^ expr_s hd ^ ",&temp);\n" ^
+			"}\n" ^ checkArray (id ^ "->array[" ^ expr_s hd ^ "].a") tail
+			
+let rec insertArray id ind=
+		match ind with
+		[hd] -> id ^ "", expr_s hd
+		| hd::tail -> 
+			insertArray (id ^ "->array[" ^ expr_s hd ^ "].a") tail
+
 
 let rec stmt_s = function
    Block(symbol_table,ss,unused_vars) -> "{\n"^ (String.concat "\n"
@@ -87,10 +126,7 @@ let rec stmt_s = function
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Return(e, vars) -> 
-	(*
-		"/*\nFree Arrays:" ^
-		(free_array vars) ^ "\n*/\n" ^ 
-		*)
+		(free_array vars) ^ "\n" ^ 
 		"return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
@@ -105,13 +141,21 @@ let rec stmt_s = function
 		" = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
  | DBraces (t, id, dim, elem) -> Types.output_of_type t ^ (print_formal_bracket dim) ^ " " ^ 
 				id ^ " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
- | AAssign(t,id,ind, e) -> Types.output_of_type t ^ " " ^ id ^
-			"[" ^ String.concat "][" (List.map (fun s-> expr_s s) ind) ^ "]" ^
-		 	" = " ^ expr_s e ^ ";"
- | DArr(t,id,dim)-> Types.output_of_type t ^ (print_formal_bracket dim) ^ " " ^ id ^ ";"
+ | AAssign(t,id,ind, e) -> 
+	let idstr, indstr = insertArray id ind in
+			checkArray id ind ^ 
+			"insert" ^ Types.string_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
+ | DArr(t,id,dim)-> "Array " ^ id ^ "_o;\n" ^
+			"initArray(&" ^ id ^ "_o);\n" ^
+			"Array *" ^ id ^ " = &" ^ id ^ "_o;"
+			
 let func_decl_s (f:func_decl_detail) =
-  (Types.output_of_type f.ftype_s) ^ (print_stars f.brackets_s) ^
-	 " " ^ f.fname_s ^ "(" ^
+	let star = match f.ftype_s with 
+	 Types.DArray(_,_) -> " *"
+	|_ -> " "
+	in
+  (Types.output_of_type f.ftype_s) ^ star 
+	  ^ f.fname_s ^ "(" ^
   String.concat "\n" (List.map print_formals f.formals_s) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 

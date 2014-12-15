@@ -19,7 +19,7 @@ type expr_detail =
   | Noexpr
   | Assign of string * expr_detail
 	| Array of Ast.elem
-  | ArrId of string * expr_detail list 
+  | ArrId of Types.t * string * expr_detail list 
   | DArrId of string * int
 
 type stmt_detail =

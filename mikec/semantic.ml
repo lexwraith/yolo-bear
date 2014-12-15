@@ -37,6 +37,7 @@ type translation_environment = {
   scope:S.symbol_table;			                (* symbol table for vars *)
 	exception_scope : exception_scope; 			(* sym tab for exceptions *)
 	return_type: string * Types.t;
+	mutable formals: string list;
   (*
 	return_type : Types.t;
   in_switch : bool;
@@ -80,12 +81,18 @@ let check_unused_var (scope : S.symbol_table) =
 			[] scope.S.variables 
 	| _ -> scope.S.variables 
 
-let rec clean_vars (scope : S.symbol_table) = 
+let rec clean_vars (formals : string list) (scope : S.symbol_table) = 
 	match scope.S.parent with
 	| Some(parent) -> 
 		let vars = scope.S.variables in
-		let parent_vars = clean_vars parent in
-		List.append vars parent_vars
+		let this_vars = 
+		List.fold_left (fun list var ->
+			let (id,_) = var in
+			if (List.mem id formals) then list else var::list)
+			[] vars
+		in
+		let parent_vars = clean_vars formals parent in
+		List.append this_vars parent_vars
 	| _ -> [] 
 
 (* check if e has type integer *)
@@ -104,6 +111,8 @@ let rec weak_eq_type t1 t2 =
 	| Types.String,Types.String -> true
 	| Types.Void, Types.Void -> true
 	| Types.Array(t1,dim1), Types.Array(t2,dim2) ->
+		(weak_eq_type t1 t2) && (dim1 == dim2)
+	| Types.DArray(t1,dim1), Types.DArray(t2,dim2) ->
 		(weak_eq_type t1 t2) && (dim1 == dim2)
 	| _, _ -> false
 
@@ -145,7 +154,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let id = try
     			find_variable env.scope name (* locate a variable by name *) 
       	with Not_found ->
-      		raise (Failure ("Undeclared identifier: " ^ name))
+      		raise (Failure ("Undeclared array: " ^ name))
       	in
     	let (_, typ) = id in
 			let t = 
@@ -154,9 +163,22 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				| Types.DArray(t,_) -> t
 				|_ -> typ
 			in
-			Sast.ArrId(name,List.rev expr_list), t
-		| Ast.DArrId(s,n)->
-			Sast.DArrId(s,n), Types.Void
+			Sast.ArrId(t,name,List.rev expr_list), t
+		| Ast.DArrId(name,n)->
+			let id = try
+    			find_variable env.scope name (* locate a variable by name *) 
+      	with Not_found ->
+      		raise (Failure ("Undeclared array: " ^ name))
+      	in
+    	let (_, typ) = id in
+			let t,n1 = 
+  			match typ with
+  			Types.Array(t,n1) -> t,n1
+				| Types.DArray(t,n1) -> t,n1
+				|_ -> typ,0
+			in
+			if (n!=n1) then raise (Failure ("Dimension of '" ^ name ^ "' is " ^ string_of_int n1 ^ ", but " ^ string_of_int n ^ " is found."));
+			Sast.DArrId(name,n), typ
   	| Ast.Binop(e1, op, e2) ->
   		let e1 = expr env e1 (* Check left and right children *) 
   		and e2 = expr env e2 in
@@ -210,7 +232,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				let t2 = 
 							match dim with
 							0 -> Types.type_from_string t2
-							| _ -> Types.Array(Types.type_from_string t2,dim)
+							| _ -> Types.DArray(Types.type_from_string t2,dim)
 				in
   				if not (weak_eq_type t1 t2) then
   					raise (Failure ("Type mismatch in function '" ^ name ^ "': parameter '" 
@@ -226,7 +248,13 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 								^ string_of_int (List.length func.formals) ^ " required, but "
   							^ string_of_int (List.length args) ^ " found." ));
   		in
-  		Sast.Call(name, sast_args), Types.type_from_string func.ftype
+			let typ = Types.type_from_string func.ftype in
+				let ftype = 
+							match func.typebrackets with
+							0 -> typ
+							| _ -> Types.DArray(typ,func.typebrackets)
+				in
+  		Sast.Call(name, sast_args), ftype
 	in
 	(* End of expression check *)
 	
@@ -313,7 +341,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type return_type ^ "', but '" ^
   							string_of_type t ^ "' is found." ));
 			let scope = env.scope in
-			let vars_to_clean = clean_vars scope in
+			let vars_to_clean = clean_vars env.formals scope in
   		Sast.Return(ep,vars_to_clean)
 			
 		| Ast.Print(s) ->
@@ -361,17 +389,29 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 		(* Dynamic Array *)
 		| Ast.DArr(t,id,dim) -> 
 			is_new_variable env.scope id;
-  		let t = Types.type_from_string t in
+  		let t = Types.array_type_from_string t in
 			let t = Types.DArray(t,dim) in
 			env.scope.S.variables <- (id,t) :: env.scope.S.variables;
 			Sast.DArr(t,id,dim)
 		
 		| Ast.AAssign(t,id,ind,ep) ->
 			(*is_new_variable env.scope id;*)
-			let t1 = Types.type_from_string t in
+			let e1 = expr env (Ast.Id(id)) in
   		let e2 = expr env ep in
+			let (_, t1) = e1 in
   		let (ep2, t2) = e2 in
-			
+			let t1,n1 = match t1 with
+				Types.DArray(t,n) -> t,n
+			| Types.Array(t,n) -> t,n
+			| _-> t1,0
+			in
+			if not (weak_eq_type t1 t2) then
+  			raise (Failure ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
+  							string_of_type t1 ^ "' array, but '" ^
+  							string_of_type t2 ^ "' is given." ));
+			if (n1 != List.length ind) then
+				raise (Failure ("Dimension of '" ^ id ^ "' is " ^ string_of_int n1 ^
+						 ", but " ^ string_of_int (List.length ind) ^ " is found."));
 			let expr_list = 
 			List.fold_left
 					(fun list epr -> 
@@ -433,12 +473,14 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 	in
 	let scope' = { S.parent = None; S.variables = vars } 
 	and exceptions' = { excep_parent = None; exceptions = [] } 
-	and return_type' = ("global",Types.Void);
+	and return_type' = ("global",Types.Void)
+	and formals' = []
 	in
 	(* New environment for globals *)
 	let env' = { scope = scope'; 
 							 exception_scope = exceptions';
-							 return_type = return_type'}
+							 return_type = return_type';
+							 formals = formals'}
 	in
 	
 	(*	
@@ -454,7 +496,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				
 				(* Convert fdecl in ast to fdecl in sast, perform semantic checking for each fdecl*)
 				(* Convert ftype *)
-				let ftype = Types.type_from_string fdecl.ftype in
+				let typ = fdecl.ftype in
+				let ftype = 
+							match fdecl.typebrackets with
+							0 -> Types.type_from_string typ
+							| _ -> Types.DArray(Types.array_type_from_string typ,fdecl.typebrackets)
+				in
 				 
 				(* Environment for current function should include globals and formals *)
 				let scope_p = { S.parent = Some(env'.scope); S.variables = [] } 
@@ -462,7 +509,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				and return_type_p = (fdecl.fname,ftype)
 				in
 	
-				let env = { scope = scope_p; exception_scope = exceptions; return_type = return_type_p }
+				let env = { scope = scope_p; exception_scope = exceptions; return_type = return_type_p; formals = [] }
 				in
 								
 				(* Convert formals *)
@@ -472,9 +519,10 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 						let tt = 
 							match dim with
 							0 -> Types.type_from_string t
-							| _ -> Types.Array(Types.type_from_string t,dim)
+							| _ -> Types.DArray(Types.array_type_from_string t,dim)
 						in
 						env.scope.S.variables <- (id,tt) :: env.scope.S.variables;
+						env.formals <- id::env.formals;
 						(tt, id, dim)::formal_list)
 					[] fdecl.formals
 				in
@@ -501,17 +549,3 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 		(List.rev sast_globals, List.rev sast_fdecls);
 						 
 		
-				
-	
-	(* Find 'main' function *)
-	
-	(*
-	let main_fun = 
-	try
-   	NameMap.find "main" func_decls
-  with Not_found -> raise (Failure ("Cannot find the main() function"))
-	in
-	stmt env' (Ast.Block(main_fun.body))
-	*)
-	(*ignore (List.fold_left (fun env stmts -> stmt env stmts) env' main_fun.body)*)
-	

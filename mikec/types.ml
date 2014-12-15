@@ -24,10 +24,13 @@ let rec string_of_type t1 =
 	| Float -> "Float"
 	| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*)
 	| Array(t_a, num) -> 
-		(string_of_type t_a) ^	(print_array_bracket num)              
+		(string_of_type t_a) ^	(print_array_bracket num)
+	| DArray(t_a, num) -> 
+		(string_of_type t_a) ^	(print_array_bracket num)                    
 	| Exception(s) -> "Exception: " ^ s
 	| Nonetype
 	| _ -> "Unknown type"
+
 
 let rec output_of_type t1 =
 	match t1 with
@@ -38,7 +41,7 @@ let rec output_of_type t1 =
 	| Float -> "float"
 	(*| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*) *)
 	| Array(t_a, _) ->  output_of_type t_a	  
-	| DArray(t_a, _) -> output_of_type t_a            
+	| DArray(t_a, _) -> "Array"           
 	| Exception(_) -> "exception"
 	| Nonetype -> ""
 	| _ -> ""
@@ -51,3 +54,10 @@ let type_from_string s1 =
 	| "String" -> String
 	| "float" -> Float
 	| _ -> Nonetype
+
+let array_type_from_string s =
+	match s with
+		"int" -> Int
+	| "char" -> Char
+	| "float" -> Float
+	| _ -> raise (Failure ("Array cannot have type '" ^ s ^"'"))
