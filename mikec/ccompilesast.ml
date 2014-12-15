@@ -126,7 +126,13 @@ let rec stmt_s = function
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Return(e, vars) -> 
-		(free_array vars) ^ "\n" ^ 
+		(*(free_array vars) ^ "\n" ^ *)
+		"Array *ptr;\n" ^
+		"while (stackEmpty(stack)==0){\n"^
+		"stack = popStack(stack, ptr);\n"^
+		"freeArray(ptr);\n"^
+		"}\n"^
+		"freeStack(stack);\n"^
 		"return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
@@ -149,7 +155,9 @@ let rec stmt_s = function
 		"char[] " ^ id ^ " = " ^ String.concat "" e ^ ";"
  | DArr(t,id,dim)-> "Array " ^ id ^ "_o;\n" ^
 			"initArray(&" ^ id ^ "_o);\n" ^
-			"Array *" ^ id ^ " = &" ^ id ^ "_o;"
+			"Array *" ^ id ^ " = &" ^ id ^ "_o;\n" ^
+			"stack = pushStack(stack, " ^ id ^ ");"
+			
 			
 let func_decl_s (f:func_decl_detail) =
 	let star = match f.ftype_s with 
@@ -159,7 +167,10 @@ let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ star 
 	  ^ f.fname_s ^ "(" ^
   String.concat "\n" (List.map print_formals f.formals_s) ^ "){\n" ^
-  String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
+	"Stack stack_o;\n" ^
+  "initStack(&stack_o);\n" ^
+	"Stack *stack = &stack_o;\n" ^
+	String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n#include \"array.h\"\n\n" ^ 
 				String.concat ", " (List.map typstrstr vars) ^ "\n" ^
