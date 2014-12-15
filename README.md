@@ -21,6 +21,12 @@ Eli -
 Prateek -
 * Help Eli with final report
 
+###12/14/14###
+Mike - 
+* Strings are in e.g. char x[] = "test"; -- see SAssign in ast.ml
+* Escape characters are in treated as chars of max size 2.
+* Variable declaration chaining in e.g. int x,y; - see VDecllist in ast.ml
+
 ###12/13/14###
 Mike/Yuchen -
 * Arrays now have their own ID type
