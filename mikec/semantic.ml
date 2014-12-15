@@ -206,7 +206,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let make_sast_args sast_args args formals =
   			let e = expr env' args in
   			let (ep1, t1) = e in
-  			let (t2, n2, dim, dym) = formals in
+  			let (t2, n2, dim) = formals in
 				let t2 = 
 							match dim with
 							0 -> Types.type_from_string t2
@@ -468,7 +468,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				(* Convert formals *)
 				let formals' = List.fold_left
 					(fun formal_list formal->
-						let (t, id, dim, dym) = formal in
+						let (t, id, dim) = formal in
 						let tt = 
 							match dim with
 							0 -> Types.type_from_string t

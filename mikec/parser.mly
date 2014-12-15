@@ -70,10 +70,8 @@ formal_list:
   | formal_list COMMA formal { $3 :: $1 }
 
 formal:
-    TYPE ID                   {  ($1 ,$2, 0, false)  }
-  | TYPE ID dbrackets_list    { ($1, $2, $3, false) }
-	| TYPE ID dbrackets_list PLUS { ($1, $2, $3, true)}
-
+    TYPE ID                   {  ($1 ,$2, 0)  }
+  | TYPE ID dbrackets_list    { ($1, $2, $3) }
 
 /* Next two exclusively for file/global scope declarations */
 vdecl_list:

@@ -41,7 +41,7 @@ type func_decl = {
     ftype : string;
 		typebrackets : int;
     fname : string;
-    formals : (string * string * int * bool) list;
+    formals : (string * string * int) list;
     body : stmt list;
   }
 
