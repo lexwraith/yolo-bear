@@ -31,6 +31,11 @@ Mike -
 * Variable declaration chaining in e.g. int x,y; - see VDecllist in ast.ml
 * INCR/DECR added under expressions - Will add a type under EXPR for it later
 
+Yuchn -
+* Dynamic Arrays are in
+* Add string in sast, semantic and ccompilesast
+
+
 ###12/13/14###
 Mike/Yuchen -
 * Arrays now have their own ID type
