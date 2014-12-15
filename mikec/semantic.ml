@@ -96,13 +96,15 @@ let require_integer (env:translation_environment) e str =
 				 raise (Failure str) 
 				
 (* check if t1 and t2 are the same types *)				
-let weak_eq_type t1 t2 =
+let rec weak_eq_type t1 t2 =
 	match t1,t2 with
 		Types.Int,Types.Int -> true
 	| Types.Char,Types.Char -> true
 	| Types.Float,Types.Float -> true
 	| Types.String,Types.String -> true
 	| Types.Void, Types.Void -> true
+	| Types.Array(t1,dim1), Types.Array(t2,dim2) ->
+		(weak_eq_type t1 t2) && (dim1 == dim2)
 	| _, _ -> false
 
 let check ((globals: (string * string * string) list), (functions : Ast.func_decl list)) = 
@@ -149,6 +151,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			let t = 
   			match typ with
   			Types.Array(t,_) -> t
+				| Types.DArray(t,_) -> t
 				|_ -> typ
 			in
 			Sast.ArrId(name,List.rev expr_list), t
@@ -203,12 +206,16 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let make_sast_args sast_args args formals =
   			let e = expr env' args in
   			let (ep1, t1) = e in
-  			let (t2, n2, _) = formals in
-				let t2 = Types.type_from_string t2 in
+  			let (t2, n2, dim) = formals in
+				let t2 = 
+							match dim with
+							0 -> Types.type_from_string t2
+							| _ -> Types.Array(Types.type_from_string t2,dim)
+				in
   				if not (weak_eq_type t1 t2) then
-  					raise (Failure ("Type mismatch in function '" ^ name ^ "': " 
-								^ n2 ^ " is " ^ (string_of_type t2) ^ ", but " 
-  							^ (string_of_type t1) ^ " is found." ));
+  					raise (Failure ("Type mismatch in function '" ^ name ^ "': parameter '" 
+								^ n2 ^ "' is '" ^ (string_of_type t2) ^ "', but '" 
+  							^ (string_of_type t1) ^ "' is found." ));
   				ep1::sast_args
   		in
   		let sast_args = 
@@ -461,10 +468,14 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				(* Convert formals *)
 				let formals' = List.fold_left
 					(fun formal_list formal->
-						let (t, id, dim) = formal in 
-						let t = Types.type_from_string t in
-						env.scope.S.variables <- (id,t) :: env.scope.S.variables;
-						(t, id, dim)::formal_list)
+						let (t, id, dim) = formal in
+						let tt = 
+							match dim with
+							0 -> Types.type_from_string t
+							| _ -> Types.Array(Types.type_from_string t,dim)
+						in
+						env.scope.S.variables <- (id,tt) :: env.scope.S.variables;
+						(tt, id, dim)::formal_list)
 					[] fdecl.formals
 				in
 				
@@ -479,6 +490,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				let func = 
 					{
 						ftype_s = ftype;
+						brackets_s = fdecl.typebrackets;
     				fname_s = fdecl.fname;
     				formals_s =List.rev formals';
     				body_s =List.rev body';

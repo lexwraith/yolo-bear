@@ -37,11 +37,28 @@ fdecl:
 	{ 
 	  { 
 	    ftype = $1;
+			typebrackets = 0;
 	    fname = $2;
 	    formals = $4;
 	    body = List.rev $7 
+			
 	  } 
 	}
+	| TYPE fbrackets_list ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
+	{ 
+	  { 
+	    ftype = $1;
+			typebrackets = $2;
+	    fname = $3;
+	    formals = $5;
+	    body = List.rev $8 
+			
+	  } 
+	}
+	
+fbrackets_list:
+	 LBRAC RBRAC { 1 }
+  | LBRAC RBRAC fbrackets_list { 1 + $3 }
 
 /* Note that the following two fall under fdecl */
 formals_opt: 
@@ -54,9 +71,7 @@ formal_list:
 
 formal:
     TYPE ID                   {  ($1 ,$2, 0)  }
-  | TYPE ID brackets_list     { ($1, $2, List.length $3) }
   | TYPE ID dbrackets_list    { ($1, $2, $3) }
-
 
 /* Next two exclusively for file/global scope declarations */
 vdecl_list:

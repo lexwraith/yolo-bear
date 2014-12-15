@@ -23,7 +23,12 @@ let rec print_formal_bracket = function n ->
 	 0 -> ""
 	| _ -> "[]" ^ print_formal_bracket (n-1)  
 
-let print_formals = function (a,b,c) ->(Types.output_of_type a) ^ " " ^ b ^ (print_formal_bracket c)
+let rec print_stars = function n ->
+	match n with
+	 0 -> ""
+	| _ -> "*" ^ print_stars (n-1) 
+
+let print_formals = function (a,b,c) ->(Types.output_of_type a) ^ (print_stars c) ^" " ^ b 
 
 let typstr = function (a,b) -> (Types.output_of_type a) ^ " " ^ b
 
@@ -67,7 +72,7 @@ let rec expr_s = function
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
- | ArrId(name,nlist) -> "array " ^ name  
+ | ArrId(name,nlist) ->  name ^ "[" ^ String.concat "][" (List.map (fun s-> expr_s s) nlist) ^ "]"
  | DArrId(name,n) -> name ^ print_formal_bracket n
 
 let rec stmt_s = function
@@ -105,7 +110,8 @@ let rec stmt_s = function
 		 	" = " ^ expr_s e ^ ";"
  | DArr(t,id,dim)-> Types.output_of_type t ^ (print_formal_bracket dim) ^ " " ^ id ^ ";"
 let func_decl_s (f:func_decl_detail) =
-  (Types.output_of_type f.ftype_s) ^ " " ^ f.fname_s ^ "(" ^
+  (Types.output_of_type f.ftype_s) ^ (print_stars f.brackets_s) ^
+	 " " ^ f.fname_s ^ "(" ^
   String.concat "\n" (List.map print_formals f.formals_s) ^ "){\n" ^
   String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
