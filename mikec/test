@@ -79,7 +79,7 @@ def test(filepath):
 
     try:
         print(outfile)
-        Popen(['gcc', "-Iarrays", outfile])
+        Popen(['gcc', "-o" + outc, "-std=c99", "-Iarrays", outfile],stdout=PIPE)
     except Exception as e:
         pt(3, "Failed GCC %s:%s" % (filepath,e))
 
