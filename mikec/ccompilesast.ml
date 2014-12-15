@@ -145,6 +145,8 @@ let rec stmt_s = function
 	let idstr, indstr = insertArray id ind in
 			checkArray id ind ^ 
 			"insert" ^ Types.string_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
+ | SAssign(t,id,ind, e) -> 
+		"char[] " ^ id ^ " = " ^ String.concat "" e ^ ";"
  | DArr(t,id,dim)-> "Array " ^ id ^ "_o;\n" ^
 			"initArray(&" ^ id ^ "_o);\n" ^
 			"Array *" ^ id ^ " = &" ^ id ^ "_o;"

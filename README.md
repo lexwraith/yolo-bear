@@ -21,6 +21,16 @@ Eli -
 Prateek -
 * Help Eli with final report
 
+###12/14/14###
+Mike - 
+* Strings are in e.g. char x[] = "test"; -- see SAssign in ast.ml
+* String declarations in char x[] = now string * string * string list
+* For loop's last argument is now stmt list as opposed to stmt
+* If's last argument is now stmt list as opposed to stmt
+* Escape characters are in treated as chars of max size 2.
+* Variable declaration chaining in e.g. int x,y; - see VDecllist in ast.ml
+* INCR/DECR added under expressions - Will add a type under EXPR for it later
+
 ###12/13/14###
 Mike/Yuchen -
 * Arrays now have their own ID type

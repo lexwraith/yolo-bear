@@ -38,6 +38,7 @@ type stmt_detail =
 	| DArr of Types.t * string * int (*Type, ID, Dimensions *)
   | DBraces of Types.t * string * int * elem list (* Type, ID, Values*)
   | AAssign of Types.t * string * expr_detail list * expr_detail (*Type, ID,value position, new value*)
+	| SAssign of Types.t * string * int * string list (* String assignment check if int == 1*)
 	
 type expression = expr_detail * Types.t
 

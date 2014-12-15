@@ -37,7 +37,7 @@ type translation_environment = {
   scope:S.symbol_table;			                (* symbol table for vars *)
 	exception_scope : exception_scope; 			(* sym tab for exceptions *)
 	return_type: string * Types.t;
-	mutable formals: string list;
+	mutable fun_formals: string list;
   (*
 	return_type : Types.t;
   in_switch : bool;
@@ -341,7 +341,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type return_type ^ "', but '" ^
   							string_of_type t ^ "' is found." ));
 			let scope = env.scope in
-			let vars_to_clean = clean_vars env.formals scope in
+			let vars_to_clean = clean_vars env.fun_formals scope in
   		Sast.Return(ep,vars_to_clean)
 			
 		| Ast.Print(s) ->
@@ -421,17 +421,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 						ep::list
 					) [] ind
 			in	
-			
-  		(*
-  		if not (weak_eq_type t1 t2) then
-  			raise (Failure ("Type mismatch in array declaration: array '"^ id ^
-								 "' is '" ^
-  							string_of_type t1 ^ "' array, but right is '" ^
-  							string_of_type t2 ^ "'" ));
-			*)
-  		(*env.scope.S.variables <- (id,t1) :: env.scope.S.variables;*)
   		Sast.AAssign(t1,id, expr_list,ep2)
 			
+		| Ast.SAssign(t,id,ind,str) ->
+			is_new_variable env.scope id;
+			let t1 = Types.String in
+  		Sast.SAssign(t1,id, ind,str)
   		 
   	| Ast.Block(sl) ->
   		(* New scopes: parent is the existing scope, start out empty *)
@@ -474,13 +469,13 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 	let scope' = { S.parent = None; S.variables = vars } 
 	and exceptions' = { excep_parent = None; exceptions = [] } 
 	and return_type' = ("global",Types.Void)
-	and formals' = []
+	and fun_formals' = []
 	in
 	(* New environment for globals *)
 	let env' = { scope = scope'; 
 							 exception_scope = exceptions';
 							 return_type = return_type';
-							 formals = formals'}
+							 fun_formals = fun_formals'}
 	in
 	
 	(*	
@@ -509,7 +504,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				and return_type_p = (fdecl.fname,ftype)
 				in
 	
-				let env = { scope = scope_p; exception_scope = exceptions; return_type = return_type_p; formals = [] }
+				let env = { scope = scope_p; exception_scope = exceptions; return_type = return_type_p; fun_formals = [] }
 				in
 								
 				(* Convert formals *)
@@ -522,7 +517,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 							| _ -> Types.DArray(Types.array_type_from_string t,dim)
 						in
 						env.scope.S.variables <- (id,tt) :: env.scope.S.variables;
-						env.formals <- id::env.formals;
+						env.fun_formals <- id::env.fun_formals;
 						(tt, id, dim)::formal_list)
 					[] fdecl.formals
 				in
