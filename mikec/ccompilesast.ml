@@ -135,9 +135,9 @@ let rec stmt_s = function
 			else
 				"freeArray(ptr);\n"
 		in
-		"Array *ptr;\n" ^
+		"Array *ptr = NULL;\n" ^
 		"while (stackEmpty(stack)==0){\n"^
-		"stack = popStack(stack, ptr);\n"^	
+		"stack = popStack(stack, &ptr);\n"^	
 		freestr ^
 		"}\n"^
 		"freeStack(stack);\n"^
@@ -175,9 +175,8 @@ let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ star 
 	  ^ f.fname_s ^ "(" ^
   String.concat "\n" (List.map print_formals f.formals_s) ^ "){\n" ^
-	"Stack stack_o;\n" ^
-  "initStack(&stack_o);\n" ^
-	"Stack *stack = &stack_o;\n" ^
+	"Stack *stack = NULL;\n" ^
+  "initStack(stack);\n" ^	
 	String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n#include \"array.h\"\n\n" ^ 

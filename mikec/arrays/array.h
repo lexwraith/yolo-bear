@@ -135,7 +135,7 @@ void freeStack(Stack *head) {
     while (head != NULL);
   }
 
-
+}
 
   
 #endif
