@@ -5,13 +5,6 @@
 #include <stdio.h>
 #define initSize 10
 
-/*typedef union Data {
-    int i;
-    char c;
-    float f;
-} Data; 
-*/
-
 typedef struct Array {
  
  int datatype;	//set to 1 if it holds arrays
@@ -87,4 +80,51 @@ void freeArray(Array *ar) {
   ar->used = ar->size = 0;
 }
 
+///////////////////////////////////
+//  Stack for garbage collection //
+///////////////////////////////////
+
+//Stack is implemented as a linked list, where Stack structs
+//are the nodes of the list
+typedef struct Stack {
+  Array *data;
+  struct Stack *next;
+} Stack;
+
+//
+void initStack(Stack *head){
+  head = NULL;
+}
+
+//Arguments: Stack *head
+Stack *pushStack(Stack *head, Array *ptr){
+  Stack *temp = (Stack *)malloc(sizeof(Stack));
+  temp->data = ptr;
+  temp->next = head;
+  head = temp;
+  return head;  
+}
+
+//Pass in ptr to Stack head and Array* which will hold the
+//data you are popping. Function returns new Stack head
+Stack* popStack(Stack *head, Array **ptr) {
+    Stack* temp = head;
+    *ptr = head->data;
+    head = head->next;
+    free(temp);
+    return head;
+}
+
+//Checks if the stack is empty
+int stackEmpty(Stack *head){
+  if(head == NULL)
+    return 1;
+  else
+   return 0;
+}
+
+
+
+
+  
 #endif

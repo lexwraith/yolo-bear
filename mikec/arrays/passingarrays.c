@@ -17,15 +17,27 @@ int main() {
   return funcArray;
   }
   
-  Array b; 
+ /* Array b; 
   initArray(&b); 
-  Array *ptrb = &b;
+*/  Array *ptrb = NULL;
 
   ptrb = doubleArray(ptra);
+  
+  Stack *head = NULL;
+  initStack(head);
+
+  head = pushStack(head, ptra);
+  head = pushStack(head, ptrb);
+  printf("%d\n", head->data->array[0].i);
+  Array *temp = NULL;
+  head = popStack(head, &temp);
+
+  printf("%d\n", temp->array[1].i);
+  
  
   for(x=0; x<10; x++){
     printf("a: %d\n", ptra->array[x].i);
     printf("b: %d\n", ptrb->array[x].i);
   }
-  
+
 }
