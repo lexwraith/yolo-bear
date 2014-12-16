@@ -34,7 +34,7 @@ Mike -
 Yuchn -
 * Dynamic Arrays are in
 * Add string in sast, semantic and ccompilesast
-
+* Fixed a few test cases
 
 ###12/13/14###
 Mike/Yuchen -
