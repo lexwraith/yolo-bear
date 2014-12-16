@@ -123,6 +123,17 @@ int stackEmpty(Stack *head){
    return 0;
 }
 
+//Frees the whole stack, pass in the head of the stack
+void freeStack(Stack *head) {
+  Stack *temp = NULL;
+  if(head != NULL){
+    do{
+      temp = head;
+      head = head->next;
+      free(temp);
+    }
+    while (head != NULL);
+  }
 
 
 
