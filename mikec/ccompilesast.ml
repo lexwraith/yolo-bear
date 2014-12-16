@@ -52,14 +52,14 @@ let print_vars = function vars->
 	List.fold_left 
 		(fun str var -> 
 			let (id,t) = var in
-			str ^ "\n" ^ (Types.string_of_type t) ^ " "^ id)
+			str ^ "\n" ^ (Types.output_of_type t) ^ " "^ id)
 		"" vars
 let free_array = function array->
 	List.fold_left 
 		(fun str var -> 
 			let (id,t) = var in
 			match t with
-				Types.DArray(_,_) ->str ^ "\n//freeArray(" ^ (Types.string_of_type t) ^ " "^ id ^ ")"
+				Types.DArray(_,_) ->str ^ "\n//freeArray(" ^ (Types.output_of_type t) ^ " "^ id ^ ")"
 			| _ -> str ^ ""
 			)
 		"" array		
@@ -159,10 +159,10 @@ let rec stmt_s = function
  | AAssign(t,id,ind, e) -> 
 	let idstr, indstr = insertArray id ind in
 			checkArray id ind ^ 
-			"insert" ^ Types.string_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
+			"insert" ^ Types.output_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
  | SAssign(t,id,ind, e) -> 
 		"char " ^ id ^ "[] = " ^ String.concat "" e ^ ";"
- | DArr(t,id,dim)-> Types.string_of_type t ^ " " ^ id ^ print_formal_bracket dim ^ 
+ | DArr(t,id,dim)-> Types.output_of_type t ^ " " ^ id ^ print_formal_bracket dim ^ ";\n" ^ 
 			"initArray(&" ^ id ^ "_o);\n" ^
 			"Array *" ^ id ^ " = &" ^ id ^ "_o;\n" ^
 			"stack = pushStack(stack, " ^ id ^ ");"

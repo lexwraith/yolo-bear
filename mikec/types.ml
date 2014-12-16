@@ -41,7 +41,7 @@ let rec output_of_type t1 =
 	| Float -> "float"
 	(*| Struct(name,_) -> "Struct: " ^ name (* TODO complete struct string*) *)
 	| Array(t_a, _) ->  output_of_type t_a	  
-	| DArray(t_a, _) -> "Array"           
+	| DArray(t_a, _) -> output_of_type t_a           
 	| Exception(_) -> "exception"
 	| Nonetype -> ""
 	| _ -> ""

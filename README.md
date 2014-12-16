@@ -19,6 +19,7 @@ Mike -
 * Fixed some code generation (For/Call/If/While)
 * Fixed array declaration/assignment to C format
 * TODO: Array assignment. e.g. a[0][] = 5;
+* Switched all code generation to use output_of_type rather than string_of_type
 ###12/14/14###
 Mike - 
 * Strings are in e.g. char x[] = "test"; -- see SAssign in ast.ml
