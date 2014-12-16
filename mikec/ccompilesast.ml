@@ -67,8 +67,8 @@ let free_array = function array->
 let rec expr_s = 
 	let rec string_of_ind = function (slist : expr_detail list) ->
 	 match slist with
-	  [hd] -> "array[" ^ expr_s hd ^ "]."
-		| hd::tail -> "array[" ^ expr_s hd ^ "].a->" ^ string_of_ind tail
+    	|  [hd] -> "[" ^ expr_s hd ^ "]"
+		| hd::tail -> "[" ^ expr_s hd ^ "].a->" ^ string_of_ind tail
 		
 		
 	in
@@ -105,7 +105,7 @@ let rec checkArray id ind=
 			"Array temp;\n" ^
 			"initArray(&temp);\n" ^
 			"insertArray(" ^ id ^ "," ^ expr_s hd ^ ",&temp);\n" ^
-			"}\n" ^ checkArray (id ^ "->array[" ^ expr_s hd ^ "].a") tail
+			"}\n" ^ checkArray (id ^ "->[" ^ expr_s hd ^ "].a") tail
 			
 let rec insertArray id ind=
 		match ind with
