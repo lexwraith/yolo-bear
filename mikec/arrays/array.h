@@ -43,10 +43,10 @@ Array *initArray(Array *ar) {
 //insert Data type element. Used by other insert methods to
 //handle memory allocation and setting of used and size fields.
 void insert(Array *ar, int offset, Data element) {
-  printf("Offset: %d\n", offset);
+/*  printf("Offset: %d\n", offset);
   printf("Inserting array addr %p into array of addr: %p\n", element.a, ar);
-//  printf("a->size: %d\n", ar->size);
-  printf("Begining insert operation\n");
+  printf("a->size: %d\n", ar->size);
+*/  printf("Begining insert operation\n");
   while (ar->size <= offset ) {
     printf("Inside insert while loop, size\n");
     ar->size *= 2;
@@ -87,13 +87,13 @@ void insertFloat(Array *ar, int offset, float element){
 }
 
 void insertArray(Array *ar, int offset, Array *element){
-  printf("Insert array method\n");
+/*  printf("Insert array method\n");
   printf("Address of array bein inserted: %p\n", element);
   printf("Address of element->array being inserted: %p\n", element->array);
-  Data temp;
+*/  Data temp;
   temp.a = element;
-  printf("Address of temp.a being inserted: %p\n", temp.a);
-  printf("Address of temp.a->array being inserted: %p\n", temp.a->array);
+//  printf("Address of temp.a being inserted: %p\n", temp.a);
+//  printf("Address of temp.a->array being inserted: %p\n", temp.a->array);
   insert(ar, offset, temp);
   ar->datatype = 1;
 }

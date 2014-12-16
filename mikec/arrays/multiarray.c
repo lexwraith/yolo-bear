@@ -32,15 +32,16 @@ int main(){
 		Array *x_3 = initArray(x_3);
 		printf("Address of x_3: %p\n", x_3);
 		printf("Address of x_3->array: %p\n", x_3->array);
-		printf("Inserting x_3 into x_2");
-		insertArray((x->array[3].a->array[2].a),0,x_3);
+		printf("Inserting x_3 into x_2\n");
+		insertArray((x->array[3].a->array[2].a),1,x_3);
 	}
-//	insertInt(x->array[3].a->array[2].a->array[1].a,5,42);:w
+
+	insertInt(x->array[3].a->array[2].a->array[1].a,5,42);
 
 
-//	printf("%d\n", x->array[3].a->array[2].a->array[1].a->array[5].i);
+	printf("%d\n", x->array[3].a->array[2].a->array[1].a->array[5].i);
 
-//        freeArray(x);
+        freeArray(x);
  return 0;
 }
 
