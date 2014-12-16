@@ -32,6 +32,7 @@ typedef union Data Data;
 Array *initArray(Array *ar) {
   printf("Initarray\n");
   ar = (Array *)malloc(sizeof(Array));
+  ar->array = NULL;
   ar->array = (Data *)malloc(initSize * sizeof(Data));
   if(!(ar->array)){
     printf("Initarray malloc failed");
@@ -46,22 +47,23 @@ void insert(Array *ar, int offset, Data element) {
 /*  printf("Offset: %d\n", offset);
   printf("Inserting array addr %p into array of addr: %p\n", element.a, ar);
   printf("a->size: %d\n", ar->size);
-*/  printf("Begining insert operation\n");
+  printf("Begining insert operation\n"); */
   while (ar->size <= offset ) {
-    printf("Inside insert while loop, size\n");
+//    printf("Inside insert while loop, size\n");
     ar->size *= 2;
     ar->array = (Data *)realloc(ar->array, ar->size * sizeof(Data));
     if(!(ar->array)){
-      printf("Realloc in insert failed");
+      printf("Realloc in insert failed\n");
+      return;
     }
     ar->array[offset] = element;
   }
 
   if ( offset > ar->used ) {
-    printf("In inert operation: offset > a->used\n");
+//    printf("In inert operation: offset > a->used\n");
     ar->used = offset;
   }
-  printf("Inserting element at offset\n");
+//  printf("Inserting element at offset\n");
   ar->array[offset] = element;
 }
 
@@ -103,17 +105,17 @@ void freeArray(Array *ar) {
   if (ar->datatype == 1){
     printf("datatype == 1\n");
     for(x = 0; x <= ar->used; x++){
-	printf("X loop\n");
       if(ar->array[x].a){
-        printf("%d\n", x);
+        printf("Found array in ar->array[%d]\n", x);
         freeArray(ar->array[x].a);
       }
     }
   }
-  else{
-    printf("else of free array\n");
-    free(ar->array);
-  }
+   
+  printf("calling free(ar->array)\n");
+  free(ar->array);
+  free(ar);
+  
 //  ar->array = NULL;
 //  ar->used = ar->size = 0;
 }
