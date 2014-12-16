@@ -152,7 +152,7 @@ let rec stmt_s = function
  | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> expr_s s) l) ^ "];"
  | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ 
   	"[" ^ String.concat "][" (List.map (fun s-> expr_s s) ind) ^ "]" ^
-		" = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
+		" = " ^ "{" ^ String.concat "," (List.map (fun elem -> string_of_elem elem) elem) ^ "};"
  | DBraces (t, id, dim, elem) -> Types.output_of_type t ^ " " ^ id 
                                 ^ (print_formal_bracket dim)^  " = "
                                  ^ "{" ^ String.concat "," (List.map (fun elem -> string_of_elem elem) elem) ^ "};"

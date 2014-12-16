@@ -1,4 +1,4 @@
 int main(){
-    int g[];
+    int z[];
     return 0;
 }
