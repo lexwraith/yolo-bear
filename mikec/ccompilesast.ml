@@ -155,14 +155,14 @@ let rec stmt_s = function
 		" = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
  | DBraces (t, id, dim, elem) -> Types.output_of_type t ^ " " ^ id 
                                 ^ (print_formal_bracket dim)^  " = "
-                                 ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
+                                 ^ "{" ^ String.concat "," (List.map (fun elem -> string_of_elem elem) elem) ^ "};"
  | AAssign(t,id,ind, e) -> 
 	let idstr, indstr = insertArray id ind in
 			checkArray id ind ^ 
 			"insert" ^ Types.string_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
  | SAssign(t,id,ind, e) -> 
 		"char " ^ id ^ "[] = " ^ String.concat "" e ^ ";"
- | DArr(t,id,dim)-> "Array " ^ id ^ "_o;\n" ^
+ | DArr(t,id,dim)-> Types.string_of_type t ^ " " ^ id ^ print_formal_bracket dim ^ 
 			"initArray(&" ^ id ^ "_o);\n" ^
 			"Array *" ^ id ^ " = &" ^ id ^ "_o;\n" ^
 			"stack = pushStack(stack, " ^ id ^ ");"

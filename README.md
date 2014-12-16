@@ -17,7 +17,8 @@ Mike -
 * Added in continue/break
 * Varchaining fully implemented
 * Fixed some code generation (For/Call/If/While)
-
+* Fixed array declaration/assignment to C format
+* TODO: Array assignment. e.g. a[0][] = 5;
 ###12/14/14###
 Mike - 
 * Strings are in e.g. char x[] = "test"; -- see SAssign in ast.ml
