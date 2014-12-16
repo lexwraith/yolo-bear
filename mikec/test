@@ -68,7 +68,7 @@ def test(filepath):
             FAIL += 1
             return
         elif not flags.nopass:
-            pt(2, "%s PASSED" % filepath)
+            if not flags.gcc: pt(2, "%s PASSED" % filepath)
             if flags.showpass: pt(5,out)
             PASS += 1
             writeC(outfile,out)
@@ -79,7 +79,7 @@ def test(filepath):
 
     try:
         print(outfile)
-        Popen(['gcc', "-o" + outc, "-std=c99", "-Iarrays", outfile],stdout=PIPE)
+        Popen(['gcc', "-o" + outc, "-std=c99", "-Iarrays", outfile])
     except Exception as e:
         pt(3, "Failed GCC %s:%s" % (filepath,e))
 
