@@ -322,7 +322,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let t = Types.type_from_string t in
   		env.scope.S.variables <- (id,t) :: env.scope.S.variables;
   		Sast.VDecl(t,id)
-  	
+    (*e.x. int x,y,z;*)
+  	| Ast.VDecllist(t,ids) -> 
+        List.map (function i -> is_new_variable env.scope i) ids;
+        let t = Types.type_from_string t in
+            List.map (function id -> env.scope.S.variables <- (id,t) :: env.scope.S.variables) ids;
+        Sast.VDecllist(t,ids)
   	(* TODO Should it check the type of s? *)
   	| Ast.Print(s) ->
   		Sast.Print(s)

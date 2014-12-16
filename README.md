@@ -24,6 +24,7 @@ Prateek -
 * Fixed float parsing
 * Test suite now fully gcc's
 * Added in continue/break
+* Varchaining fully implemented
 
 ###12/14/14###
 Mike - 
