@@ -335,6 +335,10 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let e = expr env e in
   		let (ep, t) = e in
 			let (fname, return_type) = env.return_type in
+			(match ep with 
+			  Sast.ILiteral(_) | Sast.Float(_) | Sast.String(_) | Sast.Char(_) | Sast.Id(_) | Sast.Noexpr | Sast.DArrId(_, _) -> ()
+			| Sast.ArrId(_, _, _) -> raise (Failure ("Return of function '" ^ fname ^ "' cannot be an element of the dynamic array." ))
+			| _ -> raise (Failure ("Return of function '" ^ fname ^ "' cannot be an expression." )));
 			if not (weak_eq_type t return_type ) then
   			raise (Failure ("Return type mismatch: return type of function '" ^
 								fname ^ "' is " ^ 
@@ -342,7 +346,12 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type t ^ "' is found." ));
 			let scope = env.scope in
 			let vars_to_clean = clean_vars env.fun_formals scope in
-  		Sast.Return(ep,vars_to_clean)
+			let is_darr = 
+				match return_type with
+				Types.DArray(_,_) -> true
+				| _ -> false
+			in
+  		Sast.Return(ep,vars_to_clean, is_darr)
 			
 		| Ast.Print(s) ->
 			Sast.Print(s)

@@ -94,7 +94,7 @@ let rec expr_s =
 	| Types.Char -> "c"
 	in	
 	name ^ "->" ^ string_of_ind nlist ^ tname
- | DArrId(name,n) -> name ^ print_formal_bracket n
+ | DArrId(name,n) -> name (*^ print_formal_bracket n*)
 
 
 let rec checkArray id ind=
@@ -126,8 +126,22 @@ let rec stmt_s = function
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Flow(s) -> s (*Literally "continue;" or "break;"*)
- | Return(e, vars) -> 
-		(free_array vars) ^ "\n" ^ 
+ | Return(e, vars, is_darr) -> 
+		(*(free_array vars) ^ "\n" ^ *)
+		let freestr = 
+			if (is_darr) then 
+				"if( ptr != " ^ expr_s e ^ " ){\n" ^
+				"freeArray(ptr);\n" ^
+				"}\n"
+			else
+				"freeArray(ptr);\n"
+		in
+		"Array *ptr = NULL;\n" ^
+		"while (stackEmpty(stack)==0){\n"^
+		"stack = popStack(stack, &ptr);\n"^	
+		freestr ^
+		"}\n"^
+		"freeStack(stack);\n"^
 		"return" ^ " " ^ expr_s e ^ ";" 
  | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
@@ -150,7 +164,9 @@ let rec stmt_s = function
 		"char[] " ^ id ^ " = " ^ String.concat "" e ^ ";"
  | DArr(t,id,dim)-> "Array " ^ id ^ "_o;\n" ^
 			"initArray(&" ^ id ^ "_o);\n" ^
-			"Array *" ^ id ^ " = &" ^ id ^ "_o;"
+			"Array *" ^ id ^ " = &" ^ id ^ "_o;\n" ^
+			"stack = pushStack(stack, " ^ id ^ ");"
+			
 			
 let func_decl_s (f:func_decl_detail) =
 	let star = match f.ftype_s with 
@@ -160,7 +176,9 @@ let func_decl_s (f:func_decl_detail) =
   (Types.output_of_type f.ftype_s) ^ star 
 	  ^ f.fname_s ^ "(" ^
   String.concat "\n" (List.map print_formals f.formals_s) ^ "){\n" ^
-  String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
+	"Stack *stack = NULL;\n" ^
+  "initStack(stack);\n" ^	
+	String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n#include \"array.h\"\n\n" ^ 
 				String.concat ", " (List.map typstrstr vars) ^ "\n" ^
