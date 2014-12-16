@@ -94,7 +94,7 @@ let rec expr_s =
 	| Types.Char -> "c"
 	in	
 	name ^ "->" ^ string_of_ind nlist ^ tname
- | DArrId(name,n) -> name ^ print_formal_bracket n
+ | DArrId(name,n) -> name (*^ print_formal_bracket n*)
 
 
 let rec checkArray id ind=
@@ -127,10 +127,18 @@ let rec stmt_s = function
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Return(e, vars, is_darr) -> 
 		(*(free_array vars) ^ "\n" ^ *)
+		let freestr = 
+			if (is_darr) then 
+				"if( ptr != " ^ expr_s e ^ " ){\n" ^
+				"freeArray(ptr);\n" ^
+				"}\n"
+			else
+				"freeArray(ptr);\n"
+		in
 		"Array *ptr;\n" ^
 		"while (stackEmpty(stack)==0){\n"^
-		"stack = popStack(stack, ptr);\n"^
-		"freeArray(ptr);\n"^
+		"stack = popStack(stack, ptr);\n"^	
+		freestr ^
 		"}\n"^
 		"freeStack(stack);\n"^
 		"return" ^ " " ^ expr_s e ^ ";" 
