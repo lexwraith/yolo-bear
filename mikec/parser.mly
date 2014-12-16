@@ -103,6 +103,8 @@ stmt_list:
 
     /* TODO: Could consolidate opt/list pairs */
 stmt:
+    BREAK SEMI { Flow("break;") }
+  | CONTINUE SEMI { Flow("continue;") }
   | expr SEMI { Expr($1) }
   | TYPE ID SEMI { VDecl($1,$2) }
   | TYPE id_list SEMI { VDecllist($1,$2) }

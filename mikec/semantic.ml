@@ -329,7 +329,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			
 		| Ast.Printlist(s,l) ->
 			Sast.Printlist(s,l)
-  		
+    | Ast.Flow(s) -> Sast.Flow(s)  		
   	(* TODO Should not be functions here? *)
   	| Ast.Return(e) ->
   		let e = expr env e in

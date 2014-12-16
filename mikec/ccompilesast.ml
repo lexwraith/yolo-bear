@@ -125,6 +125,7 @@ let rec stmt_s = function
  | Expr(e,_) -> expr_s e
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
+ | Flow(s) -> s (*Literally "continue;" or "break;"*)
  | Return(e, vars) -> 
 		(free_array vars) ^ "\n" ^ 
 		"return" ^ " " ^ expr_s e ^ ";" 

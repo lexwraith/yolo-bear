@@ -20,6 +20,7 @@ type expr =
 
 type stmt =
     Block of stmt list
+  | Flow of string
   | Expr of expr
   | Print of string
   | Printlist of string * string list
