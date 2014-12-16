@@ -83,7 +83,7 @@ let rec expr_s =
                      Ast.Div -> " / " | Ast.Equal -> " == " | Ast.Neq -> " != " |
                      Ast.Less -> " < " | Ast.Leq -> " <= " | Ast.Greater -> " > " |
                      Ast.Geq -> " >= ") ^ expr_s e2  
- | Call(f, es) -> f ^ "(" ^
+ | Call(f, es) -> f ^ 
         String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e ^ ";"
  | Noexpr -> ""
@@ -143,11 +143,11 @@ let rec stmt_s = function
 		"}\n"^
 		"freeStack(stack);\n"^
 		"return" ^ " " ^ expr_s e ^ ";" 
- | If(e, s1, s2) -> "If (" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
+ | If(e, s1, s2) -> "if(" ^ expr_s e ^ ") (" ^ stmt_s s1 ^ ") (" ^
                                                 stmt_s s2 ^ ")"
- | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ " " ^ expr_s e2 ^
+ | For(e1, e2, e3, s) -> "for(" ^ expr_s e1 ^ ";" ^ expr_s e2 ^
                             "; " ^ expr_s e3 ^ ") " ^ stmt_s s ^ ""
- | While(e, s) -> "While (" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
+ | While(e, s) -> "while(" ^ expr_s e ^ ") (" ^ stmt_s s ^ ")"
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
  | VDecllist(t,vs) -> Types.output_of_type t ^ " " ^ String.concat ", " vs ^ ";"  
 | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"

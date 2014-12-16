@@ -1,30 +1,22 @@
 #C Without Pointers...And References?#
 
-##TODO:##
-Mike -
-* Fix control structures;
-* Add in continue/break
-
 ###Grammar Nice to haves### 
-* Var chaining just for declrations
 * Return with no argument
-* continue/break
-* Fix floats
+* Test control structures
 
 Yuchen -
 * Work miracles
 
 Eli -
 * Test dynamic arrays/garbage collection/memory management
-* Write final report
 
-Prateek -
-* Help Eli with final report
 ###12/15/###
+Mike -
 * Fixed float parsing
 * Test suite now fully gcc's
 * Added in continue/break
 * Varchaining fully implemented
+* Fixed some code generation (For/Call/If/While)
 
 ###12/14/14###
 Mike - 
