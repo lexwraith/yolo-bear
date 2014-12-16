@@ -1,7 +1,6 @@
 #C Without Pointers...And References?#
 
 ###Grammar Nice to haves### 
-* Return with no argument
 * Test control structures
 
 Yuchen -
