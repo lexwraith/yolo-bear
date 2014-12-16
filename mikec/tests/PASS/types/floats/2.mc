@@ -1,4 +1,4 @@
-void main(int chlo}
+void main(int chlo)
 {
     float x = 3;
 }

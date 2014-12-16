@@ -2,6 +2,7 @@
 open Ast
 
 let str_of_c s = Char.escaped s
+
 let explode s =
   let rec exp i l =
     if i < 0 
@@ -11,6 +12,7 @@ let explode s =
     else exp (i - 1) ((str_of_c s.[i]) :: l) in
   exp (String.length s - 1) []
 
+
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
@@ -18,6 +20,7 @@ let explode s =
 %token EQ NEQ LT LEQ GT GEQ 
 %token RETURN IF ELSE FOR WHILE
 %token BREAK CONST CONTINUE EXTERN STATIC DECR INCR
+%token STRUCT
 %token <string> STR CHR ID FLITERAL TYPE
 %token <int> ILITERAL
 %token EOF PRINT
@@ -35,11 +38,6 @@ let explode s =
 
 %%
 
-/* 
-program consists of two lists:
-1 - global vars of string * string list
-2 - func_decls list 
-*/
 program:
    /* nothing */ { [], [] }
  | program vdecl { ($2 :: fst $1), snd $1 } 

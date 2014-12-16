@@ -20,6 +20,10 @@ Eli -
 
 Prateek -
 * Help Eli with final report
+###12/15/###
+* Fixed float parsing
+* Test suite now fully gcc's
+
 
 ###12/14/14###
 Mike - 
