@@ -29,8 +29,9 @@ typedef struct Array {
 
 typedef union Data Data;
 
-void initArray(Array *ar) {
-printf("Initarray\n");
+Array *initArray(Array *ar) {
+  printf("Initarray\n");
+  ar = (Array *)malloc(sizeof(Array));
   ar->array = (Data *)malloc(initSize * sizeof(Data));
   if(!(ar->array)){
     printf("Initarray malloc failed");
@@ -43,8 +44,8 @@ printf("Initarray\n");
 //handle memory allocation and setting of used and size fields.
 void insert(Array *ar, int offset, Data element) {
   printf("Offset: %d\n", offset);
-  printf("Inserting into array of addr: %p\n", ar);
-  printf("a->size: %d\n", ar->size);
+  printf("Inserting array addr %p into array of addr: %p\n", element.a, ar);
+//  printf("a->size: %d\n", ar->size);
   printf("Begining insert operation\n");
   while (ar->size <= offset ) {
     printf("Inside insert while loop, size\n");
@@ -87,8 +88,12 @@ void insertFloat(Array *ar, int offset, float element){
 
 void insertArray(Array *ar, int offset, Array *element){
   printf("Insert array method\n");
+  printf("Address of array bein inserted: %p\n", element);
+  printf("Address of element->array being inserted: %p\n", element->array);
   Data temp;
   temp.a = element;
+  printf("Address of temp.a being inserted: %p\n", temp.a);
+  printf("Address of temp.a->array being inserted: %p\n", temp.a->array);
   insert(ar, offset, temp);
   ar->datatype = 1;
 }
