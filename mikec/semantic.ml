@@ -267,7 +267,20 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		Ast.Expr(e) -> 
   			let e1 = expr env e in
   			let (ep1,t1) = e1 in
-  				Sast.Expr(ep1,t1)
+				let sfree = match ep1 with 
+				Sast.Assign(_,_) -> 
+  				(
+  				match t1 with 
+  				 Types.DArray(_,_) -> true
+  				|_ -> false
+  					)
+				|_->
+  				(match t1 with 
+  				 Types.DArray(_,_) -> raise (Semantic_Error ("Dynamic Array cannot stand alone.")); false
+  				|_ -> false
+  				) 
+				in
+  			Sast.Expr(ep1,t1,sfree)
   		
   		(* If statement: verify the predicate is integer *)
   	| Ast.If(e, s1, s2) ->
