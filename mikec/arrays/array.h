@@ -121,12 +121,27 @@ void initStack(Stack *head){
   head = NULL;
 }
 
+int notInStack(Stack *head, Array *ptr){
+  Stack *temp = head;
+  while(temp != NULL) {
+    if(temp->data == ptr) {
+      return 0;
+    }
+    else {
+      temp = temp->next;
+    }
+  }
+  return 1;
+}
+
 //Arguments: Stack *head
-Stack *pushStack(Stack *head, Array *ptr){
-  Stack *temp = (Stack *)malloc(sizeof(Stack));
-  temp->data = ptr;
-  temp->next = head;
-  head = temp;
+Stack *pushStack(Stack *head, Array *ptr){  
+  if(notInStack(head, ptr)){
+    Stack *temp = (Stack *)malloc(sizeof(Stack));
+    temp->data = ptr;
+    temp->next = head;
+    head = temp;
+  }
   return head;  
 }
 
