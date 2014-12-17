@@ -8,7 +8,7 @@ int decideFib(int t)
       i = i + 1;
       fibs[i] = fibs[i - 2] + fibs[i - 1];
       int g = fibs[i];
-      printf(" %d ",g);
+      printf(" %d \n",g);
    }
    if(fibs[i] == t){
       return 1;}
@@ -16,6 +16,13 @@ int decideFib(int t)
 }
 int main()
 {
-   decideFib(1000);
+   int n = 1245235;
+   int y = decideFib(n);
+   if(y){
+        printf("%d is a fibonacci number.\n",n);
+   }
+    else{
+    printf("%d is not a fibonacci number.\n",n);
+  }
    return 0;
 }
