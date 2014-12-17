@@ -124,7 +124,7 @@ let rec stmt_s = function
 															^ "}"
  | Expr(e,_, sfree) -> 
 		if (sfree==true) then "tmp = " ^ expr_s e ^ ";\n" ^
-			"stack = pushStack(stack, &tmp);\n"
+			"stack = pushStack(stack, tmp);\n"
 		else expr_s e ^ ";\n"
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
