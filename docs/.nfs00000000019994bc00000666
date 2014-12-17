@@ -21,9 +21,6 @@
 
 \begin{document}
 \maketitle
-\pagebreak
-\tableofcontents
-\pagebreak
 \section{Introduction}
 \subsection{What is Civ}
 Civ is a new language implemented by the authors as an academic project for Programming Languages and Translators class (COMS W4115) taught by Prof. Stephen A. Edwards.
@@ -53,70 +50,6 @@ Civ has the following types:
 
 \subsection{Examples}
 \paragraph{Hello World}
-\begin{verbatim}
-int main(){
-    printf("Hello World!");
-    return 0;
-}
-\end{verbatim}
-
-\paragraph{GCD}
-\begin{verbatim}
-int main() {
-  int a, b, t, gcd, lcm;
-  int x = 4;
-  int y = 18;
-  a = x;
-  b = y;
-
-  while (b != 0) {
-    t = b;
-    b = a % b;
-    a = t;
-  }
-
-  gcd = a;
-  lcm = (x*y)/gcd;
-
-  printf("Greatest common divisor of %d and %d = %d\n", x, y, gcd);
-  printf("Least common multiple of %d and %d = %d\n", x, y, lcm);
-
-  return 0;
-}
-\end{verbatim}
-\paragraph{Dynamic Arrays}
-\begin{verbatim}
-/*Short tutorial on multidimensional arrays*/
-int main(){
-
-  /*declare an array without an initial size*/
-  int a[];
-
-  /*place elements in any cell without worrying about initializing them*/
-  a[3] = 42;
-
-  /*multidimensional arrays have the same approach*/
-  int m[][][];
-  m[1][2][3] = 123;
-
-return 0;
-}
-
-/* Functions can return arrays and take arrays as arguments*/
-int[] sample(int f[]){
-
-/*if assigning one array to another, make sure to declare the array first*/
-int x[];
-x = f; 
-/*x now holds the same contents as f*/
-int x[1] = 1;
-int z = x[1];
-        printf("%d \n", z); 
-/*make sure to always return a return value of the type you declared
-     in the function signature*/
-return x;
-} 
-\end{verbatim}
 
 \subsection{Compiling and Executing Civ}
 In-order to compile and execute a Civ program the user needs to save the file with a ".mc" extension within the root directory of where the Civ compiler is stored, e.g. 
@@ -194,13 +127,14 @@ There are several kinds of constants, as follows:
 An integer constant is a sequence of digits.
 
 \subparagraph{Character constants}
-A character constant is 1 character enclosed in single quotes '' ' ''.  Within a character constant a single quote must be preceded by a back-slash ''\textbackslash''. Certain non-graphic characters, and ''\textbackslash'' itself, may be escaped by preceding them with a '\textbackslash'.
+A character constant is 1 character enclosed in single quotes '' ? ''.  Within a character constant a single
+quote must be preceded by a back-slash ''\''. Certain non-graphic characters, and ''\'' itself, may be escaped by preceding them with a '\'.
 
 \subparagraph{Floating constants}
 A floating constant consists of an integer part, a decimal point, a fraction part, an e, and an integer exponent. The integer and fraction parts both consist of a sequence of digits. Either the integer part or the fraction part (not both) may be missing; either the decimal point or the e and the exponent (not both) may be missing.
 
 \subparagraph{Strings}
-A string is a sequence of characters surrounded by double quotes '' " ''. A string has the type array-of-characters (see below) and refers to an area of storage initialized with the given characters.  The compiler places a null byte ( \textbackslash0 ) at the end of each string so that programs which scan the string can find its end.
+A string is a sequence of characters surrounded by double quotes '' " ''. A string has the type array-of-characters (see below) and refers to an area of storage initialized with the given characters.  The compiler places a null byte ( \\0 ) at the end of each string so that programs which scan the string can find its end.
 
 \subsection{Types}
 Civ supports three fundamental types of objects: characters, integers, and floating-point numbers.
@@ -273,19 +207,17 @@ The result is the difference of the operands. The same type considerations as fo
 \paragraph{Relational operators}
 The relational operators group left-to-right, but this fact is not very useful; ''$a<b<c$'' does not mean what it seems to.
 \begin{description}
-\item[]expression $<$ expression
-\item[]expression $>$ expression
-\item[]expression $<=$ expression
-\item[]expression $>=$ expression
-The operators $<$ (less than), $>$ (greater than), $<=$ (less than or equal to) and $>=$ (greater than or equal to) all yield 0 if the specified relation is false and 1 if it is true. Operand conversion is exactly the same as for the +.
+\item[]expression < expression
+\item[]expression > expression
+\item[]expression <= expression
+\item[]expression >= expression
+The operators < (less than), > (greater than), <= (less than or equal to) and >= (greater than or equal to) all yield 0 if the specified relation is false and 1 if it is true. Operand conversion is exactly the same as for the +.
 \end{description}
-
-
 \paragraph{Equality operators}
 \begin{description}
 \item[expression == expression]
 \item[expression != expression]
-The == (equal to) and the != (not equal to) operators are exactly analogous to the relational operators except for their lower precedence. (Thus ''a$<$b == c$<$d'' is 1 whenever a$<$b and c$<$d have the same truth-value).
+The == (equal to) and the != (not equal to) operators are exactly analogous to the relational operators except for their lower precedence. (Thus ''a<b == c<d'' is 1 whenever a<b and c<d have the same truth-value).
 \end{description}
 \paragraph{expression \&\& expression}
 The \&\& operator returns 1 if both its operands are non-zero, 0 otherwise. Unlike \&, \&\& guarantees left-to-right evaluation. The operands need not have the same type, but each must have one of the fundamental types.
@@ -503,35 +435,13 @@ A test suite was written about halfway through that allowed rapid testing and fe
 
 \subsection{Style Guide}
 Our overall guiding point was to minimize code redundancy, so both Mike and Yuchen wrote a lot of auxiliary functions (especially for code generation) that converted variou stypes into strings or other types depending on the sitution. The grammar was also meant to minimize redundancy, and utilized a lot of recursion like most grammars do to account for strange cases.
-In terms of actual practice, we had the following rules:
-\begin{itemize}
-    \item Never ever push to origin master.
-    \item Never ever push unless the test suite runs and things compile. Commits are fine as stopping points, but there should never be a reason to rollback.
-    \item Code should be documented, especially at the beginning of newly introduced functions in OCaml.
-    \item Small changes that don't contribute to a huge portion of the language can be marked with TODO:
-    \item Everyone owns a stake - Mike owns scanner.mll, parser.mly, and ast.ml, and Yuchen owns sast.ml, semantic,ml, and ccompilesast.ml.
-    \item When developing features, make both passing and failing test cases, and put them in the test directory in the appopriate slot.
-    \item Tests in a feature should be incremental, i.e. a test for single array declaration, then nested array, then double nested array, etc.
-    \item Update the README with your contribution at the end of the night, marking UNTESTED for future testing or for someone else to write tests.
-    \item When generating C, use camelcase for our library.
-    \item Python should follow PEP8 style guide.
-\end{itemize}
 
-\subsection{Project Timeline}
-Our ideal scenario would have ended up looking something like this:
-\begin{description}
-    \item[September] - Get a fully fleshed out idea of what our language would look like and do. This includes writing basic benchmarks for compilation that incorporate more and more features of the language.
-    \item[October] - Develop and test the scanner and parser. Print out the AST and hand verify to confirm that it is working as intended. Continue developing the language in terms of its scope and core features.
-    \item[November] - Half of the team work on pre-emptive code generation, and the other half on a semantic analyzer. As it is likely code generation will finish first, have them test/debug/even out the rest of the compiler.
-    \item[December] - Fully integrate the semantic analyzer's SAST with code generation. At this point, the scanner, parser should be fully tested and complete, and the code generation should be a easily modified to work with the new SAST as opposed to the AST. Because it's a bad idea to have four people work on the same file, some of the people will be working on the documentation and final report. 
-\end{description}
-
-\subsection{Project Log}
+\subsection{Project Timeline and Log}
 \begin{description}
 \item[September - November] We had a lot of talking and very little coding done through these months. By the end of it, we had a rough idea of the language, but we had no idea how to go about actually implementing it, especially regarding dynamic arrays or garbage collection.
 \item[December] This is where development began.
 
-\footnotesize
+\small
 \begin{verbatim}
 
 12/16/14
@@ -602,8 +512,7 @@ Yuchen -
 
 Prateek -
 * Doubled test cases to ~100
-* Reorganized all test cases into PASS/-feature and FAIL/-feature 
-folders to test individual features
+* Reorganized all test cases into PASS/-feature and FAIL/-feature folders to test individual features
 
 12/11/14
 Eli -
@@ -622,8 +531,7 @@ Mike -
 
 Yuchen
 * Add return type checking
-* Write the function convert program in ast to program in sast and 
-merge sast into the pipeline
+* Write the function convert program in ast to program in sast and merge sast into the pipeline
 
 12/9/14
 Eli -
@@ -631,14 +539,12 @@ Eli -
 * Progress on dynamic arrays and automatic garbage collection
 
 Yuchen -
-* Most problems about scope are solved and tested (Scope for 'While' and 'For', 
-scope for global environment, scope for multi functions, scope for formals)
+* Most problems about scope are solved and tested (Scope for 'While' and 'For', scope for global environment, scope for multi functions, scope for formals)
 * Add test cases for scope and multi functions
 
 ###12/8/14###
 Yuchen -
-* Problem with 'call' is solved and tested. Function's name and type, arguments' 
-number and types are checked.
+* Problem with 'call' is solved and tested. Function's name and type, arguments' number and types are checked.
 * Add semantic checking and ast-sast converting for 'Call', 'Return'
 
 
@@ -659,16 +565,12 @@ Prateek -
 Yuchen - 
 * Add semantic checking and ast-sast converting for 'While', 'For', 'VDecl' 
   UNTESTED - semantic checking and ast-sast converting for 'While', 'For'
-* Add semantic checking: if there is id confict when initialing new vairable 
-in both 'VDecl' and 'NAssign'
+* Add semantic checking: if there is id confict when initialing new vairable in both 'VDecl' and 'NAssign'
 
 12/5/14
 Yuchen -
 * Added Types.ml, Sast.ml
-* UNTESTED - Began work on Semantic; implemented: utility functions for 
-AST traversal, 
-scoping environments, equality tests, type checking, type requirements, 
-environmeny var/func checks
+* UNTESTED - Began work on Semantic; implemented: utility functions for AST traversal, scoping environments, equality tests, type checking, type requirements, environmeny var/func checks
 
 12/4/14
 Mike -
@@ -718,7 +620,7 @@ Mike -
 * Codegeneration has begun - need to adjust formatting and account for type_decl string formatting
 * Mikhail helped
 \end{verbatim}
-\normalsize
+\normal
 \end{description}
 
 \subsection{Software Environment}
@@ -747,170 +649,29 @@ Civ uses a textbook setup. The sequence is as follows:
     \begin{figure}
     \begin{tikzpicture}
 
-    \node (p1) at ( 0, 0) {Program}; 
-    \node (p2) at ( 4, 0) {Tokens};
-    \node (p3) at ( 8, 0) {AST};
-    \node (p4) at ( 4,-4) {Semantically Checked AST};
-    \node (p5) at ( 0,-8) {C Code};
+    \node (p1) at ( 0, 0) {$Program$}; 
+    \node (p2) at ( 1, 0) {$Tokens$};
+    \node (p3) at ( 2,0) {$AST$};
+    \node (p4) at ( 2,-1) {$S-AST$};
+    \node (p5) at ( 0,-2) {$Code$};
 
     \begin{scope}[every path/.style={->}]
-       \draw (p1) -- (p2) node [midway,above=5pt, fill=white] { Scanner };
-       \draw (p2) -- (p3) node [midway,above=5pt, fill=white] { Parser }; 
-       \draw (p3) -- (p4) node [midway,right=5pt, fill=white] { Semantic Checking }; 
-       \draw (p4) -- (p5) node [midway,right=5pt, fill=white] { Code Generation};
+       \draw (p1) -- (p3);
+       \draw (p3) -- (p4); 
+       \draw (p1) -- (p5);
+       \draw (p2) -- (p4);
+       \draw (p2) -- (p5);
     \end{scope}  
-    \end{tikzpicture}
+
+
+
+
+
+    \end{tikspicture}
     \end{figure}
-
-
-
+    \caption{The whole process}
 \section{Testing}
-Testing was one of the most significant part of our project; at every step we wrote new test cases to ensure that the newly developed parts worked as desired. The test suite for this project consists of an automated script written in python and about 100 test cases that we wrote to test different features of our language. The test suite has a plethora of flags and a helpfile using:
-\begin{verbatim}
-            ./civ -h
-\end{verbatim}
 
-\subsection{Automated Test Script}
-
-We wrote a python script to automate the process of testing our components. The script takes a directory of tests and runs each test case inside that directory. In other words it takes each file compiles them through civ and outputs a C file which it then runs through GCC. For each test case it specifies whether it failed or not and if failed it prints out whether it failed at civ or GCC. It also prints out the first line of each test case which says what the test case was supposed to do.
-
-\subsection{Test Suite Code}
-\scriptsize
-\begin{verbatim}
-from subprocess import call, Popen, STDOUT, PIPE
-from sys import exit
-
-pt = lambda x,y: print("\033[%sm%s\033[0m" % (30 + x,y)) # Where 0 <= x <= 7
-
-parser = argparse.ArgumentParser(description="Super testing suite for MilliC")
-parser.add_argument('directory', help="Which test directory to use e.g. 'base'. Use '.' for all tests")
-parser.add_argument('--nomillic', help='Disables makefile error messages', action="store_true")
-parser.add_argument('--gcc', help="Does full compile but no running", action="store_true")
-parser.add_argument('--noclean', help='Disable cleanup post run', action="store_true")
-parser.add_argument('--nopass', help="Disables showing passing test cases", action='store_true')
-parser.add_argument('--showpass', help="Shows passing test cases", action='store_true')
-parser.add_argument('--nofail', help="Disables showing failing test cases", action='store_true')
-parser.add_argument('--showfail', help="Shows failing test cases", action='store_true')
-parser.add_argument('--suppress', help="Only shows gcc messages" ,action='store_true')
-flags = parser.parse_args()
-microcpath = os.getcwd() + "/microc"
-FAIL,PASS,TOTALTESTS,TESTING = 0,0,0,0
-CFAIL, CPASS, CTOTALTESTS, CTESTING = 0,0,0,0
-
-def getTestPaths():
-    global TOTALTESTS,TESTING
-    allPaths = []
-    current = os.getcwd()
-    print(current)
-    for tup in os.walk('./tests'):
-        for test in tup[2]:
-            allPaths.append(current + tup[0][1:] + '/' + test)
-    allPaths = filter(lambda x: x[-2:] == 'mc', allPaths)
-    TOTALTESTS = len(allPaths)
-    allPaths = filter(lambda x: flags.directory in x, allPaths)
-    TESTING = len(allPaths)
-    return allPaths
-
-def setup():
-    show = False if flags.nomillic else True
-    try:
-        c = call(['make'])
-        if c != 0:
-            pt(1, "Makefile failed: Error Code %s" % c)
-            exit()
-    except Exception as e:
-        pt(1, "Makefile failed:%s" % e)
-
-def writeC(outfile,code):
-    with open(outfile, "w") as f:
-        f.write(code)
-
-def test(filepath):
-    outfile = filepath[:-3] + ".c"
-    outc = filepath[:-3] + ".exe"
-    filebase = filepath[:filepath.rfind('/') + 1]
-    code = open(filepath).read().encode('ascii','ignore')
-    global FAIL,PASS
-
-    try:
-        p = Popen([microcpath,'-SC'], stdin = PIPE, stdout = PIPE, stderr = STDOUT)
-        out,err = p.communicate(input=code)
-        if "error" in out and not flags.nofail:
-            pt(1,"%s\n%s" % (filepath,out))
-            if flags.showfail and not flags.suppress:  pt(3, code)
-            FAIL += 1
-            return
-        elif not flags.nopass:
-            pt(2, "%s PASSED" % filepath)
-            if flags.showpass and not flags.suppress: pt(5,out)
-            PASS += 1
-            writeC(outfile,out)
-    except Exception as e:
-        pt(3, "Failed MilliC %s:%s" % (filepath,e))
-
-    if not flags.gcc : return
-
-    try:
-        print(outfile)
-        Popen(['gcc', "-o" + outc, "-std=c99", "-Iarrays", outfile],stdout=PIPE)
-    except Exception as e:
-        pt(3, "Failed GCC %s:%s" % (filepath,e))
-
-if __name__ == "__main__":
-    setup()
-    for t in getTestPaths():
-        test(t)
-    if not flags.noclean:
-        call(['make','clean'])
-    pt(4,"Testing %s / %s Total" % (TESTING,TOTALTESTS))
-    pt(4,"%s FAILED %s PASSED" % (FAIL,PASS))
-    pt(4,"%s GCC FAILED %s GCC PASSED" % (CFAIL,CPASS))
-
-\end{verbatim}
-\normalsize
-\subsection{Test Cases}
-
-The test cases that we created were classified as Pass and Fail. They were further classified into features that we were testing like conditional tests, control tests, etc.  In the end the criteria was that all the test cases in pass should compile successfully in civ and generate a proper C code which upon execution through GCC gives the expected output. Similarly the cases in Fail were supposed to fail when compiled through civ for either syntactical errors or semantic errors.
-\subsection{Test Phase}
-We had roughly two "phases" for our tests. The first was continually building the grammar and making sure everything parsed correctly, and once the full dynamic arrays and garbage collection was in, we started making sure code generation complied with the GCC C99 standard. 
-
-\section{Lessons Learned}
-\begin{description}
-\item[Mike]
-\par Project leadership: In industry, everyone has a specialization and/or has a specific role that contributes to a whole. This is why there is a team breakdown of roles. Do not under any circumstance let it become nebulous with people having their hands in different aspects of the project. Make everyone an absolute dictator of their domain, and get everyone to be really aggressive about doing their work. Keep a work log - it becomes very evident who works and who doesn't, and the moment deadweight is detected, let the person know, and then cut them off.
-
-\par Grammar design: Minimize redundancy, and use lots of self-referential grammar rules. You don't want to create cases that require one specific rule - it will lead to scrambling to consider of all the edge cases, and hours spent testing every single possible configuration.
-
-\par Testing: Create a full test suite that is modular and takes in configurations. It will make life a lot easier to test all 50 - 100 test cases in one command line argument, with different options to display failing case code or running other unix commands on the object code. Minimizing the feedback time from compilation time shortens the development cycle.
-
-\par Work allocation and strategy: While the 'thread' idea is a good idea, where you try to get one small aspect of your code to compile and run, a 'wave' idea worked out better for us. I was first wave in designing the grammar, AST, and code generation, and then the 'second' wave moved who worked on the semantic analyzer and the SAST generation AS I was fixing/upgrading. It allowed both of us to work at maximum productivity, because I gave him a foundation to start. The third wave moved in shortly after with him working on the 'centerpiece' of our language with dynamic arrays and garbage collection. This also means that peoples' workloads peaks at different places, allowing people with spare time to work on other issues, like testing and helping each other out. The alternative to this is everyone sitting around one coder, kind of like pair programming. That was a terrible strategy we used for the longest time, because it always ended up in people arguing and bickering over trivial details.
-
-\par Advice: The earlier you work the faster you realize how painful this project can be. Get each person to have responsibility for something. Keep a worklog to keep track of who is working and who isn't. Pair programming is great, but group programming is a waste of time.
-
-\item[Yuchen]
-\par Semantic Analysis: There are a lot of things to check for semantic even we have correct AST. We have to traverse the AST using DFS to check the semantic of each literal, each ID, each expression and each statement. Unlike the lexical and syntax checking, we need to know the scope, the environment when we check everything. This should be organized and recorded carefully from the beginning of the checking process. Things should be thought clearly before the codes are written down, it is the way that makes the development process of semantic analysis more efficient.
-
-\par Coding in Ocaml: Coding in Ocaml is a special experience. It is not like the language that I were familiar with. We have to do a lot of recursions when coding in Ocaml. But it also makes the coding experience very interesting. We were not tediously moving codes from one place to another. Every line of the codes were thought carefully and a short codes can made what you want. At the beginning, the coding process is slow. But once I got used to the style of Ocaml coding, the process got more and more efficient. It was a good training of my thought of coding.
-
-\par Teamwork: I worked with Mike on the converting of AST to SAST and worked with Eli on the dynamic arrays and garbage collection. Once Mike made some changes on parser and AST, I had to follow him to make corresponding changes in SAST and semantic checking. Eli provided the C methods that could be used in dynamic arrays and garbage collection, and I should make the generated codes use these methods in the right way. Such experience gave me the training of how to work with other people as a team.  
-
-\par Advice: Think early about how to implement what you want. Make some tests about the prototype. Try to be clear of what the work will be like when starting to write codes.
-
-
-\item[Eli]
-\par Management and organization are really important to get right. While a project should be a collaboration, a design major friend once told me he can always tell when a project was designed by a committee rather than a lead designer because it is a mix of possibly good ideas all executed poorly. It is important to find a balance between collaboration and leadership. Swing too far either way and the project goes South quickly. It is ok to be flexible about team roles. If it seems like someone is uncomfortable in a certain role, let them know that they can switch roles. If it seems like someone is unable to act in their capacity in a certain roll, be proactive in approaching them about the problem. Letting someone continue to perform a roll in the project that they are unable to do is a detriment to them as well as to the rest of the team. This is especially important for the management role, as if the manager is unable to perform their duties, it may not be clear where other problems in the project lie.
-\par As a second thing, while this is not really a new lesson, it bears repeating that the early one starts on a project, the better things will turn out. Especially in testing, there are times where something that you may think is a tiny bug that will take 10 minutes to fix ends up taking 10 hours. Testing is a very important and unbelievably time consuming step, and should be considered a very major portion of the project.
-
-\item[Prateek]
-\par The lesson I learned while working on the project was that I should have started much more earlier than I actually did. Ocaml is a difficult programming language hence, the earlier you start the better it is for the project. One should also prioritize and manage things better. It is also important to take initiatives while working in a team or you would lag behind.
-
-\end{description}
-\begin{thebibliography}{9}
-\bibitem{}
-B. W. Kernighan and D.M. Ritchie
-\emph{The C Programming Language}
-Prentice Hall, Englewood Cliffs New Jersey
-1978
-\end{thebibliography}
+B. W. Kernighan and D. M. Ritchie, The C Programming Language, Prentice-Hall, Englewood Cliffs New Jersey, 1978.
 
 \end{document}
