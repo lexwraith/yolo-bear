@@ -125,6 +125,7 @@ let rec stmt_s = function
  | Expr(e,_) -> expr_s e ^ ";"
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
+ | Flow(s) -> s
  | Return(e, vars, is_darr) -> 
 		(*(free_array vars) ^ "\n" ^ *)
 		let freestr = 
@@ -148,6 +149,7 @@ let rec stmt_s = function
                             "; " ^ expr_s e3 ^ ") " ^ stmt_s s ^ ""
  | While(e, s) -> "While (" ^ expr_s e ^ ")" ^ stmt_s s 
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
+ | VDecllist(t,vs) -> Types.output_of_type t ^ " " ^ String.concat ", " vs ^ ";"
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
  | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> expr_s s) l) ^ "];"
  | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ 

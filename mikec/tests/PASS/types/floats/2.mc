@@ -1,4 +1,4 @@
 void main(int chlo)
 {
-    float x = 3;
+    float x = 3.53e1;
 }
