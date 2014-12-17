@@ -1,1 +1,4 @@
-float main(int g){}
+float main(int g){
+float g;
+return g;
+}
