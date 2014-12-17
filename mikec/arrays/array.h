@@ -5,9 +5,17 @@
 #include <stdio.h>
 #define initSize 10
 
+////////////////////////////////////////////
+// Dynamic array and associated functions //
+////////////////////////////////////////////
+
+//Array structure itself. Holds the elements of the array in a
+//union defined as any type the array can hold. This includes
+//pointers to the array struct to allow for multidimensional arrays.
+//Also holds size and max element used
+//If array holds another array, flag datatype must be set = 1.
 typedef struct Array {
- 
- int datatype;	//set to 1 if it holds arrays
+ int datatype;	
  union Data {
     int i;
     char c;
@@ -21,63 +29,77 @@ typedef struct Array {
 
 typedef union Data Data;
 
-void initArray(Array *a) {
-  a->array = (Data *)malloc(initSize * sizeof(Data));
-  a->used = 0;
-  a->size = initSize;
+//Usage syntax:
+// Array *x = initArray(x);
+Array *initArray(Array *ar) {
+  ar = (Array *)malloc(sizeof(Array));
+  ar->array = NULL;
+  ar->array = (Data *)malloc(initSize * sizeof(Data));
+  if(!(ar->array)){
+    printf("Initarray malloc failed\n");
+    return;
+  }
+  ar->used = 0;
+  ar->size = initSize;
 }
 
-//insert Data type element
-void insert(Array *a, int offset, Data element) {
-
-  while (a->size <= offset ) {
-    a->size *= 2;
-    a->array = (Data *)realloc(a->array, a->size * sizeof(Data));
-    a->array[offset] = element;
+//insert Data type element. Used by other insert methods to
+//handle memory allocation and setting of used and size fields.
+void insert(Array *ar, int offset, Data element) {
+  while (ar->size <= offset ) {
+    ar->size *= 2;
+    ar->array = (Data *)realloc(ar->array, ar->size * sizeof(Data));
+    if(!(ar->array)){
+      printf("Realloc in insert failed\n");
+      return;
+    }
+    ar->array[offset] = element;
   }
-
-  if ( offset > a->used ) {
-    a->used = offset;
+  if ( offset > ar->used ) {
+    ar->used = offset;
   }
-  a->array[offset] = element;
+  ar->array[offset] = element;
 }
 
-void insertInt(Array *a, int offset, int element){
+void insertInt(Array *ar, int offset, int element){
   Data temp;
   temp.i = element;
-  insert(a, offset, temp);
+  insert(ar, offset, temp);
+  ar->datatype = 0;
 }
 
-void insertChar(Array *a, int offset, char element){
+void insertChar(Array *ar, int offset, char element){
   Data temp;
   temp.c = element;
-  insert(a, offset, temp);
+  insert(ar, offset, temp);
+  ar->datatype = 0;
 }
 
-void insertFloat(Array *a, int offset, float element){
+void insertFloat(Array *ar, int offset, float element){
   Data temp;
   temp.f = element;
-  insert(a, offset, temp);
+  insert(ar, offset, temp);
+  ar->datatype = 0;
 }
 
-void insertArray(Array *a, int offset, Array *element){
+void insertArray(Array *ar, int offset, Array *element){
   Data temp;
   temp.a = element;
-  insert(a, offset, temp);
-  a->datatype = 1;
+  insert(ar, offset, temp);
+  ar->datatype = 1;
 }
 
 void freeArray(Array *ar) {
   int x;
-  if (ar->datatype == 0){
+  if (ar->datatype == 1){
     for(x = 0; x <= ar->used; x++){
-      printf("%d\n", x);
-      freeArray(ar->array[x].a);
+      if(ar->array[x].a){
+        freeArray(ar->array[x].a);
+      }
     }
   }
   free(ar->array);
-  ar->array = NULL;
-  ar->used = ar->size = 0;
+  free(ar);
 }
 
 ///////////////////////////////////
@@ -134,8 +156,7 @@ void freeStack(Stack *head) {
     }
     while (head != NULL);
   }
-
-
-
-  
+}
+ 
 #endif
+
