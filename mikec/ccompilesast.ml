@@ -93,7 +93,7 @@ let rec expr_s =
 	| Types.Float -> "f"
 	| Types.Char -> "c"
 	in	
-	name ^ "->" ^ string_of_ind nlist ^ tname
+	name ^ "->" ^ string_of_ind (List.rev nlist) ^ tname
  | DArrId(name,n) -> name (*^ print_formal_bracket n*)
  | CheckSize(s) -> s
 
