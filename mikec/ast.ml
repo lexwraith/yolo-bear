@@ -17,6 +17,7 @@ type expr =
   | Array of elem
   | ArrId of string * expr list (* now expr *)
   | DArrId of string * int
+  | CheckSize of string
 
 type stmt =
     Block of stmt list

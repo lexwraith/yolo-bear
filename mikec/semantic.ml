@@ -212,7 +212,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   							string_of_type t1 ^ "', but '" ^
   							string_of_type t2 ^ "' is given." ));
   		Sast.Assign(id,ep2), t1
-  		
+    | Ast.CheckSize(s) -> Sast.CheckSize(s), Types.Int
   	| Ast.Call(name, args) ->
   		let func = 
     		try

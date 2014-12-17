@@ -88,6 +88,10 @@ void insertArray(Array *ar, int offset, Array *element){
   ar->datatype = 1;
 }
 
+int maxArrayElement(Array *ar){
+  return (ar->used)+1;
+}
+
 void freeArray(Array *ar) {
   int x;
   if (ar->datatype == 1){
