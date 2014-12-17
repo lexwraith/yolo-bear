@@ -37,7 +37,6 @@ Array *initArray(Array *ar) {
   ar->array = (Data *)malloc(initSize * sizeof(Data));
   if(!(ar->array)){
     printf("Initarray malloc failed\n");
-    return;
   }
   ar->used = 0;
   ar->size = initSize;
@@ -51,8 +50,7 @@ void insert(Array *ar, int offset, Data element) {
     ar->array = (Data *)realloc(ar->array, ar->size * sizeof(Data));
     if(!(ar->array)){
       printf("Realloc in insert failed\n");
-      return;
-    }
+     }
     ar->array[offset] = element;
   }
   if ( offset > ar->used ) {
