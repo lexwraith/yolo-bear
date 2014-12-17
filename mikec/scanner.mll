@@ -34,6 +34,7 @@ rule token = parse
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
+| '%'      { MOD }
 | "if"     { IF }
 | "else"   { ELSE }
 | "for"    { FOR }

@@ -83,7 +83,7 @@ let rec expr_s =
        (match o with Ast.Add -> " + " | Ast.Sub -> " - " | Ast.Mult -> " * " |
                      Ast.Div -> " / " | Ast.Equal -> " == " | Ast.Neq -> " != " |
                      Ast.Less -> " < " | Ast.Leq -> " <= " | Ast.Greater -> " > " |
-                     Ast.Geq -> " >= ") ^ expr_s e2  
+                     Ast.Geq -> " >= "| Ast.Mod -> " % ") ^ expr_s e2  
  | Call(f, es) -> f ^ "(" ^ String.concat ", " (List.map expr_s (List.rev es)) ^ ")" 
  | Assign(v, e) -> v ^ " = " ^ expr_s e
  | Noexpr -> ""

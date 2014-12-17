@@ -18,7 +18,7 @@ let string_of_id s = s
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRAC RBRAC
 %token PLUS MINUS TIMES DIVIDE ASSIGN
-%token EQ NEQ LT LEQ GT GEQ 
+%token EQ NEQ LT LEQ GT GEQ MOD
 %token RETURN IF ELSE FOR WHILE
 %token BREAK CONST CONTINUE EXTERN STATIC DECR INCR
 %token STRUCT
@@ -167,6 +167,7 @@ binop:
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater,  $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3) }
+  | expr MOD expr {Binop($1, Mod, $3)}
 
 literals:
     ILITERAL         { ILiteral($1) }
