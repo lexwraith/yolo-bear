@@ -1,4 +1,5 @@
 void foo(int g){
+return;
 }
 
 int main(char z){

@@ -544,6 +544,15 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 					[] fdecl.body
 				in
 				
+				(* Check Retrun *)
+				(let flag = List.fold_left
+				(fun flag body ->
+					match body with 
+					Sast.Return(_ ,_,_) -> true
+					|_ -> flag ) false body'
+				in 
+				if(flag==false) then raise (Failure ( "Function '" ^ fdecl.fname ^ "' should have a return statement.")));
+				
 				let func = 
 					{
 						ftype_s = ftype;

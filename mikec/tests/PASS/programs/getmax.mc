@@ -8,4 +8,5 @@ int main(int g){
     x = 15;
     int y = foo(x);
     printf("%d",y);
+    return 0;
 }
