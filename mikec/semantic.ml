@@ -25,6 +25,8 @@ open Ast
 open Sast
 open Types
 
+exception Semantic_Error of string
+
 module NameMap = Map.Make(String)
 
 
@@ -65,7 +67,7 @@ let is_new_variable (scope : S.symbol_table) name =
     (* TODO can global variable be redeclared? *)
 	try
   	let (_,_) = List.find (fun (s, _) -> s = name) scope.S.variables in
-		raise (Failure ( "'" ^ name ^ "' already exists"));
+		raise (Semantic_Error ( "'" ^ name ^ "' already exists"));
 		()
   with Not_found -> ()
 	
@@ -100,7 +102,7 @@ let require_integer (env:translation_environment) e str =
 	match e with
 		Types.Int -> ()
 	| _ -> env.exception_scope.exceptions <- str::env.exception_scope.exceptions; 
-				 raise (Failure str) 
+				 raise (Semantic_Error str) 
 				
 (* check if t1 and t2 are the same types *)				
 let rec weak_eq_type t1 t2 =
@@ -135,7 +137,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   	| Ast.Id(vname) -> let vdecl = try
   			find_variable env.scope vname (* locate a variable by name *) 
     	with Not_found ->
-    		raise (Failure ("Undeclared identifier: " ^ vname))
+    		raise (Semantic_Error ("Undeclared identifier: " ^ vname))
     	in
     	let (_, typ) = vdecl in (* get the variable’s type *) 
     	Sast.Id(vdecl), typ
@@ -154,7 +156,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let id = try
     			find_variable env.scope name (* locate a variable by name *) 
       	with Not_found ->
-      		raise (Failure ("Undeclared array: " ^ name))
+      		raise (Semantic_Error ("Undeclared array: " ^ name))
       	in
     	let (_, typ) = id in
 			let t = 
@@ -168,7 +170,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			let id = try
     			find_variable env.scope name (* locate a variable by name *) 
       	with Not_found ->
-      		raise (Failure ("Undeclared array: " ^ name))
+      		raise (Semantic_Error ("Undeclared array: " ^ name))
       	in
     	let (_, typ) = id in
 			let t,n1 = 
@@ -177,7 +179,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				| Types.DArray(t,n1) -> t,n1
 				|_ -> typ,0
 			in
-			if (n!=n1) then raise (Failure ("Dimension of '" ^ name ^ "' is " ^ string_of_int n1 ^ ", but " ^ string_of_int n ^ " is found."));
+			if (n!=n1) then raise (Semantic_Error ("Dimension of '" ^ name ^ "' is " ^ string_of_int n1 ^ ", but " ^ string_of_int n ^ " is found."));
 			Sast.DArrId(name,n), typ
   	| Ast.Binop(e1, op, e2) ->
   		let e1 = expr env e1 (* Check left and right children *) 
@@ -196,7 +198,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   			(* error ("Type mismatch in comparison: left is " ^
   							Printer.string_of_sast_type t1 ^ "\" right is \"" ^
   							Printer.string_of_sast_type t2 ^ "\"" ) loc; *)
-  			raise (Failure ("Type mismatch in comparison: left is '" ^
+  			raise (Semantic_Error ("Type mismatch in comparison: left is '" ^
   							string_of_type t1 ^ "' right is '" ^
   							string_of_type t2 ^ "'" ));
   		Sast.Binop(ep1, op, ep2), Types.Int (* Success: result is int *)
@@ -206,7 +208,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let (_, t1) = e1 in
   		let (ep2, t2) = e2 in
   		if not (weak_eq_type t1 t2) then
-  			raise (Failure ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
+  			raise (Semantic_Error ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
   							string_of_type t1 ^ "', but '" ^
   							string_of_type t2 ^ "' is given." ));
   		Sast.Assign(id,ep2), t1
@@ -215,7 +217,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let func = 
     		try
        		NameMap.find name func_decls
-      	with Not_found -> raise (Failure ("Cannot find function '" ^ name ^ "'"))
+      	with Not_found -> raise (Semantic_Error ("Cannot find function '" ^ name ^ "'"))
   		in
   		let 
   			scope' = { S.parent = Some(env.scope); S.variables = [] } 
@@ -235,7 +237,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 							| _ -> Types.DArray(Types.type_from_string t2,dim)
 				in
   				if not (weak_eq_type t1 t2) then
-  					raise (Failure ("Type mismatch in function '" ^ name ^ "': parameter '" 
+  					raise (Semantic_Error ("Type mismatch in function '" ^ name ^ "': parameter '" 
 								^ n2 ^ "' is '" ^ (string_of_type t2) ^ "', but '" 
   							^ (string_of_type t1) ^ "' is found." ));
   				ep1::sast_args
@@ -244,7 +246,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				try
   				List.fold_left2 make_sast_args [] args func.formals
 				with Invalid_argument(_) -> 
-					raise (Failure ("Arguments number mismatch in fuction '" ^ name ^ "': " 
+					raise (Semantic_Error ("Arguments number mismatch in fuction '" ^ name ^ "': " 
 								^ string_of_int (List.length func.formals) ^ " required, but "
   							^ string_of_int (List.length args) ^ " found." ));
   		in
@@ -311,7 +313,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
   		let (ep2, t2) = e2 in
   		(* Should assign the same type as required *)
   		if not (weak_eq_type t1 t2) then
-  			raise (Failure ("Type mismatch in variable declaration: left is '" ^
+  			raise (Semantic_Error ("Type mismatch in variable declaration: left is '" ^
   							string_of_type t1 ^ "' right is '" ^
   							string_of_type t2 ^ "'" ));
   		env.scope.S.variables <- (id,t1) :: env.scope.S.variables;
@@ -342,10 +344,10 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			let (fname, return_type) = env.return_type in
 			(match ep with 
 			  Sast.ILiteral(_) | Sast.Float(_) | Sast.String(_) | Sast.Char(_) | Sast.Id(_) | Sast.Noexpr | Sast.DArrId(_, _) -> ()
-			| Sast.ArrId(_, _, _) -> raise (Failure ("Return of function '" ^ fname ^ "' cannot be an element of the dynamic array." ))
-			| _ -> raise (Failure ("Return of function '" ^ fname ^ "' cannot be an expression." )));
+			| Sast.ArrId(_, _, _) -> raise (Semantic_Error ("Return of function '" ^ fname ^ "' cannot be an element of the dynamic array." ))
+			| _ -> raise (Semantic_Error ("Return of function '" ^ fname ^ "' cannot be an expression." )));
 			if not (weak_eq_type t return_type ) then
-  			raise (Failure ("Return type mismatch: return type of function '" ^
+  			raise (Semantic_Error ("Return type mismatch: return type of function '" ^
 								fname ^ "' is " ^ 
   							string_of_type return_type ^ "', but '" ^
   							string_of_type t ^ "' is found." ));
@@ -420,11 +422,11 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 			| _-> t1,0
 			in
 			if not (weak_eq_type t1 t2) then
-  			raise (Failure ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
+  			raise (Semantic_Error ("Type mismatch in assign value: '" ^ id ^ "' is '" ^
   							string_of_type t1 ^ "' array, but '" ^
   							string_of_type t2 ^ "' is given." ));
 			if (n1 != List.length ind) then
-				raise (Failure ("Dimension of '" ^ id ^ "' is " ^ string_of_int n1 ^
+				raise (Semantic_Error ("Dimension of '" ^ id ^ "' is " ^ string_of_int n1 ^
 						 ", but " ^ string_of_int (List.length ind) ^ " is found."));
 			let expr_list = 
 			List.fold_left
@@ -551,7 +553,7 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 					Sast.Return(_ ,_,_) -> true
 					|_ -> flag ) false body'
 				in 
-				if(flag==false) then raise (Failure ( "Function '" ^ fdecl.fname ^ "' should have a return statement.")));
+				if(flag==false) then raise (Semantic_Error ( "Function '" ^ fdecl.fname ^ "' should have a return statement.")));
 				
 				let func = 
 					{
