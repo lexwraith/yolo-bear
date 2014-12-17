@@ -121,27 +121,23 @@ void initStack(Stack *head){
   head = NULL;
 }
 
-int notInStack(Stack *head, Array *ptr){
-  Stack *temp = head;
-  while(temp != NULL) {
-    if(temp->data == ptr) {
-      return 0;
-    }
-    else {
-      temp = temp->next;
-    }
-  }
-  return 1;
-}
-
 //Arguments: Stack *head
 Stack *pushStack(Stack *head, Array *ptr){  
-  if(notInStack(head, ptr)){
+    Stack *check = head;
+    while(check != NULL){
+      if(check->data == ptr){
+	printf("found\n");
+        return head;
+      }
+      else {
+        check = check->next;
+      }
+   }
     Stack *temp = (Stack *)malloc(sizeof(Stack));
     temp->data = ptr;
     temp->next = head;
     head = temp;
-  }
+  
   return head;  
 }
 
