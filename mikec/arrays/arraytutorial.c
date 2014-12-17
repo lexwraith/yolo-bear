@@ -47,6 +47,11 @@ int main() {
   //print y[3][0][0]
   printf("y[3][1][0] holding an int: %d\n",y->array[3].a->array[1].a->array[0].i);
 
+  printf("The size of x is %d\n", maxArrayElement(x));
+  printf("The size of y is %d\n", maxArrayElement(y));
+  printf("The size of z is %d\n", maxArrayElement(z));
+  printf("The size of inception is %d\n", maxArrayElement(inception));
+  
  
   //as long as precautions I outlined above are followed, calling this on the
   //bottom level array will recursively free all levels of a multidimensional array
