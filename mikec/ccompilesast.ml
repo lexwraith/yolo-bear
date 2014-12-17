@@ -161,9 +161,8 @@ let rec stmt_s = function
 			"insert" ^ Types.string_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
  | SAssign(t,id,ind, e) -> 
 		"char[] " ^ id ^ " = " ^ String.concat "" e ^ ";"
- | DArr(t,id,dim)-> "Array " ^ id ^ "_o;\n" ^
-			"initArray(&" ^ id ^ "_o);\n" ^
-			"Array *" ^ id ^ " = &" ^ id ^ "_o;\n" ^
+ | DArr(t,id,dim)-> 
+			"Array *" ^ id ^ " = (" ^ id ^ ");\n" ^
 			"stack = pushStack(stack, " ^ id ^ ");"
 			
 			
