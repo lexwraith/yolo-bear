@@ -25,7 +25,7 @@ type expr_detail =
 
 type stmt_detail =
     Block of S.symbol_table * stmt_detail list * variable_decl list
-  | Expr of expr_detail * Types.t
+  | Expr of expr_detail * Types.t * bool
   | Print of string
 	| Printlist of string * string list
   | Flow of string

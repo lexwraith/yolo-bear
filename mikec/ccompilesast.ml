@@ -84,7 +84,7 @@ let rec expr_s =
                      Ast.Div -> " / " | Ast.Equal -> " == " | Ast.Neq -> " != " |
                      Ast.Less -> " < " | Ast.Leq -> " <= " | Ast.Greater -> " > " |
                      Ast.Geq -> " >= ") ^ expr_s e2  
- | Call(f, es) -> f ^ String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
+ | Call(f, es) -> f ^ "(" ^ String.concat ", " (List.map expr_s (List.rev es)) ^ ")" 
  | Assign(v, e) -> v ^ " = " ^ expr_s e
  | Noexpr -> ""
  | ArrId(typ,name,nlist) ->  
@@ -122,7 +122,10 @@ let rec stmt_s = function
 															^ (free_array symbol_table.S.variables)
 															^ "\n*/\n" *)
 															^ "}"
- | Expr(e,_) -> expr_s e ^ ";"
+ | Expr(e,_, sfree) -> 
+		if (sfree==true) then "tmp = " ^ expr_s e ^ ";\n" ^
+			"stack = popStack(stack, &tmp);\n"
+		else expr_s e ^ ";\n"
  | Print(s) -> "printf(" ^ s ^ ");"
  | Printlist(s,l) -> "printf(" ^ s ^ "," ^ String.concat "," l ^ ");" 
  | Flow(s) -> s
@@ -178,6 +181,7 @@ let func_decl_s (f:func_decl_detail) =
   String.concat ", " (List.map print_formals f.formals_s) ^ "){\n" ^
 	"Stack *stack = NULL;\n" ^
   "initStack(stack);\n" ^	
+	"Array *tmp;\n" ^ 
 	String.concat "\n" (List.map stmt_s f.body_s) ^ "\n}\n"
 
 let program_s (vars, funcs) = "#include <stdio.h>\n#include \"array.h\"\n\n" ^ 
