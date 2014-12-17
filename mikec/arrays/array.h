@@ -40,6 +40,7 @@ Array *initArray(Array *ar) {
   }
   ar->used = 0;
   ar->size = initSize;
+  return ar;
 }
 
 //insert Data type element. Used by other insert methods to
