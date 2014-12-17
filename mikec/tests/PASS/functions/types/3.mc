@@ -1,4 +1,4 @@
-float main(int g){
+float main(){
 float g;
 return g;
 }
