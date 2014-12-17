@@ -6,4 +6,5 @@ void main(){
 			a = a + b;
 		}
 	}
+	return;
 }

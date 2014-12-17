@@ -5,4 +5,5 @@ void main(){
 	for (i = 1; i < n; i = i + 1) {
 		j = j - 1;
 	}
+	return;
 }
