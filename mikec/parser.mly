@@ -118,7 +118,7 @@ stmt:
   | ID brackets_list ASSIGN expr SEMI { AAssign("", $1, $2, $4) }
   | PRINT LPAREN strliterals RPAREN SEMI { Print($3) }
   | PRINT LPAREN strliterals COMMA id_list RPAREN SEMI {Printlist($3,$5)}
-  | RETURN expr SEMI { Return($2) }
+  | RETURN expr_opt SEMI { Return($2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt   { If($3, $5, $7) }

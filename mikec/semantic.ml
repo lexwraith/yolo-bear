@@ -555,6 +555,6 @@ let check ((globals: (string * string * string) list), (functions : Ast.func_dec
 				func::fdecl_list
 			) [] functions
 		in
-		(List.rev sast_globals, List.rev sast_fdecls);
+		(List.rev sast_globals, sast_fdecls);
 						 
 		
