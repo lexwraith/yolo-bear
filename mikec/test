@@ -18,7 +18,7 @@ parser.add_argument('--nopass', help="Disables showing passing test cases", acti
 parser.add_argument('--showpass', help="Shows passing test cases", action='store_true')
 parser.add_argument('--nofail', help="Disables showing failing test cases", action='store_true')
 parser.add_argument('--showfail', help="Shows failing test cases", action='store_true')
-
+parser.add_argument('--suppress', help="Only shows gcc messages" ,action='store_true')
 flags = parser.parse_args()
 microcpath = os.getcwd() + "/microc"
 FAIL,PASS,TOTALTESTS,TESTING = 0,0,0,0
@@ -64,12 +64,12 @@ def test(filepath):
         out,err = p.communicate(input=code)
         if "error" in out and not flags.nofail:
             pt(1,"%s\n%s" % (filepath,out))
-            if flags.showfail:  pt(3, code)
+            if flags.showfail and not flags.suppress:  pt(3, code)
             FAIL += 1
             return
         elif not flags.nopass:
             pt(2, "%s PASSED" % filepath)
-            if flags.showpass: pt(5,out)
+            if flags.showpass and not flags.suppress: pt(5,out)
             PASS += 1
             writeC(outfile,out)
     except Exception as e:

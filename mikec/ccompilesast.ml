@@ -83,8 +83,7 @@ let rec expr_s =
                      Ast.Div -> " / " | Ast.Equal -> " == " | Ast.Neq -> " != " |
                      Ast.Less -> " < " | Ast.Leq -> " <= " | Ast.Greater -> " > " |
                      Ast.Geq -> " >= ") ^ expr_s e2  
- | Call(f, es) -> f ^ "(" ^
-        String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
+ | Call(f, es) -> f ^ String.concat ", " (List.map (fun e -> "(" ^ expr_s e ^ ")") es) 
  | Assign(v, e) -> v ^ " = " ^ expr_s e
  | Noexpr -> ""
  | ArrId(typ,name,nlist) ->  
@@ -143,26 +142,26 @@ let rec stmt_s = function
 		"}\n"^
 		"freeStack(stack);\n"^
 		"return" ^ " " ^ expr_s e ^ ";" 
- | If(e, s1, s2) -> "If (" ^ expr_s e ^ ")" ^ stmt_s s1 ^
+ | If(e, s1, s2) -> "if(" ^ expr_s e ^ ")" ^ stmt_s s1 ^
                                                 stmt_s s2 
- | For(e1, e2, e3, s) -> "For (" ^ expr_s e1 ^ "; " ^ expr_s e2 ^
+ | For(e1, e2, e3, s) -> "for(" ^ expr_s e1 ^ "; " ^ expr_s e2 ^
                             "; " ^ expr_s e3 ^ ") " ^ stmt_s s ^ ""
- | While(e, s) -> "While (" ^ expr_s e ^ ")" ^ stmt_s s 
+ | While(e, s) -> "while(" ^ expr_s e ^ ")" ^ stmt_s s 
  | VDecl(t,v) -> Types.output_of_type t ^ " " ^ v ^ ";"
  | VDecllist(t,vs) -> Types.output_of_type t ^ " " ^ String.concat ", " vs ^ ";"
  | NAssign(t,v,e) -> Types.output_of_type t ^ " " ^ v ^ " = " ^ expr_s e ^ ";"
  | Arr(t,v,l) -> (Types.output_of_type t) ^ " " ^ v ^ "[" ^ String.concat "][" (List.map (fun s-> expr_s s) l) ^ "];"
  | Braces (t, id, ind, elem) -> Types.output_of_type t ^ " " ^ id ^ 
   	"[" ^ String.concat "][" (List.map (fun s-> expr_s s) ind) ^ "]" ^
-		" = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
- | DBraces (t, id, dim, elem) -> Types.output_of_type t ^ (print_formal_bracket dim) ^ " " ^ 
-				id ^ " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
+		" = {" ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ "};"
+ | DBraces (t, id, dim, elem) -> Types.output_of_type t ^ " " ^	id ^ print_formal_bracket dim ^ 
+                        " = " ^ List.fold_left (fun str elem-> str ^ string_of_elem elem) "" elem ^ ";"
  | AAssign(t,id,ind, e) -> 
 	let idstr, indstr = insertArray id ind in
 			checkArray id ind ^ 
 			"insert" ^ Types.string_of_type t ^ "("^ idstr ^"," ^ indstr ^","^ expr_s e ^");" 
  | SAssign(t,id,ind, e) -> 
-		"char[] " ^ id ^ " = " ^ String.concat "" e ^ ";"
+		"char " ^ id ^ "[] = " ^ String.concat "" e ^ ";"
  | DArr(t,id,dim)-> 
 			"Array *" ^ id ^ " = initArray(" ^ id ^ ");\n" ^
 			"stack = pushStack(stack, " ^ id ^ ");"
