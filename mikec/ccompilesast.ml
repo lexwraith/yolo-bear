@@ -162,7 +162,7 @@ let rec stmt_s = function
  | SAssign(t,id,ind, e) -> 
 		"char[] " ^ id ^ " = " ^ String.concat "" e ^ ";"
  | DArr(t,id,dim)-> 
-			"Array *" ^ id ^ " = (" ^ id ^ ");\n" ^
+			"Array *" ^ id ^ " = initArray(" ^ id ^ ");\n" ^
 			"stack = pushStack(stack, " ^ id ^ ");"
 			
 			
