@@ -103,9 +103,8 @@ let rec checkArray id ind=
 		[hd] -> ""
 		| hd::tail -> 
 			"if (!(" ^ id ^ "->array[" ^ expr_s hd ^ "].a)) {\n" ^
-			"Array temp;\n" ^
-			"initArray(&temp);\n" ^
-			"insertArray(" ^ id ^ "," ^ expr_s hd ^ ",&temp);\n" ^
+			"Array *temp = initArray(temp);\n" ^
+			"insertArray(" ^ id ^ "," ^ expr_s hd ^ ",temp);\n" ^
 			"}\n" ^ checkArray (id ^ "->array[" ^ expr_s hd ^ "].a") tail
 			
 let rec insertArray id ind=
