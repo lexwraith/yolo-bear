@@ -74,6 +74,7 @@ let rec expr_s =
 	in
 	function
    ILiteral(l) -> string_of_int l
+ | CheckSize(s) -> s
  | String(s) -> s
  | Char(c) -> c 
  | Id(v, _) ->  v
@@ -94,6 +95,7 @@ let rec expr_s =
 	in	
 	name ^ "->" ^ string_of_ind nlist ^ tname
  | DArrId(name,n) -> name (*^ print_formal_bracket n*)
+ | CheckSize(s) -> s
 
 
 let rec checkArray id ind=

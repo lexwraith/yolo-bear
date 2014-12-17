@@ -12,6 +12,7 @@ let explode s =
     else exp (i - 1) ((str_of_c s.[i]) :: l) in
   exp (String.length s - 1) []
 
+let string_of_id s = s
 
 %}
 
@@ -23,7 +24,7 @@ let explode s =
 %token STRUCT
 %token <string> STR CHR ID FLITERAL TYPE
 %token <int> ILITERAL
-%token EOF PRINT
+%token EOF PRINT SIZE
 
 %nonassoc NOELSE
 %nonassoc ELSE
@@ -143,6 +144,7 @@ expr:
   | ids              { $1 }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+  | SIZE LPAREN ID RPAREN { CheckSize("maxArrayElement(" ^ string_of_id $3 ^ ")") }
   | ID ASSIGN expr      { Assign($1, $3) } /* For chained assignments */
  /*  | ID INCR            { Id($1) + 1 } */
 /*  | ID DECR         { Id($1) + 1 } */

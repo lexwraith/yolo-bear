@@ -1,7 +1,9 @@
 void bubblesort(int t[]){
     int i,j;
-    for(i = 1; i < 11; i = i + 1){
-        for(j = 0; j < 11 - i - 1; j = j + 1){
+    int n;
+    n = maxArrayElement(t) + 1;
+    for(i = 1; i < n; i = i + 1){
+        for(j = 0; j < n - i - 1; j = j + 1){
             if(t[j] > t[j + 1]){
                 int a = t[j];
                 int b = t[j + 1];
