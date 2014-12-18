@@ -908,7 +908,915 @@ We had roughly two "phases" for our tests. The first was continually building th
 \end{description}
 
 \section{Appendix}
-See tarfile for code
+See tarfile for code.
+Test code below:
+\begin{verbatim}
+./tests/defunct/static/5.mc
+/* multidimensional array assignment*/
+int main(char g){
+    int x[2][3] = {{2,3,4},{1,2,3}};
+}
+./tests/defunct/static/6.mc
+/* super multidimensional array*/
+int main(char g){
+    int x[5][1][52] = {{3},{{3},1,2,3},5};
+}
+./tests/defunct/static/4.mc
+/* Array declaration AND assignment */
+int main(int g){
+    int x[1] = {1};
+    return 5;
+}
+./tests/defunct/static/3.mc
+int main(char g){
+    int z[1][2][3];
+    return 0;
+}
+./tests/defunct/static/1.mc
+int main(){
+    int x[5];
+    return 5;
+}
+./tests/defunct/static/2.mc
+int main(char e){
+    int g[3][4];
+    return 5;
+}
+./tests/defunct/arrays/5.mc
+int main(){
+    int a[5];
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = 2;
+    a[3] = 3;
+    a[4] = 4;
+    a[5] = 5;
+    a[6] = 6;
+    a[7] = 7;
+    a[8] = 8;
+    a[9] = 9;
+    a[10] = 10;
+    return 0;
+}
+./tests/defunct/arrays/6.mc
+int main(){
+    int a[5][5];
+    return 0;
+}
+./tests/defunct/arrays/7.mc
+int main(){
+    int a[][];
+    return 0;
+}
+./tests/defunct/arrays/4.mc
+int main(){
+    int a[];
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = 2;
+    a[3] = 3;
+    a[4] = 4;
+
+    return 0;
+}
+./tests/defunct/arrays/3.mc
+int main(){
+    int a[5];
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = 2;
+    a[3] = 3;
+    a[4] = 4;
+
+    return 0;
+}
+./tests/defunct/arrays/10.mc
+int main() {
+
+    int a[5][5];
+    a[0][0] = 00;
+    a[0][1] = 01;
+    a[0][2] = 02;
+    a[0][3] = 03;
+    a[0][4] = 04;
+
+    a[6][0] = 60; 
+    a[6][1] = 61;
+    a[6][2] = 62;
+    a[6][3] = 63;
+    a[6][4] = 64;
+
+
+    return 0;
+}
+./tests/defunct/arrays/9.mc
+int main() {
+
+    int a[][];
+    a[0][0] = 00;
+    a[0][1] = 01;
+    a[0][2] = 02;
+    a[0][3] = 03;
+    a[0][4] = 04;
+
+    a[1][0] = 10; 
+    a[1][1] = 11;
+    a[1][2] = 12;
+    a[1][3] = 13;
+    a[1][4] = 14;
+
+
+    return 0;
+}
+./tests/defunct/arrays/1.mc
+int main(){
+
+    int a[5];
+
+    return 0;
+}
+./tests/defunct/arrays/2.mc
+int main(){
+    int a[];
+    return 0;
+}
+./tests/defunct/arrays/8.mc
+int main() {
+    int a[5][5];
+    a[0][0] = 00;
+    a[0][1] = 01;
+    a[0][2] = 02;
+    a[0][3] = 03;
+    a[0][4] = 04;
+
+    a[1][0] = 10; 
+    a[1][1] = 11;
+    a[1][2] = 12;
+    a[1][3] = 13;
+    a[1][4] = 14;
+
+
+    return 0;
+}
+./tests/gcd.mc
+int main() {
+  int a, b, t, gcd, lcm;
+  int x = 4;
+  int y = 18; 
+  a = x;
+  b = y;
+ 
+  while (b != 0) {
+    t = b;
+    b = a % b;
+    a = t;
+  }
+ 
+  gcd = a;
+  lcm = (x*y)/gcd;
+ 
+  printf("Greatest common divisor of %d and %d = %d\n", x, y, gcd);
+  printf("Least common multiple of %d and %d = %d\n", x, y, lcm);
+ 
+  return 0;
+}
+./tests/multiarray.mc
+/*Short tutorial on multidimensional arrays*/
+int main(){
+
+  /*declare an array without an initial size*/
+  int a[];
+
+  /*place elements in any cell without worrying about initializing them*/
+  a[3] = 42;
+
+  /*multidimensional arrays have the same approach*/
+  int m[][][];
+  m[1][2][3] = 123;
+
+return 0;
+}
+
+/* Functions can return arrays and take arrays as arguments*/
+int[] sample(int f[]){
+
+    /*if assigning one array to another, make sure to declare the array first*/
+    int x[];
+    x = f; 
+    /*x now holds the same contents as f*/
+    int x[1] = 1;
+    int z = x[1];
+        printf("%d \n", z); 
+    /*make sure to always return a return value of the type you declared
+      in the function signature*/
+    return x;
+} 
+
+./tests/FAIL/semantic/test-scope-for3.mc
+void main(){
+    int i = 0;
+    int n = 10;
+    int j = 0;
+    for (i = 1; i < n; i = i + 1) {
+        char j = 'b';
+    }
+    return;
+}./tests/FAIL/semantic/test-multi-func1.mc
+void main(){
+    int a = 0;
+    return;
+}
+
+void func1(int a){
+    a = 0;
+    return;
+    
+}
+./tests/FAIL/semantic/test-scope-block0.mc
+void main(){
+    int a = 0;
+    {
+        a = 1;
+    }
+    return;
+}
+./tests/FAIL/semantic/test-scope-for0.mc
+void main(){
+    int i = 0;
+    int n = 10;
+    int j = 0;
+    for (i = 1; i < n; i = i + 1) j = j - 1;
+    return;
+}./tests/FAIL/semantic/test-scope-block3.mc
+void main(){
+    int a = 0;
+    {
+        char a = 'a';
+    }
+    a = 'b';
+    return;
+}./tests/FAIL/semantic/test-scope-block2.mc
+void main(){
+    int a = 0;
+    {
+        char a = 'a';
+    }
+    a = 1;
+    return;
+}./tests/FAIL/semantic/test-scope-block1.mc
+void main(){
+    int a = 0;
+    {
+        char a = 'a';
+    }
+    return;
+}./tests/FAIL/semantic/test-func3.mc
+void main(){
+    int a = 0;
+    int b = 0;
+    test(a, b);
+    return;
+}
+
+int test(int c, int d, int e)
+{
+    return 0;
+}./tests/FAIL/semantic/test-type4.mc
+int main(){
+  int a = "a";
+    return;
+}
+./tests/FAIL/semantic/test-scope-for2.mc
+void main(){
+    int i = 0;
+    int n = 10;
+    int j = 0;
+    for (i = 1; i < n; i = i + 1) {
+        j = j - 1;
+    }
+    return;
+}./tests/FAIL/semantic/test-scope-for5.mc
+void main(){
+    char i = '0';
+    char n = '1';
+    int j = 0;
+    for (i = '0'; i < n; i = i + n) j = j - 1;
+    return;
+}./tests/FAIL/semantic/test-type8.mc
+char main(){
+    char a = 'a';
+    int b = 1;
+    a = a - b;
+    return;
+}
+./tests/FAIL/semantic/test-multi-func4.mc
+int a = 0;
+void main(){
+    a = 0;
+    return;
+}
+
+void func1(int a){
+    a = 'a';
+    return;
+    
+}
+./tests/FAIL/semantic/test-type2.mc
+void main(){
+  String a = "a";
+    return;
+}
+./tests/FAIL/semantic/test-multi-func2.mc
+void main(){
+    return;
+    
+}
+
+void func1(int a){
+    int a = 0;
+    return;
+    
+}
+./tests/FAIL/semantic/test-func4.mc
+void main(){
+    test(0);
+    return;
+}
+
+int test()
+{
+    return 0;
+}./tests/FAIL/semantic/test-return3.mc
+int main(){
+    return;
+}
+./tests/FAIL/semantic/test-type3.mc
+int main(){
+  int a = 'a';
+    return;
+}
+./tests/FAIL/semantic/test-type5.mc
+int main(){
+  int a = 1;
+  char b = 'b';
+  a = b;
+    return;
+}
+./tests/FAIL/semantic/test-scope-block5.mc
+void main(){
+    int a = 0;
+    {
+        int b = 1;
+        {
+            a = a + b;
+        }
+    }
+    return;
+}./tests/FAIL/semantic/test-func6.mc
+int a = 0;
+
+void main(){
+    test(a);
+    return;
+}
+
+int test(char b)
+{
+    return 0;
+}./tests/FAIL/semantic/test-multi-func0.mc
+void main(){
+    int a = 0;
+    return;
+}
+
+void func1(){
+    int a = 0;
+    return;
+    
+}
+./tests/FAIL/semantic/test-func0.mc
+int main(){
+    int a = 0;
+    return 0+a;
+}
+./tests/FAIL/semantic/test-type1.mc
+void main(){
+  char a = 'a';
+    return;
+}
+./tests/FAIL/semantic/test-multi-func5.mc
+int a = 0;
+
+void main(){
+    a = 0;
+    return;
+}
+
+void func1(){
+    char a = 'a';   
+    return;
+}
+./tests/FAIL/semantic/test-scope-for6.mc
+void main(){
+    int i = 0;
+    for (i = 0; i < 10; i = i + 1) int j = i - 1;
+    return;
+}./tests/FAIL/semantic/test-return2.mc
+void main(){
+    return 0;
+}
+./tests/FAIL/semantic/test-type6.mc
+int main(){
+  char a = 'a';
+  int b = 1;
+  a = b;
+    return;
+}
+
+
+./tests/FAIL/semantic/test-type0.mc
+void main(){
+  int a = 1;
+    return;
+}
+./tests/FAIL/semantic/test-return5.mc
+int main(){
+    char a = 'a';
+    return a;
+}
+./tests/FAIL/semantic/test-scope-for4.mc
+void main(){
+    int i = 0;
+    char n = '1';
+    int j = 0;
+    for (i = 1; i < n; i = i + 1) j = j - 1;
+    return;
+}./tests/FAIL/semantic/test-type7.mc
+int main(){
+    int a = 1;
+    char b = 'b';
+    a = a - b;
+    return;
+}
+
+
+./tests/FAIL/semantic/test-func5.mc
+int a = 0;
+
+void main(){
+    test(a);
+    return;
+}
+
+int test(int b)
+{
+    return 0;
+}./tests/FAIL/semantic/test-multi-func6.mc
+int a = 0;
+
+void main(){
+    a = 0;
+    return;
+}
+
+void func1(char a){
+    a = 'a';
+    return; 
+}
+./tests/FAIL/semantic/test-scope-block4.mc
+void main(){
+    {
+        char a = 'a';
+    }
+    a = 'b';
+    return;
+}./tests/FAIL/semantic/test-return1.mc
+void main(){
+    return;
+}
+./tests/FAIL/semantic/test-return4.mc
+char main(){
+    return 'a';
+}
+./tests/FAIL/semantic/test-multi-func3.mc
+int a = 0;
+void main(){
+    a = 1;
+    return;
+}
+
+void func1(){
+    a = 2;
+    return;
+}
+./tests/FAIL/semantic/test-func2.mc
+void main(){
+    int a = 0;
+    int b = 0;
+    test(a, b);
+    return;
+}
+
+int test(int c, char d)
+{
+    return 0;
+}./tests/FAIL/semantic/test-func1.mc
+void main(){
+    int a = 0;
+    char b = 'b';
+    test(a, b);
+    return;
+}
+
+int test(int c, char d)
+{
+    return 0;
+}./tests/FAIL/semantic/test-return0.mc
+int main(){
+    return 0;
+}
+./tests/FAIL/semantic/test-scope-for1.mc
+void main(){
+    char i = '0';
+    int n = 10;
+    int j = 0;
+    for (i = 1; i < n; i = i + 1) j = j - 1;
+    return;
+}./tests/PASS/printing/4.mc
+int main(int g){
+    int a,b,c,d,e,f;
+    printf("abcdef",a,b,c,d,e,f);
+    return 0;
+}
+./tests/PASS/printing/3.mc
+void main(int g){
+int a;
+int b;
+printf("hi fuck you", a,b);
+    return;
+}
+
+./tests/PASS/printing/1.mc
+int main(){
+printf("Hello world!");
+    return 0;
+}
+./tests/PASS/printing/2.mc
+int main(){
+int a;
+printf("test",a);
+    return 0;
+}
+./tests/PASS/programs/getmax.mc
+int foo(int g){
+    g = g * 2 + 4;
+    return g;    
+}
+int main(int g){
+    printf("Hello world!");
+    int x;
+    x = 15;
+    int y = foo(x);
+    printf("%d",y);
+    return 0;
+}
+./tests/PASS/programs/bubblesort2.mc
+void bubblesort(int t[]){
+    int i,j;
+    int n;
+    n = maxArrayElement(t) + 1;
+    for(i = 1; i < n; i = i + 1){
+        for(j = 0; j < n - i - 1; j = j + 1){
+            if(t[j] > t[j + 1]){
+                int a = t[j];
+                int b = t[j + 1];
+                int temp = t[j];
+                t[j] = t[j + 1];
+                t[j + 1] = temp;
+                printf("\nSWAPPING: %d %d",a,b);
+            }   
+        }    
+    }
+return;
+}
+
+void main(){
+    printf("Bubblesort");
+    int g[];
+    int z;
+    for(z = 10; z > 0; z = z - 1){
+    g[10 - z] = z;
+    }
+    for(z = 0; z < 10; z = z + 1){ 
+    int temp = g[z];
+    printf("%d ", temp);
+    }
+    bubblesort(g);
+    printf("Sorted! \n");
+    for(z = 0; z < 10; z = z + 1){
+        int temp = g[z];
+        printf("%d ", temp);
+    }
+    return;
+}
+
+./tests/PASS/varchain/1.mc
+int main(){
+    int a;
+    a = 2;
+    int b = 3;
+    return 0;
+}
+./tests/PASS/varchain/2.mc
+void main(){
+    int a,b;
+    return;
+}
+./tests/PASS/dynamic/3.mc
+int main(){
+    int z[][][];
+    return 0;
+}
+./tests/PASS/dynamic/1.mc
+int main(){
+    int g[];
+    return 0;
+}
+./tests/PASS/dynamic/2.mc
+int main(){
+    int x[][];
+    return 2;
+}
+./tests/PASS/types/floats/3.mc
+void main()
+{
+    float g = 1.5e-7;
+    return;
+}
+./tests/PASS/types/floats/0.mc
+float main(){
+    float x;
+    return x;
+}
+./tests/PASS/types/floats/1.mc
+void main(){
+    float x;
+    float y = 2.854;
+    return;
+}
+./tests/PASS/types/floats/2.mc
+void main(int chlo)
+{
+    float x = 3.53e1;
+    return;
+}
+./tests/PASS/types/chars/1.mc
+char main(char z){
+    char x = 'a';
+    return x;
+}
+./tests/PASS/types/ints/1.mc
+int main(int z){
+    int a = 51;
+    return 0;
+}
+./tests/PASS/types/ints/2.mc
+int main(){
+    int g = -1123;
+    return 0;
+}
+./tests/PASS/control/if/4.mc
+int main(){
+
+    int i = 1;
+
+    if(i == 0) {
+        printf("0");
+    }
+    else if(i==1){
+        printf("1");
+    }
+    else {
+        printf("0");
+    }
+
+    return 0;
+}
+./tests/PASS/control/if/3.mc
+int main(){
+
+    int i = 1;
+
+    if(i == 0){
+        printf("0");
+    }
+    else {
+        printf("1");
+    }
+
+    return 0;
+}
+./tests/PASS/control/if/1.mc
+int main(){
+    if(1){
+        return 0;
+    }
+    return 1;
+}
+./tests/PASS/control/if/2.mc
+int main(){
+
+  int i = 1;
+  
+  if(i == 1){
+    printf("1");
+  }
+
+  if(i == 0){
+    printf("0");
+  }
+
+return 0;
+}
+./tests/PASS/control/for/1.mc
+int main(){
+    int z;
+    for(z = 0; z < 10; z = z + 1 )
+        {
+        printf("z");
+        }
+    return 0;
+}
+./tests/PASS/control/for/2.mc
+int main()
+{
+    int i;
+    int j = 10;
+
+    for( i = 0; i <= j; i = i + 1 )
+    {
+       printf("Hello %d\n", i );
+    }
+
+  return 0;
+}
+./tests/PASS/control/while/3.mc
+int main(){
+    int x = 0;
+    int g = 100;
+    while(x < g){
+    x = x + 1;
+    continue;
+}
+    return 15;
+}
+./tests/PASS/control/while/1.mc
+int main(){
+    int i = 0;
+    while(i<10){
+        i = i + 1;
+    }
+    printf("%d", i);
+return 0;
+}
+./tests/PASS/control/while/2.mc
+int main(){
+    while(1){
+        break;
+}
+    return 1;
+}
+./tests/PASS/control/return/3.mc
+char main(){
+    int g[];
+    return 'c';
+}
+./tests/PASS/control/return/2.mc
+int main(){
+    return 1;
+}
+./tests/PASS/strings/3.mc
+void main(char g){
+    char z[] = "2.5e";
+    return;
+}
+./tests/PASS/strings/1.mc
+int main(){
+    char g[] = "Hi fuck you";
+    return 0;
+}
+./tests/PASS/strings/2.mc
+void main()
+{
+    char g[] = "1234";
+    return;
+}
+./tests/PASS/escapechars/1.mc
+void main(){
+    char g = 'a';
+    char x = '0';
+    char z = '\t';
+    return;
+}
+./tests/PASS/escapechars/2.mc
+void main(){
+    char z = '\0';
+    return;
+}
+./tests/PASS/functions/parameters/1.mc
+int main(int z, char b){return 0 ;}
+./tests/PASS/functions/parameters/2.mc
+void main(float z, int x, char g){
+return;
+}
+./tests/PASS/functions/returns/3.mc
+float main(int g){
+    return 2.5;
+}
+./tests/PASS/functions/returns/1.mc
+int main(){
+    return 1;
+}
+./tests/PASS/functions/returns/2.mc
+char main(int g){
+    return 'c';
+}
+./tests/PASS/functions/types/3.mc
+float main(){
+float g;
+return g;
+}
+./tests/PASS/functions/types/1.mc
+void main(){return;}
+./tests/PASS/functions/types/2.mc
+int main(){return 0;}
+
+./tests/PASS/functions/calls/1.mc
+void foo(int g){
+return;
+}
+
+int main(char z){
+    foo(5);
+    return 5;
+}
+./tests/PASS/arrays/3.mc
+int main(){
+    int g[];
+    int temp;
+    g[0] = 15;
+    g[1] = 30;
+    temp = g[0];
+    int print = g[1];
+    printf("%d\n\n\n%d",print,print);
+    g[0] = g[1];
+    g[1] = temp;
+    return 0;
+}
+./tests/PASS/arrays/1.mc
+
+int main(){
+    int x[];
+    int y[];
+    
+    return 0;
+} 
+./tests/PASS/arrays/2.mc
+int main(){
+    int x[];
+    x[156] = 123;
+    return 0;
+}   
+./tests/fib.mc
+int decideFib(int t)
+{
+   int fibs[];
+   fibs[0] = 1;
+   fibs[1] = 1;
+   int i = 1;
+   while(fibs[i] < t){
+      i = i + 1;
+      fibs[i] = fibs[i - 2] + fibs[i - 1];
+      int g = fibs[i];
+      printf(" %d \n",g);
+   }
+   if(fibs[i] == t){
+      return 1;}
+   return 0;
+}
+int main()
+{
+   int n = 1245235;
+   int y = decideFib(n);
+   if(y){
+        printf("%d is a fibonacci number.\n",n);
+   }
+    else{
+    printf("%d is not a fibonacci number.\n",n);
+  }
+   return 0;
+}
+\end{verbatim}
 \begin{thebibliography}{9}
 \bibitem{}
 B. W. Kernighan and D.M. Ritchie
