@@ -1,16 +1,12 @@
 #C Without Pointers...And References?#
 
-###Grammar Nice to haves### 
-* Return with no argument
-* Test control structures
+###12/16/14###
+Team -
+* Finished up last minute tests
+* Wrote report
+*Nomenclature/renamed some stuff
 
-Yuchen -
-* Work miracles
-
-Eli -
-* Test dynamic arrays/garbage collection/memory management
-
-###12/15/###
+###12/15/14###
 Mike -
 * Fixed float parsing
 * Test suite now fully gcc's

@@ -29,7 +29,7 @@ def getTestPaths():
     allPaths = []
     current = os.getcwd()
     print(current)
-    for tup in os.walk('./tests'):
+    for tup in os.walk('./src'):
         for test in tup[2]:
             allPaths.append(current + tup[0][1:] + '/' + test)
     allPaths = filter(lambda x: x[-2:] == 'mc', allPaths)
